@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     */
 
     while(!tle) {
-        ;   //rien
+        
     }
     fprintf(stderr, "interrompu\n");
  
