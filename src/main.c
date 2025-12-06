@@ -11,11 +11,14 @@ float worker;
  
 void term(int signum)
 {
+	(void)signum;
     tle = 1;
 }
  
 int main(int argc, char *argv[])
 {
+	(void)argc;
+	(void)argv;
     struct sigaction action;
     memset(&action, 0, sizeof(struct sigaction));
     action.sa_handler = term;
