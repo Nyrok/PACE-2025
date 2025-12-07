@@ -14,9 +14,9 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 NAME = ds_finder
 
-SIZE = 20
-REDIN = < tmp/testset/bremen_subgraph_$(SIZE).gr
-REDOUT = > out/bremen_subgraph_$(SIZE).sol
+NO = 001
+REDIN = < tmp/instances/heuristic_$(NO).gr
+REDOUT = > out/heuristic_$(NO).sol
 
 all: $(NAME)
 

@@ -12,4 +12,3 @@ void	solve_graph(t_graph *graph) {
 	free_graph(graph);
 	exit(EXIT_SUCCESS);
 }
-

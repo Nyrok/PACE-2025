@@ -3,6 +3,7 @@
 static void	parse_line(t_graph *graph, char *line)
 {
 	char **strs;
+	t_node	*node;
 
 	if (!line)
 		return ;
@@ -14,8 +15,10 @@ static void	parse_line(t_graph *graph, char *line)
 		free_split(strs, 4);
 	}
 	else {
-		graph->nodes[ft_atoull(strs[0]) - 1].neighbors[ft_atoull(strs[1]) - 1] = 1;
-		graph->nodes[ft_atoull(strs[0]) - 1].degree++;
+		node = &graph->nodes[ft_atoull(strs[0]) - 1];
+		node->neighbors = realloc(node->neighbors, (node->degree + 1) * sizeof(t_ull));
+		node->neighbors[node->degree] = ft_atoull(strs[1]) - 1;
+		node->degree++;
 		free_split(strs, 2);
 	}
 }

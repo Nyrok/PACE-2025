@@ -7,6 +7,7 @@ services:
     volumes:
       - "./src:/app"
       - "./testset:/app/tmp/testset"
+      - "./real-instances:/app/tmp/instances"
     stdin_open: true
     tty: true
     restart: always

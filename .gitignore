@@ -2,9 +2,10 @@
 .idea/
 .DS_Store
 objs/
-real-instances/
+*instances/
 ds_finder
 *.o
 *.a
+*.gr
 *.sol
 *.csv
