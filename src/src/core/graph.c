@@ -6,17 +6,17 @@ void	fill_graph(t_graph	*graph, int v, int e)
 
 	graph->v_count = v;
 	graph->e_count = e;
-	graph->neighbors = ft_calloc(v, sizeof(int *));
+	graph->neighbors = ft_calloc(v, sizeof(t_node));
 	if (!graph->neighbors)
 		exit(EXIT_FAILURE);
 	i = 0;
 	while (i < v)
 	{
-		graph->neighbors[i] = ft_calloc(v, sizeof(int));
-		if (!graph->neighbors[i])
+		graph->neighbors[i].adj = ft_calloc(v, sizeof(t_ull));
+		if (!graph->neighbors[i].adj)
 		{
 			while (--i >= 0)
-				free(graph->neighbors[i]);
+				free(graph->neighbors[i].adj);
 			free(graph->neighbors);
 			exit(EXIT_FAILURE);
 		}
@@ -31,7 +31,7 @@ void	free_graph(t_graph	*graph)
 	i = 0;
 	while (i < graph->v_count)
 	{
-		free(graph->neighbors[i]);
+		free(graph->neighbors[i].adj);
 		i++;
 	}
 	free(graph->neighbors);

@@ -10,11 +10,12 @@ static void	parse_line(t_graph *graph, char *line)
 		return ;
 	strs = ft_split(line, ' ');
 	if (line[0] == 'p') {
-		fill_graph(graph, ft_atoi(strs[2]), ft_atoi(strs[3]));
+		fill_graph(graph, ft_atoll(strs[2]), ft_atoll(strs[3]));
 		free_split(strs, 4);
 	}
 	else {
-		graph->neighbors[ft_atoi(strs[0]) - 1][ft_atoi(strs[1]) - 1] = 1;
+		graph->neighbors[ft_atoll(strs[0]) - 1].adj[ft_atoll(strs[1]) - 1] = 1;
+		graph->neighbors[ft_atoll(strs[0]) - 1].degree++;
 		free_split(strs, 2);
 	}
 }

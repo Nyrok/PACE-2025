@@ -1,9 +1,9 @@
 CX = gcc
 CXFLAGS = -Wall -Werror -Wextra -I includes -g3 -std=c99
 SRCS = src/main.c \
-	   src/utils/parser.c \
-	   src/struct/graph.c \
-	   libs/gnl/get_next_line.c \
+		src/utils/parser.c \
+		src/core/graph.c \
+		libs/gnl/get_next_line.c \
 
 OBJDIR = objs
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
@@ -14,7 +14,8 @@ LIBFT = $(LIBFT_DIR)/libft.a
 NAME = ds_finder
 
 SIZE = 20
-OUT = > out/bremen_subgraph_$(SIZE).sol
+REDIN = < testset/bremen_subgraph_$(SIZE).gr
+REDOUT = > out/bremen_subgraph_$(SIZE).sol
 
 all: $(NAME)
 
@@ -38,9 +39,9 @@ fclean: clean
 re: fclean all
 
 test: all
-	./$(NAME) < testset/bremen_subgraph_$(SIZE).gr > out/bremen_subgraph_$(SIZE).sol
+	./$(NAME) $(REDIN) $(REDOUT)
 
 leaks: all
-	valgrind --leak-check=full --show-leak-kinds=all ./$(NAME) < testset/bremen_subgraph_$(SIZE).gr > out/bremen_subgraph_$(SIZE).sol
+	valgrind --leak-check=full --show-leak-kinds=all ./$(NAME) $(REDIN) $(REDOUT)
 
 .PHONY: all clean fclean re
