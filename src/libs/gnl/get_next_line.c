@@ -12,6 +12,7 @@
 
 #include "get_next_line.h"
 #include "libft.h"
+#include <stdio.h>
 
 static char	*parse_buffer_line(char *buffer)
 {
@@ -50,7 +51,7 @@ static char	*parse_buffer_memory(char *buffer)
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	if (buffer[i] == '\0')
+	if (buffer[i] == '\0' || (buffer[i] == '\n' && buffer[i + 1] == '\0'))
 	{
 		free(buffer);
 		return (NULL);
