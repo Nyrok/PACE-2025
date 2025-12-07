@@ -14,7 +14,7 @@ static void	parse_line(t_graph *graph, char *line)
 		fill_graph(graph, ft_atoull(strs[2]), ft_atoull(strs[3]));
 		free_split(strs, 4);
 	}
-	else {
+	else if (ft_isdigit(line[0]) && graph->nodes) {
 		node = &graph->nodes[ft_atoull(strs[0]) - 1];
 		node->neighbors = realloc(node->neighbors, (node->degree + 1) * sizeof(t_ull));
 		node->neighbors[node->degree] = ft_atoull(strs[1]) - 1;

@@ -1,5 +1,5 @@
 CX = gcc
-CXFLAGS = -Wall -Werror -Wextra -I includes -g3 -std=c99
+CXFLAGS = -static -Wall -Werror -Wextra -I includes -g3 -std=c99
 SRCS = src/main.c \
 		src/utils/parser.c \
 		src/core/graph.c \
@@ -35,6 +35,7 @@ clean:
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f $(NAME).tgz
 	rm -f $(LIBFT)
 
 re: fclean all
@@ -44,5 +45,9 @@ test: all
 
 leaks: all
 	valgrind --leak-check=full --show-leak-kinds=all ./$(NAME) $(REDIN) $(REDOUT)
+	./$(NAME) $(REDIN) $(REDOUT)
+
+solution: re
+	tar -czf $(NAME).tgz $(NAME)
 
 .PHONY: all clean fclean re

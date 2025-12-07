@@ -1,8 +1,8 @@
 # Compiler
-CX = cc
+CX = gcc
 
 # Compiler flags
-CXFLAGS = -Wall -Wextra -Werror -I ../../includes -g3
+CXFLAGS = -static -Wall -Wextra -Werror -I ../../includes -g3
 
 NAME =		libft.a
 SRCS = ft_atoi.c \

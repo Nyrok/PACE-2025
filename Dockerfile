@@ -5,15 +5,19 @@ FROM debian:sid-slim
 ENV DEBIAN_FRONTEND=noninteractive
 
 # 3. Update, Install packages, and Clean up in a single layer
-#    --no-install-recommends: skips heavy extras (like documentation)
-#    rm -rf /var/lib/apt/lists/*: deletes the cache to keep image small
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-	build-essential \
-	valgrind \
+    # Explicitly install GCC 13 and 'make'
+    gcc-13 \
+    make \
+    # Install the static C library headers (CRUCIAL for -static linking)
+    libc6-dev \
+    valgrind \
     vim \
-	tree \
-	openjdk-21-jre-headless && \
+    tree \
+    openjdk-21-jre-headless && \
+    # Set gcc-13 as the default 'gcc' command
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
