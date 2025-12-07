@@ -15,7 +15,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 NAME = ds_finder
 
 SIZE = 20
-REDIN = < testset/bremen_subgraph_$(SIZE).gr
+REDIN = < tmp/testset/bremen_subgraph_$(SIZE).gr
 REDOUT = > out/bremen_subgraph_$(SIZE).sol
 
 all: $(NAME)

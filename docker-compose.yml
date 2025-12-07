@@ -6,7 +6,7 @@ services:
     build: .
     volumes:
       - "./src:/app"
-      - "./testset:/app/testset"
+      - "./testset:/app/tmp/testset"
     stdin_open: true
     tty: true
     restart: always

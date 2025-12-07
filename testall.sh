@@ -35,13 +35,13 @@ for inst in `ls $INSTANCES/*.gr | sort -V`; do
     solFile=$(mktemp -t sol"$instName"XXXXX)
     errFile=$(mktemp -t err"$instName"XXXXX)
 
-    timeout -k 30s 5m $PROGNAME < $inst 2> $errFile > $solFile
+    timeout -k 30s 5m $PROGNAME < $inst > $solFile
 
     STATUS=$?
     if [ $STATUS -eq 137 ] ; then #was killed, so timeouted
         echo "; TO " >> $OUTPUT
     elif [ $STATUS -eq 0 -o $STATUS -eq 124 ] ; then
-        OUTVER=$(java -jar ds_verifier-1.0.jar $inst $solFile 2>/dev/null)
+        OUTVER=$(java -jar ds_verifier-1.0.jar $inst $solFile)
         STATUSVERIF=$?
         
         if [ -z "$OUTVER" ] ; then
