@@ -1,50 +1,33 @@
-#include <signal.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <math.h>
- 
+#include "ds_finder.h"
+
 //https://www.optil.io/optilion/help/signals#c
 volatile sig_atomic_t tle = 0;
-int n, i;
-float worker;
- 
+
 void term(int signum)
 {
 	(void)signum;
-    tle = 1;
+	tle = 1;
 }
- 
+
 int main(int argc, char *argv[])
 {
 	(void)argc;
 	(void)argv;
-    struct sigaction action;
-    memset(&action, 0, sizeof(struct sigaction));
-    action.sa_handler = term;
-    sigaction(SIGTERM, &action, NULL);
- 
-    //read the graph from stdin
-    int c;
-    c = fgetc(stdin);
-    while(c != -1) {
-        printf("%c", c);
-        c = fgetc(stdin);
-    }
-    printf("\n");
-    
-    /*
-    demo of capturing SIGTERM
-    to see how it works, run:
-    gcc -Wall main.c
-    timeout 2s ./a.out < instance.gr
-    tle is True after 2 second (in the benchmark, it will be after 5 minutes)
-    */
+	struct sigaction action;
+	memset(&action, 0, sizeof(struct sigaction));
+	action.sa_handler = term;
+	sigaction(SIGTERM, &action, NULL);
 
-    while(!tle) {
-        
-    }
-    fprintf(stderr, "interrompu\n");
- 
-    return 0;
+	//read the graph from stdin
+	char *str;
+	do {
+		str = get_next_line(STDIN_FILENO);
+		if (str)
+			printf("%s", str);
+		free(str);
+	} while (str);
+	printf("\n");
+	while (!tle);
+	fprintf(stderr, "interrompu\n");
+	return 0;
 }
