@@ -28,7 +28,7 @@ DATE=$(date)
 
 echo "$PROGNAME ; $DATE " > $OUTPUT
 
-for inst in `ls $INSTANCES/* | sort -V`; do
+for inst in `ls $INSTANCES/*.gr | sort -V`; do
     echo -n "$inst " >> $OUTPUT
     instName=$(basename $inst)
 
