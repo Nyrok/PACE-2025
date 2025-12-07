@@ -19,7 +19,8 @@ int main(int argc, char *argv[])
 	action.sa_handler = term;
 	sigaction(SIGTERM, &action, NULL);
 	parse_input(&graph);
+	free_graph(&graph);
 	while (!tle);
-	fprintf(stderr, "interrompu\n");
+	ft_putendl_fd("Received SIGTERM, exiting...", STDERR_FILENO);
 	return 0;
 }

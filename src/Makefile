@@ -1,4 +1,4 @@
-CX = cc
+CX = gcc
 CXFLAGS = -Wall -Werror -Wextra -I includes -g3 -std=c99
 SRCS = src/main.c \
 	   src/utils/parser.c \
@@ -13,10 +13,13 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 NAME = ds_finder
 
-all: $(LIBFT) $(NAME)
+SIZE = 20
+OUT = > out/bremen_subgraph_$(SIZE).sol
 
-$(NAME): $(OBJS)
-	$(CX) $(OBJS) -L $(LIBFT_DIR) -lft -o $(NAME)
+all: $(NAME)
+
+$(NAME): $(LIBFT) $(OBJS)
+	$(CX) $(CXFLAGS) $(OBJS) -L $(LIBFT_DIR) -lft -o $(NAME)
 	
 $(LIBFT):
 	make -C $(LIBFT_DIR)
@@ -34,7 +37,10 @@ fclean: clean
 
 re: fclean all
 
-test:
-	./$(NAME) < ../testset/bremen_subgraph_20.gr
+test: all
+	./$(NAME) < testset/bremen_subgraph_$(SIZE).gr > out/bremen_subgraph_$(SIZE).sol
+
+leaks: all
+	valgrind --leak-check=full --show-leak-kinds=all ./$(NAME) < testset/bremen_subgraph_$(SIZE).gr > out/bremen_subgraph_$(SIZE).sol
 
 .PHONY: all clean fclean re

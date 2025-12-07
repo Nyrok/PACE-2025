@@ -5,3 +5,4 @@ objs/
 ds_finder
 *.o
 *.a
+*.sol

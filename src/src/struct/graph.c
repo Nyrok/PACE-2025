@@ -23,3 +23,16 @@ void	fill_graph(t_graph	*graph, int v, int e)
 		i++;
 	}
 }
+
+void	free_graph(t_graph	*graph)
+{
+	int		i;
+
+	i = 0;
+	while (i < graph->v_count)
+	{
+		free(graph->neighbors[i]);
+		i++;
+	}
+	free(graph->neighbors);
+}
