@@ -1,16 +1,20 @@
 CX = gcc
-CXFLAGS = -static -Wall -Werror -Wextra -I includes -g3 -std=c99
+CXFLAGS = -Wall -Werror -Wextra -I includes -g3 -std=c99
+STATIC_FLAG = -static
+
+LIBFT_DIR = libs/libft
+LIBFT = $(LIBFT_DIR)/libft.a
+LIBFT_SRCS = $(wildcard $(LIBFT_DIR)/*.c)
+
 SRCS = src/main.c \
 		src/utils/parser.c \
 		src/core/graph.c \
 		src/core/solver.c \
 		libs/gnl/get_next_line.c \
+        $(LIBFT_SRCS)
 
 OBJDIR = objs
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.c=.o))
-
-LIBFT_DIR = libs/libft
-LIBFT = $(LIBFT_DIR)/libft.a
 
 NAME = ds_finder
 
@@ -20,11 +24,8 @@ REDOUT = > out/heuristic_$(NO).sol
 
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(OBJS)
-	$(CX) $(CXFLAGS) $(OBJS) -L $(LIBFT_DIR) -lft -o $(NAME)
-	
-$(LIBFT):
-	make -C $(LIBFT_DIR)
+$(NAME): $(OBJS)
+	$(CX) $(CXFLAGS) $(STATIC_FLAG) $(OBJS) -o $(NAME)
 
 $(OBJDIR)/%.o: %.c
 	@mkdir -p $(dir $@)
@@ -36,7 +37,7 @@ clean:
 fclean: clean
 	rm -f $(NAME)
 	rm -f $(NAME).tgz
-	rm -f $(LIBFT)
+	rm -f $(NAME).c
 
 re: fclean all
 
@@ -47,7 +48,10 @@ leaks: all
 	valgrind --leak-check=full --show-leak-kinds=all ./$(NAME) $(REDIN) $(REDOUT)
 	./$(NAME) $(REDIN) $(REDOUT)
 
-solution: re
-	tar -czf $(NAME).tgz $(NAME)
+solution: re fclean
+	tar -czf $(NAME).tgz Makefile includes libs $(SRCS)
+
+unify: re
+	$(CX) $(CXFLAGS) -E src/main.c -o $(NAME).c
 
 .PHONY: all clean fclean re
