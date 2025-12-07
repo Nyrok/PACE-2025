@@ -17,16 +17,7 @@ int main(int argc, char *argv[])
 	memset(&action, 0, sizeof(struct sigaction));
 	action.sa_handler = term;
 	sigaction(SIGTERM, &action, NULL);
-
-	//read the graph from stdin
-	char *str;
-	do {
-		str = get_next_line(STDIN_FILENO);
-		if (str)
-			printf("%s", str);
-		free(str);
-	} while (str);
-	printf("\n");
+	parse_input();
 	while (!tle);
 	fprintf(stderr, "interrompu\n");
 	return 0;

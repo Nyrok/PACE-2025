@@ -3,3 +3,5 @@
 .DS_Store
 objs/
 ds_finder
+*.o
+*.a
