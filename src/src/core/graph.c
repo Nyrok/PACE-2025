@@ -1,6 +1,16 @@
 #include "ds_finder.h"
 
-void	fill_graph(t_graph	*graph, t_ull v, t_ull e)
+void	add_neighbor(t_graph *graph, t_ull e1, t_ull e2)
+{
+	t_node	*node;
+
+	node = &graph->nodes[e2];
+	node->neighbors = realloc(node->neighbors, (node->degree + 1) * sizeof(t_ull));
+	node->neighbors[node->degree] = e1;
+	node->degree++;
+}
+
+void	fill_graph(t_graph *graph, t_ull v, t_ull e)
 {
 	t_ll	i;
 

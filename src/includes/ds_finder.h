@@ -33,6 +33,7 @@ typedef struct s_graph
 
 void	parse_input(t_graph *graph);
 void	fill_graph(t_graph	*graph, t_ull v, t_ull e);
+void	add_neighbor(t_graph *graph, t_ull e1, t_ull e2);
 void	free_graph(t_graph	*graph);
 void	solve_graph(t_graph *g);
 

@@ -3,7 +3,8 @@
 static void	parse_line(t_graph *graph, char *line)
 {
 	char **strs;
-	t_node	*node;
+	t_node	*first_node, *second_node;
+	t_ull	e1, e2;
 
 	if (!line)
 		return ;
@@ -15,10 +16,10 @@ static void	parse_line(t_graph *graph, char *line)
 		free_split(strs, 4);
 	}
 	else if (ft_isdigit(line[0]) && graph->nodes) {
-		node = &graph->nodes[ft_atoull(strs[0]) - 1];
-		node->neighbors = realloc(node->neighbors, (node->degree + 1) * sizeof(t_ull));
-		node->neighbors[node->degree] = ft_atoull(strs[1]) - 1;
-		node->degree++;
+		e1 = ft_atoull(strs[0]) - 1;
+		e2 = ft_atoull(strs[1]) - 1;
+		add_neighbor(graph, e1, e2);
+		add_neighbor(graph, e2, e1);
 		free_split(strs, 2);
 	}
 }
