@@ -14,24 +14,26 @@
 # include "get_next_line.h"
 # include "libft.h"
 
+typedef long long	t_ll;
 typedef unsigned long long	t_ull;
 
 typedef struct s_node
 {
-	t_ull	*adj;
-	int		degree;
+	t_ull	*neighbors;
+	t_ull	degree;
+	t_ull	capacity;
 }	t_node;
 
 typedef struct s_graph
 {
-	int		v_count;
-	int		e_count;
-	t_node	*neighbors;
+	t_ull	v_count;
+	t_ull	e_count;
+	t_node	*nodes;
 }	t_graph;
 
 void	parse_input(t_graph *graph);
-void	fill_graph(t_graph	*graph, int v, int e);
+void	fill_graph(t_graph	*graph, t_ull v, t_ull e);
 void	free_graph(t_graph	*graph);
-void    run_root_strategy(t_graph *graph);
+void	solve_graph(t_graph *g);
 
 #endif

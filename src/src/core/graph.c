@@ -1,23 +1,24 @@
 #include "ds_finder.h"
 
-void	fill_graph(t_graph	*graph, int v, int e)
+void	fill_graph(t_graph	*graph, t_ull v, t_ull e)
 {
-	int		i;
+	t_ll	i;
 
 	graph->v_count = v;
 	graph->e_count = e;
-	graph->neighbors = ft_calloc(v, sizeof(t_node));
-	if (!graph->neighbors)
+	graph->nodes = ft_calloc(v, sizeof(t_node));
+	if (!graph->nodes)
 		exit(EXIT_FAILURE);
 	i = 0;
-	while (i < v)
+	while (i < (t_ll)v)
 	{
-		graph->neighbors[i].adj = ft_calloc(v, sizeof(t_ull));
-		if (!graph->neighbors[i].adj)
+		graph->nodes[i].neighbors = ft_calloc(v, sizeof(t_ull));
+		graph->nodes[i].capacity = 10;
+		if (!graph->nodes[i].neighbors)
 		{
 			while (--i >= 0)
-				free(graph->neighbors[i].adj);
-			free(graph->neighbors);
+				free(graph->nodes[i].neighbors);
+			free(graph->nodes);
 			exit(EXIT_FAILURE);
 		}
 		i++;
@@ -26,13 +27,13 @@ void	fill_graph(t_graph	*graph, int v, int e)
 
 void	free_graph(t_graph	*graph)
 {
-	int		i;
+	t_ll	i;
 
 	i = 0;
-	while (i < graph->v_count)
+	while (i < (t_ll)graph->v_count)
 	{
-		free(graph->neighbors[i].adj);
+		free(graph->nodes[i].neighbors);
 		i++;
 	}
-	free(graph->neighbors);
+	free(graph->nodes);
 }

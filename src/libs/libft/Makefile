@@ -6,7 +6,7 @@ CXFLAGS = -Wall -Wextra -Werror -I ../../includes -g3
 
 NAME =		libft.a
 SRCS = ft_atoi.c \
-		ft_atoll.c \
+		ft_atoull.c \
 		ft_bzero.c \
 		ft_calloc.c \
 		ft_isalnum.c \

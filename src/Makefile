@@ -3,6 +3,7 @@ CXFLAGS = -Wall -Werror -Wextra -I includes -g3 -std=c99
 SRCS = src/main.c \
 		src/utils/parser.c \
 		src/core/graph.c \
+		src/core/solver.c \
 		libs/gnl/get_next_line.c \
 
 OBJDIR = objs

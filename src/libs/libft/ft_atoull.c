@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoll.c                                         :+:      :+:    :+:   */
+/*   ft_atoull.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hkonte <hkonte@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,24 +12,24 @@
 
 #include "libft.h"
 
-static long long	ft_is_sign(char c)
+static unsigned long long	ft_is_sign(char c)
 {
 	return (c == '+' || c == '-');
 }
 
-static long long	ft_is_space(char c)
+static unsigned long long	ft_is_space(char c)
 {
 	if (c == ' ' || c == '\n' || c == '\t')
 		return (1);
 	return (c == '\r' || c == '\v' || c == '\f');
 }
 
-long long	ft_atoll(const char *nptr)
+unsigned long long	ft_atoull(const char *nptr)
 {
-	long long	result;
-	long long			i;
-	long long			p;
-	long long			val;
+	unsigned long long	result;
+	unsigned long long			i;
+	unsigned long long			p;
+	unsigned long long			val;
 
 	result = 0;
 	i = 0;
@@ -44,11 +44,11 @@ long long	ft_atoll(const char *nptr)
 	}
 	while (nptr[i] != '\0')
 	{
-		val = (long long)(nptr[i] - '0');
-		if (val < 0 || val > 9)
+		val = (unsigned long long)(nptr[i] - '0');
+		if (val > 9)
 			return (p * result);
 		result = result * 10 + val;
 		i++;
 	}
-	return ((long long)p * result);
+	return ((unsigned long long)p * result);
 }
