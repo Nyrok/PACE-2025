@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  ds-finder:
+    container_name: ds-finder
+    build: .
+    volumes:
+      - "./src:/app"
+      - "./testset:/app/testset"
+    stdin_open: true
+    tty: true
+    restart: always
