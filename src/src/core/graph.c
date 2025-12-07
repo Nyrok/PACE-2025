@@ -3,10 +3,18 @@
 void	add_neighbor(t_graph *graph, t_ull e1, t_ull e2)
 {
 	t_node	*node;
+	t_ull	i;
 
-	node = &graph->nodes[e2];
+	node = &graph->nodes[e1];
+	i = 0;
+	while (i < node->degree)
+	{
+		if (node->neighbors[i] == e2)
+			return ;
+		i++;
+	}
 	node->neighbors = realloc(node->neighbors, (node->degree + 1) * sizeof(t_ull));
-	node->neighbors[node->degree] = e1;
+	node->neighbors[node->degree] = e2;
 	node->degree++;
 }
 
