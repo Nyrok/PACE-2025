@@ -48,7 +48,10 @@ leaks: all
 	valgrind --leak-check=full --show-leak-kinds=all ./$(NAME) $(REDIN) $(REDOUT)
 	./$(NAME) $(REDIN) $(REDOUT)
 
-solution: re fclean
+binary_solution: re fclean
+	tar -czf $(NAME).tgz $(NAME)
+
+source_solution: re fclean
 	tar -czf $(NAME).tgz Makefile includes libs $(SRCS)
 
 unify: re
