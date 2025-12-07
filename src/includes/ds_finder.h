@@ -17,8 +17,7 @@ typedef struct s_graph
     int  		**neighbors;
 }   t_graph;
 
-void	parse_input(void);
-t_graph	*create_graph(void);
-void	fill_graph(t_graph	**graph, int v, int e);
+void	parse_input(t_graph *graph);
+void	fill_graph(t_graph	*graph, int v, int e);
 
 #endif

@@ -11,13 +11,14 @@ void term(int signum)
 
 int main(int argc, char *argv[])
 {
+	t_graph graph = {0, 0, NULL};
 	(void)argc;
 	(void)argv;
 	struct sigaction action;
 	memset(&action, 0, sizeof(struct sigaction));
 	action.sa_handler = term;
 	sigaction(SIGTERM, &action, NULL);
-	parse_input();
+	parse_input(&graph);
 	while (!tle);
 	fprintf(stderr, "interrompu\n");
 	return 0;
