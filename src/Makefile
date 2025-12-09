@@ -46,7 +46,6 @@ test: all
 
 leaks: all
 	valgrind --leak-check=full --show-leak-kinds=all ./$(NAME) $(REDIN) $(REDOUT)
-	./$(NAME) $(REDIN) $(REDOUT)
 
 binary_solution: re fclean
 	tar -czf $(NAME).tgz $(NAME)
