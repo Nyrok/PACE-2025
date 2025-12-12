@@ -24,7 +24,7 @@ jobs:
       - name: Running 'make'
         run: |
           docker run \
-            -v ${{ github.workspace }}:/app \
+            -v ${{ github.workspace }}/src:/app \
             -w /app \
             ds-finder:latest \
             make
