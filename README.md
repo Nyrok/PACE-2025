@@ -5,15 +5,17 @@
 
 ## AUTHOR
 
-Indiquer votre nom / prénom
+Hamza KONTE
 
 ## Optilio
 
-Indiquer ici votre login sur [optil.io](https://www.optil.io/optilion/)
+`dauphine_l3miage_hamza` <br>
+<sub>*actuellement `hkonte`, en cours de changement par l'équipe optilio*</sub>
 
 ## USAGE
+```
+make
+./ds_finder < in.gr > out.sol
+```
 
-indiquer ici comment utiliser votre projet, par exemple
-
-    python3 projet.py < file1.gr > solution
 
