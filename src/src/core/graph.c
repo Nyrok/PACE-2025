@@ -18,6 +18,23 @@ void	add_neighbor(t_graph *graph, t_ull e1, t_ull e2)
 	node->degree++;
 }
 
+void remove_neighbor(t_node *node, t_ull target)
+{
+    t_ull   i;
+
+    i = 0;
+    while (i < node->degree)
+    {
+        if (node->neighbors[i] == target)
+        {
+            node->neighbors[i] = node->neighbors[node->degree - 1];
+            node->degree--;
+            return ;
+        }
+        i++;
+    }
+}
+
 void	fill_graph(t_graph *graph, t_ull v, t_ull e)
 {
 	t_ll	i;
@@ -25,7 +42,9 @@ void	fill_graph(t_graph *graph, t_ull v, t_ull e)
 	graph->v_count = v;
 	graph->e_count = e;
 	graph->nodes = ft_calloc(v, sizeof(t_node));
-	if (!graph->nodes)
+    graph->actives = ft_calloc(v, sizeof(bool));
+    graph->solutions = ft_calloc(v, sizeof(bool));
+	if (!graph->nodes || !graph->actives || !graph->solutions)
 		exit(EXIT_FAILURE);
 	i = 0;
 	while (i < (t_ll)v)

@@ -9,7 +9,8 @@ LIBFT_SRCS = $(wildcard $(LIBFT_DIR)/*.c)
 SRCS = src/main.c \
 		src/utils/parser.c \
 		src/core/graph.c \
-		src/core/solver.c \
+		src/solvers/solver.c \
+		src/solvers/kernelization.c \
 		libs/gnl/get_next_line.c \
         $(LIBFT_SRCS)
 
