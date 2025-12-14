@@ -11,7 +11,14 @@ void term(int signum)
 
 int main(int argc, char *argv[])
 {
-	t_graph graph = {0, 0, NULL};
+	t_graph graph = {
+		0, // v_count
+		0, // e_count
+		NULL, // nodes
+		NULL, // solutions
+		NULL, // actives
+		0 // len_solutions
+	};
 	(void)argc;
 	(void)argv;
 	struct sigaction action;

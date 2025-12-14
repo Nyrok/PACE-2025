@@ -3,6 +3,7 @@
 void	solve_graph(t_graph *graph) {
 	t_ull	i;
 
+	apply_degree_one_rule(graph);
 	printf("%lld\n", graph->v_count);
 	i = 0;
 	while (i < graph->v_count) {

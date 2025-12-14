@@ -29,12 +29,17 @@ typedef struct s_graph
 	t_ull	v_count;
 	t_ull	e_count;
 	t_node	*nodes;
+	bool	*solutions;
+	bool	*actives;
+	t_ull	len_solutions;
 }	t_graph;
 
 void	parse_input(t_graph *graph);
 void	fill_graph(t_graph	*graph, t_ull v, t_ull e);
 void	add_neighbor(t_graph *graph, t_ull e1, t_ull e2);
+void	remove_neighbor(t_node *node, t_ull target);
 void	free_graph(t_graph	*graph);
 void	solve_graph(t_graph *g);
+void	apply_degree_one_rule(t_graph *g);
 
 #endif
