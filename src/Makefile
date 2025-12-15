@@ -11,6 +11,7 @@ SRCS = src/main.c \
 		src/core/graph.c \
 		src/solvers/solver.c \
 		src/solvers/kernelization.c \
+		src/solvers/greedy.c \
 		libs/gnl/get_next_line.c \
         $(LIBFT_SRCS)
 
