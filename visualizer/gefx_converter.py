@@ -28,4 +28,7 @@ def convert_to_gephi(graph_path, solution_path):
 	print("gefx file 'graph.gexf' generated. Open it with Gephi to visualize.")
 
 if __name__ == "__main__":
-	convert_to_gephi(sys.argv[1], sys.argv[2])
+	if len(sys.argv) < 2:
+		print(f"Usage: python3 {sys.argv[0]} <graph_file> [solution_file]")
+	else:
+		convert_to_gephi(sys.argv[1], sys.argv[2])

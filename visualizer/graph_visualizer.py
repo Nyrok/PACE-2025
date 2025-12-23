@@ -54,6 +54,6 @@ def visualize_dimacs_with_solution(graph_path, solution_path):
 
 if __name__ == "__main__":
 	if len(sys.argv) < 2:
-		print(f"Usage: python #{sys.argv} <graph_file> [solution_file]")
+		print(f"Usage: python3 {sys.argv[0]} <graph_file> [solution_file]")
 	else:
 		visualize_dimacs_with_solution(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None)
