@@ -54,6 +54,7 @@ static void update_neighbors_score(t_graph *g, t_ull u, t_ull *curr_degrees)
         v = node_u->neighbors[i];
         if (g->actives[v] && curr_degrees[v] > 0)
             curr_degrees[v]--;
+		g->actives[v] = false;
         i++;
     }
 }
@@ -76,7 +77,7 @@ void solve_greedy(t_graph *graph)
         graph->solutions[best_node] = true;
         graph->len_solutions++;
         update_neighbors_score(graph, best_node, curr_degrees);
-        curr_degrees[best_node] = 0; 
+        curr_degrees[best_node] = 0;
     }
     free(curr_degrees);
 }
