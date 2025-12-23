@@ -52,12 +52,19 @@ static void update_neighbors_score(t_graph *g, t_ull u, t_ull *curr_degrees, boo
     while (i < node_u->degree)
     {
         v = node_u->neighbors[i];
-        if (original && g->actives[v] && curr_degrees[v] > 0)
-            update_neighbors_score(g, v, curr_degrees, false);
-		else if (!original)
-			curr_degrees[v]--;
+		if (!curr_degrees[v] || !g->actives[v])
+		{
+			i++;
+			continue ;
+		}
 		if (original)
+		{
 			g->actives[v] = false;
+			curr_degrees[v] = 0;
+            update_neighbors_score(g, v, curr_degrees, false);
+		}
+		else
+			curr_degrees[v]--;
         i++;
     }
 }
