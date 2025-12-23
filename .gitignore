@@ -10,3 +10,4 @@ ds_finder
 *.sol
 *.csv
 *.tgz
+*.gexf
