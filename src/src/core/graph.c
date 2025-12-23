@@ -50,7 +50,7 @@ void	fill_graph(t_graph *graph, t_ull v, t_ull e)
 	while (i < (t_ll)v)
 	{
 		graph->nodes[i].neighbors = ft_calloc(0, sizeof(t_ull));
-		graph->nodes[i].capacity = 10;
+		graph->actives[i] = true;
 		if (!graph->nodes[i].neighbors)
 		{
 			while (--i >= 0)
