@@ -49,7 +49,7 @@ static void update_neighbors_score(t_graph *g, t_ull u, t_ull *curr_degrees, boo
 
     node_u = &g->nodes[u];
     i = 0;
-    while (i < node_u->degree)
+    while (i < curr_degrees[u])
     {
         v = node_u->neighbors[i];
 		if (!curr_degrees[v] || !g->actives[v])
@@ -63,8 +63,10 @@ static void update_neighbors_score(t_graph *g, t_ull u, t_ull *curr_degrees, boo
 			curr_degrees[v] = 0;
             update_neighbors_score(g, v, curr_degrees, false);
 		}
-		else
+		else {
 			curr_degrees[v]--;
+			remove_neighbor(&g->nodes[v], u);
+		}
         i++;
     }
 }
