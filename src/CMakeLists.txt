@@ -65,7 +65,7 @@ add_custom_target(binary_solution
 )
 
 add_custom_target(source_solution
-    COMMAND tar -czf ds_finder.tgz Makefile includes libs src
+    COMMAND tar -czf ds_finder.tgz CMakeLists.txt includes libs src
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
@@ -80,4 +80,11 @@ add_custom_target(fclean
     COMMAND rm -f ds_finder.c
 	COMMAND find ${CMAKE_SOURCE_DIR} -iwholename '*cmake*' -not -name CMakeLists.txt -delete
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+
+add_custom_target(re
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ds_finder
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMENT "Rebuilding ds_finder..."
 )

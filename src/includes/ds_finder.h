@@ -3,6 +3,7 @@
 # define _POSIX_C_SOURCE 200809L
 # define MAX_SOLVE_TIME 300LL
 # define TOLERANCE_TIME 10LL
+# define TABU_TENURE 2
 
 # include <signal.h>
 # include <stdio.h>
