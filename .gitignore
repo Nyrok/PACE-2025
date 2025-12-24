@@ -11,3 +11,6 @@ ds_finder
 *.csv
 *.tgz
 *.gexf
+CMake*
+!CMakeLists.txt
+Makefile
