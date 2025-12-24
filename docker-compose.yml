@@ -1,9 +1,11 @@
 version: '3.8'
 
 services:
-  ds-finder:
-    container_name: ds-finder
-    build: .
+  ds-dev:
+    container_name: ds-dev
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
     volumes:
       - "./src:/app"
       - "./testset:/app/tmp/testset"
@@ -11,3 +13,15 @@ services:
     stdin_open: true
     tty: true
     restart: always
+  ds-builder:
+    container_name: ds-builder
+    build:
+      context: .
+      dockerfile: builder.Dockerfile
+    platform: linux/amd64
+    volumes:
+      - "./src:/app"
+    tty: true
+    stdin_open: true
+    restart: no
+    command: make binary_solution
