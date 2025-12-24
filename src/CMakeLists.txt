@@ -72,12 +72,12 @@ add_custom_target(binary_solution
 )
 
 add_custom_target(source_solution
-    COMMAND tar -czf ds_finder.tgz CMakeLists.txt includes libs src
+    COMMAND tar -czf ds_finder.tgz CMakeLists.txt includes libs core
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
 add_custom_target(unify
-    COMMAND gcc -E -P src/main.c -I includes -I libs/libft -I libs/gnl -o ds_finder.c
+    COMMAND gcc -E -P core/main.c -I includes -I libs/libft -I libs/gnl -o ds_finder.c
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
