@@ -14,5 +14,8 @@
 
 void	ft_putchar_fd(const char c, int fd)
 {
-	write(fd, &c, 1);
+	ssize_t	ret;
+
+	ret = write(fd, &c, 1);
+	(void)ret;
 }

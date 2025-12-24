@@ -40,7 +40,7 @@ void	add_neighbor(t_graph *graph, t_ull e1, t_ull e2);
 void	remove_neighbor(t_node *node, t_ull target);
 void	free_graph(t_graph	*graph);
 void	solve_graph(t_graph *graph, t_time *start_time);
+void 	solve_optimizer(t_graph *g, t_time *start_time);
 void	solve_greedy(t_graph *graph, t_time *start_time);
-void	apply_degree_one_rule(t_graph *g);
 
 #endif
