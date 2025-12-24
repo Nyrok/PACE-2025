@@ -22,13 +22,13 @@ include_directories(includes libs/libft libs/gnl)
 file(GLOB LIBFT_SRCS "libs/libft/*.c")
 
 set(SRCS
-    src/main.c
-    src/utils/parser.c
-    src/utils/time.c
-    src/core/graph.c
-    src/solvers/solver.c
-    src/solvers/greedy.c
-    src/solvers/optimizer.c
+    core/main.c
+    core/utils/parser.c
+    core/utils/time.c
+    core/struct/graph.c
+    core/solvers/solver.c
+    core/solvers/greedy.c
+    core/solvers/optimizer.c
     libs/gnl/get_next_line.c
     ${LIBFT_SRCS}
 )
