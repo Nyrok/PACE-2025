@@ -3,10 +3,17 @@ project(ds_finder C)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_COMPILER /usr/bin/gcc-13)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
+
+if(NOT TIME_LIMIT)
+    set(TIME_LIMIT 300)
+endif()
+
+add_definitions(-DMAX_SOLVE_TIME=${TIME_LIMIT}LL)
 
 add_compile_options(-Wall -Wextra -Werror)
 

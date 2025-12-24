@@ -1,0 +1,90 @@
+name: Dockerized CI
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: build.Dockerfile
+          load: true
+          tags: ds-build:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Building the Static Binary
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}/src:/app \
+            -w /app \
+            ds-build:latest \
+            /bin/sh -c "cmake -DCMAKE_BUILD_TYPE=Release . && make binary_solution"
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: dev.Dockerfile
+          load: true
+          tags: ds-dev:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Compiling with CMake
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}/src:/app \
+            -w /app \
+            ds-dev:latest \
+            /bin/sh -c "cmake -DCMAKE_BUILD_TYPE=Release . && make -j$(nproc)"
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
+      - name: Build Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: dev.Dockerfile
+          load: true
+          tags: ds-test:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          
+      - name: Compile and Run Test Script
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}/src:/app \
+            -v ${{ github.workspace }}/testset:/testset \
+            -w /app \
+            ds-test:latest \
+            /bin/sh -c "
+              cmake -DTIME_LIMIT=60 -DCMAKE_BUILD_TYPE=Release . && \
+              make -j$(nproc) && \
+              cd /root && \
+              /root/testall.sh /app/ds_finder /testset | tee /app/test_output.log && \
+              if grep -qE 'TO|KO|ERR' /app/test_output.log; then
+                echo '❌ FAILURE DETECTED: TO, KO, or ERR found in logs.'
+                exit 1
+              else
+                exit 0
+              fi
+            "

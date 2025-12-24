@@ -13,11 +13,11 @@ services:
     stdin_open: true
     tty: true
     restart: always
-  ds-builder:
-    container_name: ds-builder
+  ds-build:
+    container_name: ds-build
     build:
       context: .
-      dockerfile: builder.Dockerfile
+      dockerfile: build.Dockerfile
     platform: linux/amd64
     volumes:
       - "./src:/app"

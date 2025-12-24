@@ -6,6 +6,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     gcc-13 \
     make \
+    cmake \
     libc6-dev \
     bsdmainutils && \
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100 && \
