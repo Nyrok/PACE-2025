@@ -40,7 +40,7 @@ def visualize_dimacs_with_solution(graph_path, solution_path):
 			color_map.append('lightblue')
 
 	plt.figure(figsize=(10, 8))
-	pos = nx.spring_layout(G, k=0.1, iterations=1)
+	pos = nx.spring_layout(G, k=0.1, iterations=500)
 	
 	nx.draw(G, pos, 
 			with_labels=True, 

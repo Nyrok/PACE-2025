@@ -36,40 +36,48 @@ else()
 endif()
 
 set(NO "001")
-set(INPUT "${CMAKE_SOURCE_DIR}/tmp/instances/heuristic_${NO}.gr")
-set(OUTPUT "${CMAKE_SOURCE_DIR}/out/heuristic_${NO}.sol")
+
+set(RAW_INPUT "tmp/instances/heuristic_${NO}.gr")
+set(RAW_OUTPUT "out/heuristic_${NO}.sol")
+
+string(STRIP "${RAW_INPUT}" INPUT)
+string(STRIP "${RAW_OUTPUT}" OUTPUT)
 
 add_custom_target(test
     COMMAND sh -c "./ds_finder < ${INPUT} > ${OUTPUT}"
     DEPENDS ds_finder
+	COMMENT "Running test with input: ${INPUT} and output: ${OUTPUT}"
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    VERBATIM
 )
 
 add_custom_target(leaks
     COMMAND sh -c "valgrind --leak-check=full --show-leak-kinds=all ./ds_finder < ${INPUT} > ${OUTPUT}"
     DEPENDS ds_finder
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    VERBATIM
 )
 
 add_custom_target(binary_solution
-    COMMAND tar -czf ${CMAKE_SOURCE_DIR}/ds_finder.tgz ds_finder
+    COMMAND tar -czf ds_finder.tgz ds_finder
     DEPENDS ds_finder
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 
 add_custom_target(source_solution
-    COMMAND tar -czf ${CMAKE_SOURCE_DIR}/ds_finder.tgz Makefile includes libs src
+    COMMAND tar -czf ds_finder.tgz Makefile includes libs src
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
 add_custom_target(unify
-    COMMAND gcc -E -P src/main.c -I includes -I libs/libft -I libs/gnl -o ${CMAKE_SOURCE_DIR}/ds_finder.c
+    COMMAND gcc -E -P src/main.c -I includes -I libs/libft -I libs/gnl -o ds_finder.c
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
 add_custom_target(fclean
     COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target clean
-    COMMAND rm -f ${CMAKE_SOURCE_DIR}/ds_finder.tgz
-    COMMAND rm -f ${CMAKE_SOURCE_DIR}/ds_finder.c
+    COMMAND rm -f ds_finder.tgz
+    COMMAND rm -f ds_finder.c
+	COMMAND find ${CMAKE_SOURCE_DIR} -iwholename '*cmake*' -not -name CMakeLists.txt -delete
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )

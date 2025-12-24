@@ -103,7 +103,7 @@ void solve_greedy(t_graph *graph, t_time *start_time)
 	curr_degrees = init_degrees(graph);
 	if (!curr_degrees)
 		return ;
-	while (gettime() - *start_time < MAX_SOLVE_TIME - 5)
+	while (gettime() - *start_time < MAX_SOLVE_TIME - TOLERANCE_TIME)
 	{
 		best_node = find_best_candidate(graph, curr_degrees);
 		if (best_node == (t_ull)-1)

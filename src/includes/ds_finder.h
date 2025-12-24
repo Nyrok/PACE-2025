@@ -2,6 +2,7 @@
 # define DS_FINDER_H
 # define _POSIX_C_SOURCE 200809L
 # define MAX_SOLVE_TIME 300LL
+# define TOLERANCE_TIME 10LL
 
 # include <signal.h>
 # include <stdio.h>
