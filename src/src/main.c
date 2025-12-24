@@ -22,9 +22,10 @@ int main(int argc, char *argv[])
 		0, // len_solutions
 		false // finished
 	};
+	struct sigaction action;
+
 	(void)argc;
 	(void)argv;
-	struct sigaction action;
 	ft_memset(&action, 0, sizeof(struct sigaction));
 	action.sa_handler = term;
 	sigaction(SIGTERM, &action, NULL);

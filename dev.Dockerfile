@@ -9,7 +9,7 @@ RUN apt-get update && \
     libc6-dev \
     valgrind \
     vim \
-    tree \
+	man-db \
     openjdk-21-jre-headless && \
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100 && \
     apt-get clean && \
@@ -21,7 +21,5 @@ COPY ds_verifier-1.0.jar /root/ds_verifier-1.0.jar
 COPY testall.sh /root/testall.sh
 
 RUN chmod +x /root/testall.sh
-
-RUN ls -la .
 
 CMD ["tail", "-f", "/dev/null"]

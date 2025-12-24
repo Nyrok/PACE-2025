@@ -4,8 +4,8 @@ void	solve_graph(t_graph *graph, t_time *start_time) {
 	t_ull	i;
 	t_ull	solutions_count;
 
-	apply_degree_one_rule(graph);
 	solve_greedy(graph, start_time);
+	solve_optimizer(graph, start_time);
 	solutions_count = graph->len_solutions;
 	if (!graph->finished)
 	{
