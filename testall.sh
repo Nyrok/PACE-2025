@@ -26,10 +26,10 @@ OUTPUT="results.csv"
 
 DATE=$(date)
 
-echo "$PROGNAME ; $DATE " > $OUTPUT
+echo "$PROGNAME ; $DATE "
 
 for inst in `ls $INSTANCES/*.gr | sort -V`; do
-    echo -n "$inst " >> $OUTPUT
+    echo -n "$inst "
     instName=$(basename $inst)
 
     solFile=$(mktemp -t sol"$instName"XXXXX)
@@ -39,7 +39,7 @@ for inst in `ls $INSTANCES/*.gr | sort -V`; do
 
     STATUS=$?
     if [ $STATUS -eq 137 ] ; then #was killed, so timeouted
-        echo "; TO " >> $OUTPUT
+        echo "; TO "
     elif [ $STATUS -eq 0 -o $STATUS -eq 124 ] ; then
         OUTVER=$(java -jar ds_verifier-1.0.jar $inst $solFile)
         STATUSVERIF=$?
@@ -51,15 +51,15 @@ for inst in `ls $INSTANCES/*.gr | sort -V`; do
         WIDTH=$(echo $OUTVER | grep -o -E '[0-9]+'); 
 
         if [ $STATUSVERIF -eq 0 ] ; then
-            echo "; $WIDTH " >> $OUTPUT
+            echo "; $WIDTH "
 	    elif [ ! -s $solFile ]; then
-	        echo "; TO " >> $OUTPUT
+	        echo "; TO "
         else
-            echo "; KO " >> $OUTPUT
-	        echo "KO with output verifier : $OUTVER and status verifier: $STATUSVERIF and status timeout $STATUS" >> $errFile
+            echo "; KO "
+	        echo "KO with output verifier : $OUTVER and status verifier: $STATUSVERIF and status timeout $STATUS"
         fi
     else
-	    echo "; ERR " >> $OUTPUT
-	    echo "ERR $STATUS" >> $errFile
+	    echo "; ERR "
+	    echo "ERR $STATUS"
     fi
 done 

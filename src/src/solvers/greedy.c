@@ -41,7 +41,7 @@ static t_ull *init_degrees(t_graph *g)
     return (arr);
 }
 
-static void update_neighbors_score(t_graph *g, t_ull u, t_ull *curr_degrees)
+static void update_neighbors_score(t_graph *g, t_ull u, t_ull *curr_degrees, bool original)
 {
     t_ull   i;
     t_ull   v;
@@ -49,16 +49,29 @@ static void update_neighbors_score(t_graph *g, t_ull u, t_ull *curr_degrees)
 
     node_u = &g->nodes[u];
     i = 0;
-    while (i < node_u->degree)
+    while (i < curr_degrees[u])
     {
         v = node_u->neighbors[i];
-        if (g->actives[v] && curr_degrees[v] > 0)
-            curr_degrees[v]--;
+		if (!curr_degrees[v] || !g->actives[v])
+		{
+			i++;
+			continue ;
+		}
+		if (original)
+		{
+			g->actives[v] = false;
+			curr_degrees[v] = 0;
+            update_neighbors_score(g, v, curr_degrees, false);
+		}
+		else {
+			curr_degrees[v]--;
+			remove_neighbor(&g->nodes[v], u);
+		}
         i++;
     }
 }
 
-void solve_greedy(t_graph *graph)
+void solve_greedy(t_graph *graph, t_time *start_time)
 {
     t_ull   *curr_degrees;
     t_ull   best_node;
@@ -67,16 +80,17 @@ void solve_greedy(t_graph *graph)
         graph->solutions = ft_calloc(graph->v_count, sizeof(bool));
     curr_degrees = init_degrees(graph);
     if (!curr_degrees)
-        return ;
-    while (1)
+		return ;
+    while (gettime() - *start_time < MAX_SOLVE_TIME - 5)
     {
-        best_node = find_best_candidate(graph, curr_degrees);
-        if (best_node == (t_ull)-1)
-            break ;
-        graph->solutions[best_node] = true;
-        graph->len_solutions++;
-        update_neighbors_score(graph, best_node, curr_degrees);
-        curr_degrees[best_node] = 0; 
+		best_node = find_best_candidate(graph, curr_degrees);
+		if (best_node == (t_ull)-1)
+		    break ;
+		graph->solutions[best_node] = true;
+		graph->len_solutions++;
+		update_neighbors_score(graph, best_node, curr_degrees, true);
+		graph->actives[best_node] = false;
+		curr_degrees[best_node] = 0;
     }
     free(curr_degrees);
 }

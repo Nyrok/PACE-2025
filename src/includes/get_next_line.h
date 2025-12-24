@@ -16,8 +16,6 @@
 #  define BUFFER_SIZE 1024
 # endif
 # define MAX_FD 2048
-# include <stdlib.h>
-# include <unistd.h>
 
 char	*get_next_line(int fd);
 
