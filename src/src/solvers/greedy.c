@@ -13,7 +13,7 @@ static double	get_score(t_graph *g, t_ull node_idx, t_ull *curr_degrees)
 	{
 		t_ull v = u->neighbors[i];
 		if (g->actives[v] && curr_degrees[v] > 0)
-			score += 1.0 / (double)curr_degrees[v];
+			score += 1.0 / ((double)curr_degrees[v] || 1);
 		i++;
 	}
 	return score;
@@ -31,7 +31,9 @@ static t_ull find_best_candidate(t_graph *g, t_ull *curr_degrees)
 	i = 0;
 	while (i < g->v_count)
 	{
-		if (g->actives[i] && curr_degrees[i] > 0)
+		if (g->actives[i] && (curr_degrees[i] == 0 || curr_degrees[i] == 1))
+			return (i);
+		if (g->actives[i])
 		{
 			current_score = get_score(g, i, curr_degrees);
 			if (current_score > best_score)
@@ -67,32 +69,30 @@ static t_ull	*init_degrees(t_graph *g)
 
 static void update_neighbors_score(t_graph *g, t_ull u, t_ull *curr_degrees, bool original)
 {
-	t_ull   i;
-	t_ull   v;
-	t_node  *node_u;
+    t_ull   i;
+    t_ull   v;
+    t_node  *node_u;
 
-	node_u = &g->nodes[u];
-	i = 0;
-	while (i < curr_degrees[u])
-	{
-		v = node_u->neighbors[i];
-		if (!curr_degrees[v] || !g->actives[v])
-		{
-			i++;
-			continue ;
-		}
-		if (original)
-		{
-			g->actives[v] = false;
-			curr_degrees[v] = 0;
-			update_neighbors_score(g, v, curr_degrees, false);
-		}
-		else {
-			curr_degrees[v]--;
-			remove_neighbor(&g->nodes[v], u);
-		}
-		i++;
-	}
+    node_u = &g->nodes[u];
+    i = 0;
+    while (i < node_u->degree)
+    {
+        v = node_u->neighbors[i];
+        if (!g->actives[v]) 
+        {
+            i++;
+            continue ;
+        }
+        if (original)
+        {
+            g->actives[v] = false;
+            curr_degrees[v] = 0;
+            update_neighbors_score(g, v, curr_degrees, false);
+        }
+        else if (curr_degrees[v] > 0)
+                curr_degrees[v]--;
+        i++;
+    }
 }
 
 void solve_greedy(t_graph *graph, t_time *start_time)
@@ -100,8 +100,6 @@ void solve_greedy(t_graph *graph, t_time *start_time)
 	t_ull   *curr_degrees;
 	t_ull   best_node;
 
-	if (!graph->solutions)
-		graph->solutions = ft_calloc(graph->v_count, sizeof(bool));
 	curr_degrees = init_degrees(graph);
 	if (!curr_degrees)
 		return ;
