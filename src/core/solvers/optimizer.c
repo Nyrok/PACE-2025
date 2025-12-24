@@ -61,7 +61,7 @@ static bool	try_prune(t_graph *g, int *covers, t_ull u)
 	return (true);
 }
 
-static bool	try_swap(t_graph *g, int *covers, t_ull u, int *tabu_list, int iter)
+static bool	try_swap(t_graph *g, int *covers, t_ull u)
 {
 	t_node	*first_priv;
 	t_ull	*private_neighbors;
@@ -69,8 +69,6 @@ static bool	try_swap(t_graph *g, int *covers, t_ull u, int *tabu_list, int iter)
 	t_ull	j, v, k, neighbor;
 	bool	can_cover_all;
 
-	if (tabu_list[u] > iter)
-		return (false);
 	private_neighbors = malloc(sizeof(t_ull) * (g->nodes[u].degree + 1));
 	if (!private_neighbors) return (false);
 
@@ -96,7 +94,7 @@ static bool	try_swap(t_graph *g, int *covers, t_ull u, int *tabu_list, int iter)
 	while (k < first_priv->degree)
 	{
 		v = first_priv->neighbors[k];
-		if (!g->solutions[v] && tabu_list[v] <= iter)
+		if (!g->solutions[v])
 		{
 			can_cover_all = true;
 			for (t_ull m = 1; m < p_count; m++)
@@ -122,8 +120,6 @@ static bool	try_swap(t_graph *g, int *covers, t_ull u, int *tabu_list, int iter)
 				update_covers(g, covers, u, -1);
 				g->solutions[v] = true;
 				update_covers(g, covers, v, 1);
-				tabu_list[u] = iter + TABU_TENURE;
-				tabu_list[v] = iter + TABU_TENURE;
 				free(private_neighbors);
 				return (true);
 			}
@@ -137,24 +133,14 @@ static bool	try_swap(t_graph *g, int *covers, t_ull u, int *tabu_list, int iter)
 void solve_optimizer(t_graph *g, t_time *start_time)
 {
 	int	 *covers;
-	int	 *tabu_list;
 	bool	change;
 	t_ull	i;
-	int	 iter;
 
 	covers = init_cover_counts(g);
 	if (!covers)
 		return ;
-	tabu_list = ft_calloc(g->v_count, sizeof(int));
-	if (!tabu_list)
-	{
-		free(covers);
-		return ;
-	}
-	iter = 0;
 	while (gettime() - *start_time < MAX_SOLVE_TIME - TOLERANCE_TIME)
 	{
-		iter++;
 		change = false;
 		i = 0;
 		while (i < g->v_count)
@@ -163,7 +149,7 @@ void solve_optimizer(t_graph *g, t_time *start_time)
 			{
 				if (try_prune(g, covers, i))
 					change = true;
-				else if (try_swap(g, covers, i, tabu_list, iter))
+				else if (try_swap(g, covers, i))
 					change = true;
 			}
 			if ((i % 1000 == 0) && (gettime() - *start_time >= MAX_SOLVE_TIME - TOLERANCE_TIME))
@@ -177,5 +163,4 @@ void solve_optimizer(t_graph *g, t_time *start_time)
 		}
 	}
 	free(covers);
-	free(tabu_list);
 }
