@@ -14,6 +14,7 @@ Hamza KONTE
 
 ## USAGE
 ```
+cmake .
 make
 ./ds_finder < in.gr > out.sol
 ```
