@@ -156,7 +156,7 @@ jobs:
               cmake -DTIME_LIMIT=300 -DCMAKE_BUILD_TYPE=Release . && \
               make -j$(nproc) && \
               (timeout -k 2s 15s ./ds_finder < /testset/bremen_subgraph_300.gr > /app/timeouted.sol || [ \$? -eq 124 ]) && \
-              java -jar /app/ds_verifier-1.0.jar /testset/bremen_subgraph_300.gr /app/timeouted.sol | tee /app/test_output.log && \
+              java -jar /root/ds_verifier-1.0.jar /testset/bremen_subgraph_300.gr /app/timeouted.sol | tee /app/test_output.log && \
               if grep -qE 'At least one vertex is not dominated by the given solution!' /app/test_output.log; then
                 exit 1
               else
