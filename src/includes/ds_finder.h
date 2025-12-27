@@ -2,7 +2,7 @@
 # define DS_FINDER_H
 # define _POSIX_C_SOURCE 200809L
 # ifndef MAX_SOLVE_TIME
-#  define MAX_SOLVE_TIME 60LL
+#  define MAX_SOLVE_TIME 300LL
 # endif
 # define TOLERANCE_TIME 10LL
 # define TABU_TENURE 2

@@ -74,8 +74,10 @@ add_custom_target(leaks
 )
 
 add_custom_target(binary_solution
-    COMMAND tar -czf ds_finder.tgz ds_finder
-    DEPENDS ds_finder
+	COMMAND rm -f ds_finder
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target unify
+	COMMAND gcc -static ds_finder.c -o ds_finder
+	COMMAND rm -f ds_finder.c
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 
