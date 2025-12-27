@@ -11,12 +11,12 @@ static void	parse_line(t_graph *graph, char *line)
 		return ;
 	strs = ft_split(line, ' ');
 	if (graph->v_count == 0 && line[0] == 'p') {
-		fill_graph(graph, ft_atoull(strs[2]), ft_atoull(strs[3]));
+		fill_graph(graph, ft_atoi(strs[2]), ft_atoi(strs[3]));
 		free_split(strs, 4);
 	}
 	else if (graph->v_count > 0 && ft_isdigit(line[0])) {
-		e1 = ft_atoull(strs[0]) - 1;
-		e2 = ft_atoull(strs[1]) - 1;
+		e1 = ft_atoi(strs[0]) - 1;
+		e2 = ft_atoi(strs[1]) - 1;
 		add_neighbor(graph, e1, e2);
 		add_neighbor(graph, e2, e1);
 		free_split(strs, 2);

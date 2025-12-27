@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoull.c                                        :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hkonte <hkonte@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,24 +12,24 @@
 
 #include "libft.h"
 
-static unsigned long long	ft_is_sign(char c)
+static int	ft_is_sign(char c)
 {
 	return (c == '+' || c == '-');
 }
 
-static unsigned long long	ft_is_space(char c)
+static int	ft_is_space(char c)
 {
 	if (c == ' ' || c == '\n' || c == '\t')
 		return (1);
 	return (c == '\r' || c == '\v' || c == '\f');
 }
 
-unsigned long long	ft_atoull(const char *nptr)
+int	ft_atoi(const char *nptr)
 {
-	unsigned long long	result;
-	unsigned long long			i;
-	unsigned long long			p;
-	unsigned long long			val;
+	int	result;
+	int	i;
+	int	p;
+	int	val;
 
 	result = 0;
 	i = 0;
@@ -44,11 +44,11 @@ unsigned long long	ft_atoull(const char *nptr)
 	}
 	while (nptr[i] != '\0')
 	{
-		val = (unsigned long long)(nptr[i] - '0');
-		if (val > 9)
+		val = (int)(nptr[i] - '0');
+		if (val < 0 || val > 9)
 			return (p * result);
 		result = result * 10 + val;
 		i++;
 	}
-	return ((unsigned long long)p * result);
+	return (p * result);
 }
