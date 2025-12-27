@@ -145,7 +145,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           
-      - name: Compile and Check for clean exit
+      - name: Compile and Check for Timeout management
         run: |
           docker run --rm \
             -v ${{ github.workspace }}/src:/app \
