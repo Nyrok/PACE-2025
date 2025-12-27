@@ -57,6 +57,8 @@ static t_bool	try_prune(t_graph *g, int *covers, int u)
 			return (FALSE);
 		j++;
 	}
+	if (!tle)
+		return (FALSE);
 	g->solutions[u] = FALSE;
 	g->len_solutions--;
 	update_covers(g, covers, u, -1);
