@@ -26,7 +26,7 @@ jobs:
             -v ${{ github.workspace }}/src:/app \
             -w /app \
             ds-build:latest \
-            /bin/sh -c "cmake -DCMAKE_BUILD_TYPE=Release . && make binary_solution"
+            /bin/sh -c "cmake -DCMAKE_BUILD_TYPE=Static . && make binary_solution"
   compile:
     runs-on: ubuntu-latest
     steps:
@@ -43,7 +43,7 @@ jobs:
           tags: ds-dev:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      - name: Compiling with CMake
+      - name: Compile with CMake
         run: |
           docker run --rm \
             -v ${{ github.workspace }}/src:/app \

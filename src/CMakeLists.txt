@@ -36,6 +36,9 @@ set(SRCS
 add_executable(ds_finder ${SRCS})
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
+	target_compile_options(ds_finder PRIVATE -O3 -flto)
+	target_link_options(ds_finder PRIVATE -flto)
+elseif(CMAKE_BUILD_TYPE STREQUAL "Static")
     target_compile_options(ds_finder PRIVATE -O3 -flto)
     target_link_options(ds_finder PRIVATE -static -flto)
 else()
