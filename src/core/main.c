@@ -8,6 +8,7 @@ void term(int signum)
 {
 	(void)signum;
 	tle = 1;
+	ft_putendl_fd("Received SIGTERM, exiting...", STDERR_FILENO);
 }
 
 int main(int argc, char *argv[])
@@ -30,9 +31,7 @@ int main(int argc, char *argv[])
 	action.sa_handler = term;
 	sigaction(SIGTERM, &action, NULL);
 	parse_input(&graph);
-	while (!tle)
-		solve_graph(&graph, &start_time);
+	solve_graph(&graph, &start_time);
 	free_graph(&graph);
-	ft_putendl_fd("Received SIGTERM, exiting...", STDERR_FILENO);
 	return (EXIT_SUCCESS);
 }
