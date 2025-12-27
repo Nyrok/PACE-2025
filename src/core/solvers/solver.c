@@ -18,12 +18,13 @@ void	solve_graph(t_graph *graph, t_time *start_time) {
 		}
 	}
 	ft_putnbr_fd(solutions_count, STDOUT_FILENO);
+	ft_putchar_fd('\n', STDOUT_FILENO);
 	i = 0;
 	while (i < graph->v_count) {
-		if (graph->solutions[i])
+		if (graph->solutions[i] || (!graph->finished && graph->actives[i]))
+		{
 			ft_putnbr_fd(i + 1, STDOUT_FILENO);
-		else if (!graph->finished && graph->actives[i]) {
-			ft_putnbr_fd(i + 1, STDOUT_FILENO);
+			ft_putchar_fd('\n', STDOUT_FILENO);
 		}
 		i++;
 	}

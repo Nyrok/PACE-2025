@@ -85,8 +85,14 @@ add_custom_target(source_solution
 )
 
 add_custom_target(unify
-    COMMAND gcc -E -P core/main.c -I includes -I libs/libft -I libs/gnl -o ds_finder.c
+    COMMAND sh -c "echo '/* Unified Source */' > binder.c"
+    COMMAND sh -c "find core/struct core/utils core/solvers libs/libft libs/gnl -name '*.c' | while read -r file; do echo \"#include \\\"$file\\\"\"; done >> binder.c"
+    COMMAND sh -c "echo '#include \"core/main.c\"' >> binder.c"
+    COMMAND gcc -E -P binder.c -I includes -I libs/libft -I libs/gnl -o ds_finder.c
+    COMMAND rm binder.c
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Unifying all sources into ds_finder.c"
+    VERBATIM
 )
 
 add_custom_target(fclean

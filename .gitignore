@@ -4,7 +4,7 @@
 objs/
 *instances/
 ds_finder*
-*.o
+*.o*
 *.a
 *.gr
 *.sol
