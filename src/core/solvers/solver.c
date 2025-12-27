@@ -17,13 +17,14 @@ void	solve_graph(t_graph *graph, t_time *start_time) {
 			i++;
 		}
 	}
-	printf("%lld\n", solutions_count);
+	ft_putnbr_fd(solutions_count, STDOUT_FILENO);
+	ft_putchar_fd('\n', STDOUT_FILENO);
 	i = 0;
 	while (i < graph->v_count) {
-		if (graph->solutions[i])
-			printf("%lld\n", i + 1);
-		else if (!graph->finished && graph->actives[i]) {
-			printf("%lld\n", i + 1);
+		if (graph->solutions[i] || (!graph->finished && graph->actives[i]))
+		{
+			ft_putnbr_fd(i + 1, STDOUT_FILENO);
+			ft_putchar_fd('\n', STDOUT_FILENO);
 		}
 		i++;
 	}

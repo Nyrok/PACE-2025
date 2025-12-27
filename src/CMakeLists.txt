@@ -74,8 +74,10 @@ add_custom_target(leaks
 )
 
 add_custom_target(binary_solution
-    COMMAND tar -czf ds_finder.tgz ds_finder
-    DEPENDS ds_finder
+	COMMAND rm -f ds_finder
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target unify
+	COMMAND gcc -static -O3 -flto ds_finder.c -o ds_finder
+	COMMAND rm -f ds_finder.c
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 
@@ -85,8 +87,13 @@ add_custom_target(source_solution
 )
 
 add_custom_target(unify
-    COMMAND gcc -E -P core/main.c -I includes -I libs/libft -I libs/gnl -o ds_finder.c
+    COMMAND sh -c "echo '/* Unified Source - DS_FINDER */' > ds_finder.c"
+    COMMAND sh -c "find includes libs/libft libs/gnl -name '*.h' -exec sed '/# include \"/d' {} + >> ds_finder.c"
+    COMMAND sh -c "find libs/libft libs/gnl core/struct core/utils core/solvers -name '*.c' -not -name 'main.c' -exec sed '/#include \"/d' {} + >> ds_finder.c"
+    COMMAND sh -c "sed '/#include \"/d' core/main.c >> ds_finder.c"
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Unifying all sources into ds_finder.c"
+    VERBATIM
 )
 
 add_custom_target(fclean

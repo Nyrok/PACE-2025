@@ -10,7 +10,6 @@ RUN apt-get update && \
     libc6-dev \
     valgrind \
     vim \
-	man-db \
     openjdk-21-jre-headless && \
     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100 && \
     apt-get clean && \

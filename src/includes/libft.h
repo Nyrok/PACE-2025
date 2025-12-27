@@ -14,7 +14,6 @@
 # define LIBFT_H
 # include <stdlib.h>
 # include <unistd.h>
-# include <stddef.h>
 
 unsigned long long	ft_atoull(const char *nptr);
 void				ft_bzero(void *s, size_t n);
@@ -23,6 +22,7 @@ int					ft_isdigit(int c);
 void				*ft_memset(void	*s, int c, size_t n);
 void				ft_putchar_fd(const char c, int fd);
 void				ft_putendl_fd(const char *s, int fd);
+void				ft_putnbr_fd(unsigned long long nb, int fd);
 void				ft_putstr_fd(const char *s, int fd);
 char				**ft_split(const char *s, const char c);
 char				*ft_strchr(const char *str, const char c);

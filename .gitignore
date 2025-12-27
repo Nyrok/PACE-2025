@@ -3,8 +3,8 @@
 .DS_Store
 objs/
 *instances/
-ds_finder
-*.o
+ds_finder*
+*.o*
 *.a
 *.gr
 *.sol
