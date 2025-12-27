@@ -20,7 +20,7 @@ jobs:
           tags: ds-build:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      - name: Building the Static Binary
+      - name: Build the Static Binary
         run: |
           docker run --rm \
             -v ${{ github.workspace }}/src:/app \
@@ -86,5 +86,43 @@ jobs:
                 exit 1
               else
                 exit 0
+              fi
+            "
+  leaks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
+      - name: Build Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: dev.Dockerfile
+          load: true
+          tags: ds-test:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          
+      - name: Compile and Check for Memory Leaks
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}/src:/app \
+            -v ${{ github.workspace }}/testset:/testset \
+            -w /app \
+            ds-test:latest \
+            /bin/sh -c "
+              cmake -DCMAKE_BUILD_TYPE=Debug . && \
+              make ds_finder && \
+              valgrind --leak-check=full --show-leak-kinds=all ./ds_finder < /testset/bremen_subgraph_300.gr 2>&1 | tee /app/valgrind_log.txt && \
+              if grep -q 'All heap blocks were freed -- no leaks are possible' /app/valgrind_log.txt; then
+                echo '✅ MEMORY CHECK PASSED: No leaks detected.'
+                exit 0
+              else
+                echo '❌ MEMORY CHECK FAILED: Leaks detected or program crashed.'
+                exit 1
               fi
             "

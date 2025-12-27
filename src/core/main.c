@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 		NULL, // solutions
 		NULL, // actives
 		0, // len_solutions
-		false // finished
+		FALSE // finished
 	};
 	struct sigaction action;
 

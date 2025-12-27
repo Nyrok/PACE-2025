@@ -37,29 +37,14 @@ void remove_neighbor(t_node *node, t_ull target)
 
 void	fill_graph(t_graph *graph, t_ull v, t_ull e)
 {
-	t_ll	i;
-
 	graph->v_count = v;
 	graph->e_count = e;
 	graph->nodes = ft_calloc(v, sizeof(t_node));
-    graph->actives = ft_calloc(v, sizeof(bool));
-    graph->solutions = ft_calloc(v, sizeof(bool));
+    graph->solutions = ft_calloc(v, sizeof(t_bool));
+    graph->actives = malloc(v * sizeof(t_bool));
 	if (!graph->nodes || !graph->actives || !graph->solutions)
 		exit(EXIT_FAILURE);
-	i = 0;
-	while (i < (t_ll)v)
-	{
-		graph->nodes[i].neighbors = ft_calloc(0, sizeof(t_ull));
-		graph->actives[i] = true;
-		if (!graph->nodes[i].neighbors)
-		{
-			while (--i >= 0)
-				free(graph->nodes[i].neighbors);
-			free(graph->nodes);
-			exit(EXIT_FAILURE);
-		}
-		i++;
-	}
+	ft_memset(graph->actives, TRUE, v);
 }
 
 void	free_graph(t_graph	*graph)
@@ -73,4 +58,6 @@ void	free_graph(t_graph	*graph)
 		i++;
 	}
 	free(graph->nodes);
+	free(graph->solutions);
+	free(graph->actives);
 }

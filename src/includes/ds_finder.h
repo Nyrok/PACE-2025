@@ -6,19 +6,21 @@
 # endif
 # define TOLERANCE_TIME 10LL
 # define TABU_TENURE 2
+# define TRUE 1
+# define FALSE 0
 
 # include <signal.h>
 # include <stdio.h>
 # include <unistd.h>
-# include <stdbool.h>
 # include <sys/time.h>
 
 # include "get_next_line.h"
 # include "libft.h"
 
-typedef long long	t_ll;
-typedef long long	t_time;
+typedef long long			t_ll;
+typedef long long			t_time;
 typedef unsigned long long	t_ull;
+typedef unsigned char		t_bool;
 
 typedef struct s_node
 {
@@ -31,10 +33,10 @@ typedef struct s_graph
 	t_ull	v_count;
 	t_ull	e_count;
 	t_node	*nodes;
-	bool	*solutions;
-	bool	*actives;
+	t_bool	*solutions;
+	t_bool	*actives;
 	t_ull	len_solutions;
-	bool	finished;
+	t_bool	finished;
 }	t_graph;
 
 t_time	gettime(void);
