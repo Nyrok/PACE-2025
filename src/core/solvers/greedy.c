@@ -2,7 +2,7 @@
 
 static double	get_score(t_graph *g, int node_idx, int *curr_degrees)
 {
-	int	i;
+	int		i;
 	double	score;
 	t_node	*u;
 
@@ -19,11 +19,11 @@ static double	get_score(t_graph *g, int node_idx, int *curr_degrees)
 	return score;
 }
 
-static int find_best_candidate(t_graph *g, int *curr_degrees)
+static int	find_best_candidate(t_graph *g, int *curr_degrees)
 {
-	int   best_node;
-	double  best_score;
-	double  current_score;
+	int		best_node;
+	double	best_score;
+	double	current_score;
 	int	i;
 
 	best_node = -1;
@@ -49,8 +49,8 @@ static int find_best_candidate(t_graph *g, int *curr_degrees)
 
 static int	*init_degrees(t_graph *g)
 {
-	int   *arr;
-	int   i;
+	int	*arr;
+	int	i;
 
 	arr = malloc(sizeof(int) * g->v_count);
 	if (!arr)
@@ -67,38 +67,38 @@ static int	*init_degrees(t_graph *g)
 	return (arr);
 }
 
-static void update_neighbors_score(t_graph *g, int u, int *curr_degrees, t_bool original)
+static void	update_neighbors_score(t_graph *g, int u, int *curr_degrees, t_bool original)
 {
-    int   i;
-    int   v;
-    t_node  *node_u;
+	int		i;
+	int		v;
+	t_node	*node_u;
 
-    node_u = &g->nodes[u];
-    i = 0;
-    while (i < node_u->degree)
-    {
-        v = node_u->neighbors[i];
-        if (!g->actives[v]) 
-        {
-            i++;
-            continue ;
-        }
-        if (original)
-        {
-            g->actives[v] = FALSE;
-            curr_degrees[v] = 0;
-            update_neighbors_score(g, v, curr_degrees, FALSE);
-        }
-        else if (curr_degrees[v] > 0)
-                curr_degrees[v]--;
-        i++;
-    }
+	node_u = &g->nodes[u];
+	i = 0;
+	while (i < node_u->degree)
+	{
+		v = node_u->neighbors[i];
+		if (!g->actives[v]) 
+		{
+			i++;
+			continue ;
+		}
+		if (original)
+		{
+			g->actives[v] = FALSE;
+			curr_degrees[v] = 0;
+			update_neighbors_score(g, v, curr_degrees, FALSE);
+		}
+		else if (curr_degrees[v] > 0)
+				curr_degrees[v]--;
+		i++;
+	}
 }
 
-void solve_greedy(t_graph *graph, t_time *start_time)
+void	solve_greedy(t_graph *graph, t_time *start_time)
 {
-	int   *curr_degrees;
-	int   best_node;
+	int	*curr_degrees;
+	int	best_node;
 
 	curr_degrees = init_degrees(graph);
 	if (!curr_degrees)
