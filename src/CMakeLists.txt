@@ -45,13 +45,18 @@ else()
     target_compile_options(ds_finder PRIVATE -g3)
 endif()
 
-set(NO "001")
+if(NOT FILENO)
+	set(FILENO "001")
+endif()
+if(NOT REDIN)
+	set(REDIN "tmp/instances/heuristic_${FILENO}.gr")
+endif()
+if(NOT REDOUT)
+	set(REDOUT "/dev/stdout")
+endif()
 
-set(RAW_INPUT "tmp/instances/heuristic_${NO}.gr")
-set(RAW_OUTPUT "out/heuristic_${NO}.sol")
-
-string(STRIP "${RAW_INPUT}" INPUT)
-string(STRIP "${RAW_OUTPUT}" OUTPUT)
+string(STRIP "${REDIN}" INPUT)
+string(STRIP "${REDOUT}" OUTPUT)
 
 add_custom_target(test
     COMMAND sh -c "./ds_finder < ${INPUT} > ${OUTPUT}"

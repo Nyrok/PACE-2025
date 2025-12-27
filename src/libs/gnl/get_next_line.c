@@ -71,6 +71,7 @@ static char	*parse_buffer_memory(char *buffer)
 static char	*update_memory(int fd, char *memory)
 {
 	char	*temp;
+	char	*to_free;
 	int		size;
 
 	size = 1;
@@ -86,8 +87,12 @@ static char	*update_memory(int fd, char *memory)
 			free(memory);
 			return (NULL);
 		}
+		else if (size == 0)
+			break ;
 		temp[size] = '\0';
+		to_free = memory;
 		memory = ft_strjoin(memory, temp);
+		free(to_free);
 	}
 	free(temp);
 	return (memory);

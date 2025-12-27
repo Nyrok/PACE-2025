@@ -10,11 +10,11 @@ static void	parse_line(t_graph *graph, char *line)
 	if (line[0] == 'c')
 		return ;
 	strs = ft_split(line, ' ');
-	if (line[0] == 'p') {
+	if (graph->v_count == 0 && line[0] == 'p') {
 		fill_graph(graph, ft_atoull(strs[2]), ft_atoull(strs[3]));
 		free_split(strs, 4);
 	}
-	else if (ft_isdigit(line[0]) && graph->nodes) {
+	else if (graph->v_count > 0 && ft_isdigit(line[0])) {
 		e1 = ft_atoull(strs[0]) - 1;
 		e2 = ft_atoull(strs[1]) - 1;
 		add_neighbor(graph, e1, e2);
@@ -29,6 +29,8 @@ void	parse_input(t_graph *graph)
 
 	do {
 		line = get_next_line(STDIN_FILENO);
+		if (!line)
+			break ;
 		parse_line(graph, line);
 		free(line);
 	} while (line);
