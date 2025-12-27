@@ -8,7 +8,7 @@ void term(int signum)
 {
 	(void)signum;
 	if (tle == 0)
-		ft_putendl_fd("Received SIGTERM, exiting...", STDERR_FILENO);
+		fprintf(stderr, "Received SIGTERM, exiting...");
 	tle = 1;
 }
 
