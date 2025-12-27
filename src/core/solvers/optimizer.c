@@ -147,6 +147,8 @@ void solve_optimizer(t_graph *g, t_time *start_time)
 	int		i;
 	int	 	iter;
 
+	if (tle)
+		return ;
 	covers = init_cover_counts(g);
 	if (!covers)
 		return ;
