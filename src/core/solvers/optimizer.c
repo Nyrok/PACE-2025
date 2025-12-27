@@ -1,5 +1,7 @@
 #include "ds_finder.h"
 
+extern volatile sig_atomic_t	tle;
+
 static int	*init_cover_counts(t_graph *g)
 {
 	int		*covers;
@@ -9,13 +11,13 @@ static int	*init_cover_counts(t_graph *g)
 	if (!covers) return (NULL);
 
 	i = 0;
-	while (i < g->v_count)
+	while (!tle && i < g->v_count)
 	{
 		if (g->solutions[i])
 		{
 			covers[i]++;
 			j = 0;
-			while (j < g->nodes[i].degree)
+			while (!tle && j < g->nodes[i].degree)
 			{
 				neighbor = g->nodes[i].neighbors[j];
 				covers[neighbor]++;
@@ -33,7 +35,7 @@ static void	update_covers(t_graph *g, int *covers, int u, int sign)
 
 	covers[u] += sign;
 	j = 0;
-	while (j < g->nodes[u].degree)
+	while (!tle && j < g->nodes[u].degree)
 	{
 		neighbor = g->nodes[u].neighbors[j];
 		covers[neighbor] += sign;
@@ -48,7 +50,7 @@ static t_bool	try_prune(t_graph *g, int *covers, int u)
 	if (covers[u] < 2)
 		return (FALSE);
 	j = 0;
-	while (j < g->nodes[u].degree)
+	while (!tle && j < g->nodes[u].degree)
 	{
 		neighbor = g->nodes[u].neighbors[j];
 		if (covers[neighbor] < 2)
@@ -77,7 +79,7 @@ static t_bool	try_swap(t_graph *g, int *covers, int u, int *tabu_list, int iter)
 
 	if (covers[u] == 1) private_neighbors[p_count++] = u;
 	j = 0;
-	while (j < g->nodes[u].degree)
+	while (!tle && j < g->nodes[u].degree)
 	{
 		neighbor = g->nodes[u].neighbors[j];
 		if (covers[neighbor] == 1)
@@ -94,7 +96,7 @@ static t_bool	try_swap(t_graph *g, int *covers, int u, int *tabu_list, int iter)
 	}
 	first_priv = &g->nodes[private_neighbors[0]];
 	k = 0;
-	while (k < first_priv->degree)
+	while (!tle && k < first_priv->degree)
 	{
 		v = first_priv->neighbors[k];
 		if (!g->solutions[v] && tabu_list[v] <= iter)
@@ -153,7 +155,7 @@ void solve_optimizer(t_graph *g, t_time *start_time)
 		return ;
 	}
 	iter = 0;
-	while (gettime() - *start_time < MAX_SOLVE_TIME - TOLERANCE_TIME)
+	while (!tle && gettime() - *start_time < MAX_SOLVE_TIME - TOLERANCE_TIME)
 	{
 		iter++;
 		change = FALSE;
