@@ -1,9 +1,9 @@
 #include "ds_finder.h"
 
-void	add_neighbor(t_graph *graph, t_ull e1, t_ull e2)
+void	add_neighbor(t_graph *graph, int e1, int e2)
 {
 	t_node	*node;
-	t_ull	i;
+	int	i;
 
 	node = &graph->nodes[e1];
 	i = 0;
@@ -13,14 +13,14 @@ void	add_neighbor(t_graph *graph, t_ull e1, t_ull e2)
 			return ;
 		i++;
 	}
-	node->neighbors = realloc(node->neighbors, (node->degree + 1) * sizeof(t_ull));
+	node->neighbors = realloc(node->neighbors, (node->degree + 1) * sizeof(int));
 	node->neighbors[node->degree] = e2;
 	node->degree++;
 }
 
-void remove_neighbor(t_node *node, t_ull target)
+void remove_neighbor(t_node *node, int target)
 {
-    t_ull   i;
+    int   i;
 
     i = 0;
     while (i < node->degree)
@@ -35,7 +35,7 @@ void remove_neighbor(t_node *node, t_ull target)
     }
 }
 
-void	fill_graph(t_graph *graph, t_ull v, t_ull e)
+void	fill_graph(t_graph *graph, int v, int e)
 {
 	graph->v_count = v;
 	graph->e_count = e;
@@ -49,10 +49,10 @@ void	fill_graph(t_graph *graph, t_ull v, t_ull e)
 
 void	free_graph(t_graph	*graph)
 {
-	t_ll	i;
+	int	i;
 
 	i = 0;
-	while (i < (t_ll)graph->v_count)
+	while (i < (int)graph->v_count)
 	{
 		free(graph->nodes[i].neighbors);
 		i++;
