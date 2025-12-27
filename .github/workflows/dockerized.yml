@@ -103,7 +103,7 @@ jobs:
           context: .
           file: dev.Dockerfile
           load: true
-          tags: ds-test:latest
+          tags: ds-leaks:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
           
@@ -113,9 +113,9 @@ jobs:
             -v ${{ github.workspace }}/src:/app \
             -v ${{ github.workspace }}/testset:/testset \
             -w /app \
-            ds-test:latest \
+            ds-leaks:latest \
             /bin/sh -c "
-              cmake -DCMAKE_BUILD_TYPE=Debug . && \
+              cmake -DTIME_LIMIT=60 -DCMAKE_BUILD_TYPE=Debug . && \
               make ds_finder && \
               valgrind --leak-check=full --show-leak-kinds=all ./ds_finder < /testset/bremen_subgraph_300.gr 2>&1 | tee /app/valgrind_log.txt && \
               if grep -q 'All heap blocks were freed -- no leaks are possible' /app/valgrind_log.txt; then
