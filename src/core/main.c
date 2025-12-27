@@ -24,8 +24,12 @@ int main(int argc, char *argv[])
 	};
 	struct sigaction action;
 
-	(void)argc;
 	(void)argv;
+	if (argc != 1)
+	{
+		ft_putendl_fd("Usage: ./ds_finder < input_graph.gr", STDERR_FILENO);
+		return (EXIT_FAILURE);
+	}
 	ft_memset(&action, 0, sizeof(struct sigaction));
 	action.sa_handler = term;
 	sigaction(SIGTERM, &action, NULL);
@@ -34,5 +38,5 @@ int main(int argc, char *argv[])
 		solve_graph(&graph, &start_time);
 	free_graph(&graph);
 	ft_putendl_fd("Received SIGTERM, exiting...", STDERR_FILENO);
-	return 0;
+	return (EXIT_SUCCESS);
 }
