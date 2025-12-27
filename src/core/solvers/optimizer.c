@@ -164,7 +164,7 @@ void solve_optimizer(t_graph *g, t_time *start_time)
 		iter++;
 		change = FALSE;
 		i = 0;
-		while (i < g->v_count)
+		while (!tle && i < g->v_count)
 		{
 			if (g->solutions[i])
 			{
