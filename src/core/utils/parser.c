@@ -29,6 +29,8 @@ void	parse_input(t_graph *graph)
 
 	do {
 		line = get_next_line(STDIN_FILENO);
+		if (!line)
+			break ;
 		parse_line(graph, line);
 		free(line);
 	} while (line);
