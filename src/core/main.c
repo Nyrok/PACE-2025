@@ -7,8 +7,9 @@ t_time					start_time;
 void term(int signum)
 {
 	(void)signum;
+	if (tle == 0)
+		ft_putendl_fd("Received SIGTERM, exiting...", STDERR_FILENO);
 	tle = 1;
-	ft_putendl_fd("Received SIGTERM, exiting...", STDERR_FILENO);
 }
 
 int main(int argc, char *argv[])

@@ -126,3 +126,34 @@ jobs:
                 exit 1
               fi
             "
+  timeout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
+      - name: Build Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: dev.Dockerfile
+          load: true
+          tags: ds-leaks:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          
+      - name: Compile and Check for Timeout management
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}/src:/app \
+            -v ${{ github.workspace }}/testset:/testset \
+            -w /app \
+            ds-test:latest \
+            /bin/sh -c "
+              cmake -DTIME_LIMIT=300 -DCMAKE_BUILD_TYPE=Release . && \
+              make -j$(nproc) && \
+              (timeout -k 2s 15s ./ds_finder < /testset/bremen_subgraph_300.gr || [ \$? -eq 124 ])
+            "
