@@ -18,23 +18,6 @@ void	add_neighbor(t_graph *graph, int e1, int e2)
 	node->degree++;
 }
 
-void remove_neighbor(t_node *node, int target)
-{
-    int   i;
-
-    i = 0;
-    while (i < node->degree)
-    {
-        if (node->neighbors[i] == target)
-        {
-            node->neighbors[i] = node->neighbors[node->degree - 1];
-            node->degree--;
-            return ;
-        }
-        i++;
-    }
-}
-
 void	fill_graph(t_graph *graph, int v, int e)
 {
 	graph->v_count = v;
@@ -52,7 +35,7 @@ void	free_graph(t_graph	*graph)
 	int	i;
 
 	i = 0;
-	while (i < (int)graph->v_count)
+	while (i < graph->v_count)
 	{
 		free(graph->nodes[i].neighbors);
 		i++;

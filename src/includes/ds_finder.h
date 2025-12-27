@@ -39,7 +39,6 @@ t_time	gettime(void);
 void	parse_input(t_graph *graph);
 void	fill_graph(t_graph	*graph, int v, int e);
 void	add_neighbor(t_graph *graph, int e1, int e2);
-void	remove_neighbor(t_node *node, int target);
 void	free_graph(t_graph	*graph);
 void	solve_graph(t_graph *graph, t_time *start_time);
 void	solve_optimizer(t_graph *g, t_time *start_time);
