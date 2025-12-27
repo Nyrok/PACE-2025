@@ -3,7 +3,7 @@
 static int	*init_cover_counts(t_graph *g)
 {
 	int		*covers;
-	t_ull	i, j, neighbor;
+	int	i, j, neighbor;
 
 	covers = ft_calloc(g->v_count, sizeof(int));
 	if (!covers) return (NULL);
@@ -27,9 +27,9 @@ static int	*init_cover_counts(t_graph *g)
 	return (covers);
 }
 
-static void	update_covers(t_graph *g, int *covers, t_ull u, int sign)
+static void	update_covers(t_graph *g, int *covers, int u, int sign)
 {
-	t_ull j, neighbor;
+	int j, neighbor;
 
 	covers[u] += sign;
 	j = 0;
@@ -41,9 +41,9 @@ static void	update_covers(t_graph *g, int *covers, t_ull u, int sign)
 	}
 }
 
-static t_bool	try_prune(t_graph *g, int *covers, t_ull u)
+static t_bool	try_prune(t_graph *g, int *covers, int u)
 {
-	t_ull j, neighbor;
+	int j, neighbor;
 
 	if (covers[u] < 2)
 		return (FALSE);
@@ -61,18 +61,18 @@ static t_bool	try_prune(t_graph *g, int *covers, t_ull u)
 	return (TRUE);
 }
 
-static t_bool	try_swap(t_graph *g, int *covers, t_ull u, int *tabu_list, int iter)
+static t_bool	try_swap(t_graph *g, int *covers, int u, int *tabu_list, int iter)
 {
 	t_node	*first_priv;
-	t_ull	*private_neighbors;
-	t_ull	p_count = 0;
-	t_ull	j, v, k, neighbor;
+	int	*private_neighbors;
+	int	p_count = 0;
+	int	j, v, k, neighbor;
 	t_bool	can_cover_all;
 	t_bool	covered_by_v;
 
 	if (tabu_list[u] > iter)
 		return (FALSE);
-	private_neighbors = malloc(sizeof(t_ull) * (g->nodes[u].degree + 1));
+	private_neighbors = malloc(sizeof(int) * (g->nodes[u].degree + 1));
 	if (!private_neighbors) return (FALSE);
 
 	if (covers[u] == 1) private_neighbors[p_count++] = u;
@@ -100,12 +100,12 @@ static t_bool	try_swap(t_graph *g, int *covers, t_ull u, int *tabu_list, int ite
 		if (!g->solutions[v] && tabu_list[v] <= iter)
 		{
 			can_cover_all = TRUE;
-			for (t_ull m = 1; m < p_count; m++)
+			for (int m = 1; m < p_count; m++)
 			{
 				covered_by_v = FALSE;
 				if (private_neighbors[m] == v) covered_by_v = TRUE;
 				else {
-					for (t_ull z = 0; z < g->nodes[v].degree; z++) {
+					for (int z = 0; z < g->nodes[v].degree; z++) {
 						if (g->nodes[v].neighbors[z] == private_neighbors[m]) {
 							covered_by_v = TRUE;
 							break;
@@ -140,7 +140,7 @@ void solve_optimizer(t_graph *g, t_time *start_time)
 	int	 	*covers;
 	int	 	*tabu_list;
 	t_bool	change;
-	t_ull	i;
+	int	i;
 	int	 	iter;
 
 	covers = init_cover_counts(g);

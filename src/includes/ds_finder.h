@@ -15,33 +15,31 @@
 # include "get_next_line.h"
 # include "libft.h"
 
-typedef long long			t_ll;
 typedef long long			t_time;
-typedef unsigned long long	t_ull;
 typedef unsigned char		t_bool;
 
 typedef struct s_node
 {
-	t_ull	*neighbors;
-	t_ull	degree;
+	int	*neighbors;
+	int	degree;
 }	t_node;
 
 typedef struct s_graph
 {
-	t_ull	v_count;
-	t_ull	e_count;
+	int	v_count;
+	int	e_count;
 	t_node	*nodes;
 	t_bool	*solutions;
 	t_bool	*actives;
-	t_ull	len_solutions;
+	int	len_solutions;
 	t_bool	finished;
 }	t_graph;
 
 t_time	gettime(void);
 void	parse_input(t_graph *graph);
-void	fill_graph(t_graph	*graph, t_ull v, t_ull e);
-void	add_neighbor(t_graph *graph, t_ull e1, t_ull e2);
-void	remove_neighbor(t_node *node, t_ull target);
+void	fill_graph(t_graph	*graph, int v, int e);
+void	add_neighbor(t_graph *graph, int e1, int e2);
+void	remove_neighbor(t_node *node, int target);
 void	free_graph(t_graph	*graph);
 void	solve_graph(t_graph *graph, t_time *start_time);
 void	solve_optimizer(t_graph *g, t_time *start_time);

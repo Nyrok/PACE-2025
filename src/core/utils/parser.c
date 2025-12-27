@@ -3,7 +3,7 @@
 static void	parse_line(t_graph *graph, char *line)
 {
 	char **strs;
-	t_ull	e1, e2;
+	int	e1, e2;
 
 	if (!line)
 		return ;

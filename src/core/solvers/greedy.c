@@ -1,8 +1,8 @@
 #include "ds_finder.h"
 
-static double	get_score(t_graph *g, t_ull node_idx, t_ull *curr_degrees)
+static double	get_score(t_graph *g, int node_idx, int *curr_degrees)
 {
-	t_ull	i;
+	int	i;
 	double	score;
 	t_node	*u;
 
@@ -11,7 +11,7 @@ static double	get_score(t_graph *g, t_ull node_idx, t_ull *curr_degrees)
 	score = 0.0;
 	while (i < u->degree)
 	{
-		t_ull v = u->neighbors[i];
+		int v = u->neighbors[i];
 		if (g->actives[v] && curr_degrees[v] > 0)
 			score += 1.0 / ((double)curr_degrees[v] || 1);
 		i++;
@@ -19,14 +19,14 @@ static double	get_score(t_graph *g, t_ull node_idx, t_ull *curr_degrees)
 	return score;
 }
 
-static t_ull find_best_candidate(t_graph *g, t_ull *curr_degrees)
+static int find_best_candidate(t_graph *g, int *curr_degrees)
 {
-	t_ull   best_node;
+	int   best_node;
 	double  best_score;
 	double  current_score;
-	t_ull	i;
+	int	i;
 
-	best_node = (t_ull)-1;
+	best_node = -1;
 	best_score = -1.0;
 	i = 0;
 	while (i < g->v_count)
@@ -47,12 +47,12 @@ static t_ull find_best_candidate(t_graph *g, t_ull *curr_degrees)
 	return (best_node);
 }
 
-static t_ull	*init_degrees(t_graph *g)
+static int	*init_degrees(t_graph *g)
 {
-	t_ull   *arr;
-	t_ull   i;
+	int   *arr;
+	int   i;
 
-	arr = malloc(sizeof(t_ull) * g->v_count);
+	arr = malloc(sizeof(int) * g->v_count);
 	if (!arr)
 		return (NULL);
 	i = 0;
@@ -67,10 +67,10 @@ static t_ull	*init_degrees(t_graph *g)
 	return (arr);
 }
 
-static void update_neighbors_score(t_graph *g, t_ull u, t_ull *curr_degrees, t_bool original)
+static void update_neighbors_score(t_graph *g, int u, int *curr_degrees, t_bool original)
 {
-    t_ull   i;
-    t_ull   v;
+    int   i;
+    int   v;
     t_node  *node_u;
 
     node_u = &g->nodes[u];
@@ -97,8 +97,8 @@ static void update_neighbors_score(t_graph *g, t_ull u, t_ull *curr_degrees, t_b
 
 void solve_greedy(t_graph *graph, t_time *start_time)
 {
-	t_ull   *curr_degrees;
-	t_ull   best_node;
+	int   *curr_degrees;
+	int   best_node;
 
 	curr_degrees = init_degrees(graph);
 	if (!curr_degrees)
@@ -106,7 +106,7 @@ void solve_greedy(t_graph *graph, t_time *start_time)
 	while (gettime() - *start_time < MAX_SOLVE_TIME - TOLERANCE_TIME)
 	{
 		best_node = find_best_candidate(graph, curr_degrees);
-		if (best_node == (t_ull)-1)
+		if (best_node == -1)
 			break ;
 		graph->solutions[best_node] = TRUE;
 		graph->len_solutions++;
