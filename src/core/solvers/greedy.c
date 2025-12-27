@@ -13,7 +13,7 @@ static double	get_score(t_graph *g, int node_idx, int *curr_degrees)
 	{
 		int v = u->neighbors[i];
 		if (g->actives[v] && curr_degrees[v] > 0)
-			score += 1.0 / ((double)curr_degrees[v] || 1);
+			score += 1.0 / (double)curr_degrees[v];
 		i++;
 	}
 	return score;
@@ -31,7 +31,7 @@ static int	find_best_candidate(t_graph *g, int *curr_degrees)
 	i = 0;
 	while (i < g->v_count)
 	{
-		if (g->actives[i] && (curr_degrees[i] == 0 || curr_degrees[i] == 1))
+		if (g->actives[i] && curr_degrees[i] == 0)
 			return (i);
 		if (g->actives[i])
 		{
