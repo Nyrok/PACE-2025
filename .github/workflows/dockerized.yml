@@ -141,7 +141,7 @@ jobs:
           context: .
           file: dev.Dockerfile
           load: true
-          tags: ds-leaks:latest
+          tags: ds-timeout:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
           
@@ -151,7 +151,7 @@ jobs:
             -v ${{ github.workspace }}/src:/app \
             -v ${{ github.workspace }}/testset:/testset \
             -w /app \
-            ds-test:latest \
+            ds-timeout:latest \
             /bin/sh -c "
               cmake -DTIME_LIMIT=300 -DCMAKE_BUILD_TYPE=Release . && \
               make -j$(nproc) && \
