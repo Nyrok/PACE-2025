@@ -1,18 +1,18 @@
 CX = gcc
-CXFLAGS = -Wall -Werror -Wextra -I includes -g3 -std=c99
+CXFLAGS = -Wall -Werror -Wextra -I includes -O3 -std=c99 -flto
 STATIC_FLAG = -static
 
 LIBFT_DIR = libs/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 LIBFT_SRCS = $(wildcard $(LIBFT_DIR)/*.c)
 
-SRCS = src/main.c \
-		src/utils/parser.c \
-		src/utils/time.c \
-		src/core/graph.c \
-		src/solvers/solver.c \
-		src/solvers/kernelization.c \
-		src/solvers/greedy.c \
+SRCS = core/main.c \
+		core/utils/parser.c \
+		core/utils/time.c \
+		core/struct/graph.c \
+		core/solvers/solver.c \
+		core/solvers/optimizer.c \
+		core/solvers/greedy.c \
 		libs/gnl/get_next_line.c \
         $(LIBFT_SRCS)
 
@@ -57,6 +57,6 @@ source_solution: all fclean
 	tar -czf $(NAME).tgz Makefile includes libs $(SRCS)
 
 unify: re
-	$(CX) $(CXFLAGS) -E src/main.c -o $(NAME).c
+	$(CX) $(CXFLAGS) -E core/main.c -o $(NAME).c
 
 .PHONY: all clean fclean re
