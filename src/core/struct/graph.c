@@ -23,11 +23,8 @@ void	fill_graph(t_graph *graph, int v, int e)
 	graph->v_count = v;
 	graph->e_count = e;
 	graph->nodes = ft_calloc(v, sizeof(t_node));
-    graph->solutions = ft_calloc(v, sizeof(t_bool));
-    graph->actives = malloc(v * sizeof(t_bool));
-	if (!graph->nodes || !graph->actives || !graph->solutions)
+	if (!graph->nodes)
 		exit(EXIT_FAILURE);
-	ft_memset(graph->actives, TRUE, v);
 }
 
 void	free_graph(t_graph	*graph)

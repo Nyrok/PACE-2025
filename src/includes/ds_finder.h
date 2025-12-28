@@ -27,12 +27,12 @@ typedef struct s_node
 
 typedef struct s_graph
 {
-	int	v_count;
-	int	e_count;
+	int		v_count;
+	int		e_count;
 	t_node	*nodes;
 	t_bool	*solutions;
 	t_bool	*actives;
-	int	len_solutions;
+	int		len_solutions;
 	t_bool	finished;
 }	t_graph;
 
