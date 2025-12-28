@@ -9,6 +9,7 @@
 # define TRUE 1
 # define FALSE 0
 
+# include <stdio.h>
 # include <signal.h>
 # include <sys/time.h>
 

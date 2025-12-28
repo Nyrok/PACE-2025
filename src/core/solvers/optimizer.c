@@ -11,13 +11,13 @@ static int	*init_cover_counts(t_graph *g)
 	if (!covers) return (NULL);
 
 	i = 0;
-	while (!tle && i < g->v_count)
+	while (i < g->v_count)
 	{
 		if (g->solutions[i])
 		{
 			covers[i]++;
 			j = 0;
-			while (!tle && j < g->nodes[i].degree)
+			while (j < g->nodes[i].degree)
 			{
 				neighbor = g->nodes[i].neighbors[j];
 				covers[neighbor]++;
@@ -35,7 +35,7 @@ static void	update_covers(t_graph *g, int *covers, int u, int sign)
 
 	covers[u] += sign;
 	j = 0;
-	while (!tle && j < g->nodes[u].degree)
+	while (j < g->nodes[u].degree)
 	{
 		neighbor = g->nodes[u].neighbors[j];
 		covers[neighbor] += sign;
@@ -50,14 +50,14 @@ static t_bool	try_prune(t_graph *g, int *covers, int u)
 	if (covers[u] < 2)
 		return (FALSE);
 	j = 0;
-	while (!tle && j < g->nodes[u].degree)
+	while (j < g->nodes[u].degree)
 	{
 		neighbor = g->nodes[u].neighbors[j];
 		if (covers[neighbor] < 2)
 			return (FALSE);
 		j++;
 	}
-	if (!tle)
+	if (tle)
 		return (FALSE);
 	g->solutions[u] = FALSE;
 	g->len_solutions--;
@@ -81,7 +81,7 @@ static t_bool	try_swap(t_graph *g, int *covers, int u, int *tabu_list, int iter)
 
 	if (covers[u] == 1) private_neighbors[p_count++] = u;
 	j = 0;
-	while (!tle && j < g->nodes[u].degree)
+	while (j < g->nodes[u].degree)
 	{
 		neighbor = g->nodes[u].neighbors[j];
 		if (covers[neighbor] == 1)
@@ -98,7 +98,7 @@ static t_bool	try_swap(t_graph *g, int *covers, int u, int *tabu_list, int iter)
 	}
 	first_priv = &g->nodes[private_neighbors[0]];
 	k = 0;
-	while (!tle && k < first_priv->degree)
+	while (k < first_priv->degree)
 	{
 		v = first_priv->neighbors[k];
 		if (!g->solutions[v] && tabu_list[v] <= iter)
@@ -144,9 +144,11 @@ void solve_optimizer(t_graph *g, t_time *start_time)
 	int	 	*covers;
 	int	 	*tabu_list;
 	t_bool	change;
-	int	i;
+	int		i;
 	int	 	iter;
 
+	if (tle)
+		return ;
 	covers = init_cover_counts(g);
 	if (!covers)
 		return ;
@@ -162,7 +164,7 @@ void solve_optimizer(t_graph *g, t_time *start_time)
 		iter++;
 		change = FALSE;
 		i = 0;
-		while (i < g->v_count)
+		while (!tle && i < g->v_count)
 		{
 			if (g->solutions[i])
 			{
@@ -171,15 +173,10 @@ void solve_optimizer(t_graph *g, t_time *start_time)
 				else if (try_swap(g, covers, i, tabu_list, iter))
 					change = TRUE;
 			}
-			if ((i % 1000 == 0) && (gettime() - *start_time >= MAX_SOLVE_TIME - TOLERANCE_TIME))
-				break ;
 			i++;
 		}
 		if (!change)
-		{
-			g->finished = TRUE;
 			break ;
-		}
 	}
 	free(covers);
 	free(tabu_list);

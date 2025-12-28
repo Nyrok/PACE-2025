@@ -11,7 +11,7 @@ static double	get_score(t_graph *g, int node_idx, int *curr_degrees)
 	u = &g->nodes[node_idx];
 	i = 0;
 	score = 0.0;
-	while (!tle && i < u->degree)
+	while (i < u->degree)
 	{
 		int v = u->neighbors[i];
 		if (g->actives[v] && curr_degrees[v] > 0)
@@ -31,7 +31,7 @@ static int	find_best_candidate(t_graph *g, int *curr_degrees)
 	best_node = -1;
 	best_score = -1.0;
 	i = 0;
-	while (!tle && i < g->v_count)
+	while (i < g->v_count)
 	{
 		if (g->actives[i] && curr_degrees[i] == 0)
 			return (i);
@@ -58,7 +58,7 @@ static int	*init_degrees(t_graph *g)
 	if (!arr)
 		return (NULL);
 	i = 0;
-	while (!tle && i < g->v_count)
+	while (i < g->v_count)
 	{
 		if (g->actives[i])
 			arr[i] = g->nodes[i].degree;
@@ -77,7 +77,7 @@ static void	update_neighbors_score(t_graph *g, int u, int *curr_degrees, t_bool 
 
 	node_u = &g->nodes[u];
 	i = 0;
-	while (!tle && i < node_u->degree)
+	while (i < node_u->degree)
 	{
 		v = node_u->neighbors[i];
 		if (!g->actives[v]) 
@@ -109,7 +109,10 @@ void	solve_greedy(t_graph *graph, t_time *start_time)
 	{
 		best_node = find_best_candidate(graph, curr_degrees);
 		if (best_node == -1)
+		{
+			graph->finished = TRUE;
 			break ;
+		}
 		graph->solutions[best_node] = TRUE;
 		graph->len_solutions++;
 		update_neighbors_score(graph, best_node, curr_degrees, TRUE);
