@@ -94,10 +94,12 @@ void	solve_greedy(t_graph *graph, t_time *start_time)
 
 	solutions = ft_calloc(graph->v_count, sizeof(t_bool));
 	actives = malloc(graph->v_count * sizeof(t_bool));
+	if (!solutions || !actives)
+		return ;
+	ft_memset(actives, TRUE, graph->v_count * sizeof(t_bool));
 	scores = init_scores(graph, actives);
 	if (!scores)
 		return ;
-	ft_memset(actives, TRUE, graph->v_count * sizeof(t_bool));
 	first_active = 0;
 	while (!tle && gettime() - *start_time < MAX_SOLVE_TIME - TOLERANCE_TIME)
 	{
