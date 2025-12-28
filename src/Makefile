@@ -1,6 +1,5 @@
 CX = gcc
 CXFLAGS = -Wall -Werror -Wextra -I includes -O3 -std=c99 -flto
-STATIC_FLAG = -static
 
 LIBFT_DIR = libs/libft
 LIBFT = $(LIBFT_DIR)/libft.a
@@ -28,7 +27,7 @@ REDOUT = > out/heuristic_$(NO).sol
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CX) $(CXFLAGS) $(STATIC_FLAG) $(OBJS) -o $(NAME)
+	$(CX) $(CXFLAGS) $(OBJS) -o $(NAME)
 
 $(OBJDIR)/%.o: %.c
 	@mkdir -p $(dir $@)
