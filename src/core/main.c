@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 	ft_memset(&action, 0, sizeof(struct sigaction));
 	action.sa_handler = term;
 	sigaction(SIGTERM, &action, NULL);
-	parse_input(&graph);
+	parse_input(&graph, &start_time);
 	solve_graph(&graph, &start_time);
 	free_graph(&graph);
 	return (EXIT_SUCCESS);

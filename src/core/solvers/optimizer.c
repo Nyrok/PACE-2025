@@ -149,6 +149,7 @@ void solve_optimizer(t_graph *g, t_time *start_time)
 
 	if (tle)
 		return ;
+	fprintf(stderr, "%lld s - Starting Local Search\n", gettime() - *start_time);
 	covers = init_cover_counts(g);
 	if (!covers)
 		return ;

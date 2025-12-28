@@ -37,7 +37,7 @@ typedef struct s_graph
 }	t_graph;
 
 t_time	gettime(void);
-void	parse_input(t_graph *graph);
+void	parse_input(t_graph *graph, t_time *start_time);
 void	fill_graph(t_graph	*graph, int v, int e);
 void	add_neighbor(t_graph *graph, int e1, int e2);
 void	free_graph(t_graph	*graph);
