@@ -4,7 +4,7 @@
 # ifndef MAX_SOLVE_TIME
 #  define MAX_SOLVE_TIME 300LL
 # endif
-# define TOLERANCE_TIME 10LL
+# define TOLERANCE_TIME 0LL
 # define TABU_TENURE 2
 # define TRUE 1
 # define FALSE 0
