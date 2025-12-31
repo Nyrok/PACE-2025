@@ -23,11 +23,11 @@ static void	parse_line(t_graph *graph, char *line)
 	}
 }
 
-void	parse_input(t_graph *graph, t_time *start_time)
+void	parse_input(t_graph *graph)
 {
 	char *line;
 
-	fprintf(stderr, "%lld s - Starting parsing\n", gettime() - *start_time);
+	debug("Start parsing");
 	do {
 		line = get_next_line(STDIN_FILENO);
 		if (!line)
@@ -35,5 +35,5 @@ void	parse_input(t_graph *graph, t_time *start_time)
 		parse_line(graph, line);
 		free(line);
 	} while (line);
-	fprintf(stderr, "%lld s - Finished parsing\n", gettime() - *start_time);
+	debug("End parsing");
 }

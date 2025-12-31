@@ -8,21 +8,28 @@ void term(int signum)
 {
 	(void)signum;
 	if (tle == 0)
-		fprintf(stderr, "Received SIGTERM, exiting...");
+		debug("Received SIGTERM, exiting...");
 	tle = 1;
+}
+
+void	check_timeout(t_graph *graph)
+{
+	if (tle)
+		exit_print_solution(graph);
 }
 
 int main(int argc, char *argv[])
 {
 	start_time = gettime();
 	t_graph graph = {
-		0, // v_count
-		0, // e_count
-		NULL, // nodes
-		NULL, // solutions
-		NULL, // actives
-		0, // len_solutions
-		FALSE // finished
+		.v_count = 0,
+		.e_count = 0,
+		.nodes = NULL,
+		.solutions = NULL,
+		.actives = NULL,
+		.v_sorted = NULL,
+		.len_solutions = 0,
+		.finished = FALSE
 	};
 	struct sigaction action;
 
@@ -31,8 +38,8 @@ int main(int argc, char *argv[])
 	ft_memset(&action, 0, sizeof(struct sigaction));
 	action.sa_handler = term;
 	sigaction(SIGTERM, &action, NULL);
-	parse_input(&graph, &start_time);
-	solve_graph(&graph, &start_time);
-	free_graph(&graph);
+	parse_input(&graph);
+	sort_graph(&graph);
+	solve_graph(&graph);
 	return (EXIT_SUCCESS);
 }

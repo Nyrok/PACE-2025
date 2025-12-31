@@ -9,12 +9,6 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-if(NOT TIME_LIMIT)
-    set(TIME_LIMIT 300)
-endif()
-
-add_definitions(-DMAX_SOLVE_TIME=${TIME_LIMIT}LL)
-
 add_compile_options(-Wall -Wextra -Werror)
 
 include_directories(includes libs/libft libs/gnl)
@@ -25,10 +19,15 @@ set(SRCS
     core/main.c
     core/utils/parser.c
     core/utils/time.c
+    core/utils/logger.c
     core/struct/graph.c
+    core/struct/covers.c
     core/solvers/solver.c
     core/solvers/greedy.c
     core/solvers/optimizer.c
+    core/solvers/prune.c
+    core/solvers/swap.c
+    core/solvers/sorter.c
     libs/gnl/get_next_line.c
     ${LIBFT_SRCS}
 )
@@ -36,9 +35,11 @@ set(SRCS
 add_executable(ds_finder ${SRCS})
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
+	add_definitions(-DDEBUG=0)
 	target_compile_options(ds_finder PRIVATE -O3 -flto)
 	target_link_options(ds_finder PRIVATE -flto)
 elseif(CMAKE_BUILD_TYPE STREQUAL "Static")
+	add_definitions(-DDEBUG=0)
     target_compile_options(ds_finder PRIVATE -O3 -flto)
     target_link_options(ds_finder PRIVATE -static -flto)
 else()
