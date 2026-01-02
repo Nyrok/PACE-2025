@@ -86,7 +86,7 @@ static void	core_loop(t_graph *g, int *head, int *next, int *gain)
 	}
 }
 
-void	solve_sparse_greedy(t_graph *g)
+void	solve_periphery_greedy(t_graph *g)
 {
 	int	*head;
 	int	*next;
@@ -98,7 +98,7 @@ void	solve_sparse_greedy(t_graph *g)
 	gain = malloc(sizeof(int) * (unsigned int)g->v_count);
 	if (!head || !next || !gain)
 		exit(EXIT_FAILURE);
-	debug("Start Sparse Greedy");
+	debug("Start Periphery Greedy");
 	i = -1;
 	while (++i < g->v_count)
 	{
@@ -113,5 +113,5 @@ void	solve_sparse_greedy(t_graph *g)
 	free(head);
 	free(next);
 	free(gain);
-	debug("End Sparse Greedy");
+	debug("End Periphery Greedy");
 }

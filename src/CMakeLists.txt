@@ -24,7 +24,7 @@ set(SRCS
     core/struct/covers.c
     core/solvers/solver.c
     core/solvers/greedy.c
-    core/solvers/sparse_greedy.c
+    core/solvers/periphery_greedy.c
     core/solvers/optimizer.c
     core/solvers/prune.c
     core/solvers/swap.c

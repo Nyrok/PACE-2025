@@ -30,7 +30,7 @@ void	exit_print_solution(t_graph *graph)
 
 void	solve_graph(t_graph *graph) {
 	if (get_graph_type(graph) == GRAPH_CORE_PERIPHERY)
-		solve_sparse_greedy(graph);
+		solve_periphery_greedy(graph);
 	else
 		solve_greedy(graph);
 	solve_optimizer(graph);
