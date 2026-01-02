@@ -19,8 +19,8 @@ if [ "$#" -ne 2 ]; then
     exit 1
 fi
 
-PROGNAME=$1
-INSTANCES=$2
+PROGNAME=$2
+INSTANCES=$3
 
 OUTPUT="results.csv"
 
@@ -35,7 +35,7 @@ for inst in `ls $INSTANCES/*.gr | sort -V`; do
     solFile=$(mktemp -t sol"$instName"XXXXX)
     errFile=$(mktemp -t err"$instName"XXXXX)
 
-    timeout -k 10s 5m $PROGNAME < $inst > $solFile
+    timeout -k 10s $1 $PROGNAME < $inst > $solFile
 
     STATUS=$?
     if [ $STATUS -eq 137 ] ; then #was killed, so timeouted

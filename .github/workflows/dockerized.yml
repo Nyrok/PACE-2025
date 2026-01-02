@@ -80,7 +80,7 @@ jobs:
               cmake -DCMAKE_BUILD_TYPE=Release . && \
               make -j$(nproc) && \
               cd /root && \
-              /root/testall.sh /app/ds_finder /testset | tee /app/test_output.log && \
+              /root/testall.sh 60s /app/ds_finder /testset | tee /app/test_output.log && \
               if grep -qE 'TO|KO|ERR' /app/test_output.log; then
                 echo '❌ FAILURE DETECTED: TO, KO, or ERR found in logs.'
                 exit 1
@@ -162,4 +162,4 @@ jobs:
               else
                 exit 0
               fi
-            "
+            " 
