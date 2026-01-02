@@ -6,21 +6,23 @@ static int	find_best_candidate(int v_count, int *v_sorted, int *first_active, t_
 	int	node_idx;
 
 	while (*first_active < v_count)
-    {
-        node_idx = v_sorted[*first_active];
-        if (actives[node_idx])
-            break;
-        (*first_active)++;
-    }
+	{
+		node_idx = v_sorted[*first_active];
+		if (actives[node_idx])
+			break;
+		(*first_active)++;
+	}
+	if (*first_active >= v_count)
+		return (-1);
 	i = *first_active;
 	while (i < v_count)
 	{
 		node_idx = v_sorted[i];
-		if (actives[node_idx])
+		if (actives[node_idx] && rand() % 2 == 0)
 			return (node_idx);
 		i++;
 	}
-	return (-1);
+	return (v_sorted[*first_active]);
 }
 
 static void	update_neighbors_active(t_graph *g, int u, t_bool *actives)
@@ -67,7 +69,7 @@ void	solve_greedy(t_graph *graph)
 		graph->len_solutions++;
 		update_neighbors_active(graph, best_node, actives);
 	}
-	debug("End Greedy");
 	graph->actives = actives;
 	graph->solutions = solutions;
+	debug("End Greedy");
 }

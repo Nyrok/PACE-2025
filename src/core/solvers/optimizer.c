@@ -10,7 +10,7 @@ void solve_optimizer(t_graph *g)
 
 	if (tle)
 		return ;
-	debug("Start Local Search");
+	debug("Start Local Search, solutions len %i", g->len_solutions);
 	covers = init_cover_counts(g);
 	if (!covers)
 		return ;
@@ -42,5 +42,5 @@ void solve_optimizer(t_graph *g)
 	}
 	free(covers);
 	free(tabu_list);
-	debug("End Local Search");
+	debug("End Local Search, solutions len %i", g->len_solutions);
 }

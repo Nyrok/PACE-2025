@@ -13,4 +13,5 @@ ds_finder*
 *.gexf
 CMake*
 !CMakeLists.txt
+!testset/*
 Makefile

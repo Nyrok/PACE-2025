@@ -23,12 +23,16 @@ void	exit_print_solution(t_graph *graph)
 			printf("%d\n", i + 1);
 		i++;
 	}
+	fflush(stdout);
 	free_graph(graph);
 	exit(EXIT_SUCCESS);
 }
 
 void	solve_graph(t_graph *graph) {
-	solve_greedy(graph);
+	if (get_graph_type(graph) == GRAPH_CORE_PERIPHERY)
+		solve_sparse_greedy(graph);
+	else
+		solve_greedy(graph);
 	solve_optimizer(graph);
 	exit_print_solution(graph);
 }

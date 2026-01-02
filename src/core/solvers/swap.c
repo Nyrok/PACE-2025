@@ -36,20 +36,17 @@ t_bool	try_swap(t_graph *g, int *covers, int u, int *tabu_list, int iter)
 	k = 0;
 	while (k < first_priv->degree)
 	{
-		check_timeout(g);
 		v = first_priv->neighbors[k];
 		if (!g->solutions[v] && tabu_list[v] <= iter)
 		{
 			can_cover_all = TRUE;
 			for (int m = 1; m < p_count; m++)
 			{
-				check_timeout(g);
 				covered_by_v = FALSE;
 				if (private_neighbors[m] == v)
 					covered_by_v = TRUE;
 				else {
 					for (int z = 0; z < g->nodes[v].degree; z++) {
-						check_timeout(g);
 						if (g->nodes[v].neighbors[z] == private_neighbors[m]) {
 							covered_by_v = TRUE;
 							break;

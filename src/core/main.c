@@ -12,12 +12,6 @@ void term(int signum)
 	tle = 1;
 }
 
-void	check_timeout(t_graph *graph)
-{
-	if (tle)
-		exit_print_solution(graph);
-}
-
 int main(int argc, char *argv[])
 {
 	start_time = gettime();
@@ -35,10 +29,12 @@ int main(int argc, char *argv[])
 
 	(void)argc;
 	(void)argv;
+	srand(42); // Déterministe
 	ft_memset(&action, 0, sizeof(struct sigaction));
 	action.sa_handler = term;
 	sigaction(SIGTERM, &action, NULL);
 	parse_input(&graph);
+	debug("Graph Type %i", get_graph_type(&graph));
 	sort_graph(&graph);
 	solve_graph(&graph);
 	return (EXIT_SUCCESS);

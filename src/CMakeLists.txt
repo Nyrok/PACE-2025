@@ -11,7 +11,7 @@ endif()
 
 add_compile_options(-Wall -Wextra -Werror)
 
-include_directories(includes libs/libft libs/gnl)
+include_directories(includes libs/libft)
 
 file(GLOB LIBFT_SRCS "libs/libft/*.c")
 
@@ -24,11 +24,11 @@ set(SRCS
     core/struct/covers.c
     core/solvers/solver.c
     core/solvers/greedy.c
+    core/solvers/sparse_greedy.c
     core/solvers/optimizer.c
     core/solvers/prune.c
     core/solvers/swap.c
     core/solvers/sorter.c
-    libs/gnl/get_next_line.c
     ${LIBFT_SRCS}
 )
 
@@ -89,8 +89,8 @@ add_custom_target(source_solution
 
 add_custom_target(unify
     COMMAND sh -c "echo '/* Unified Source - DS_FINDER */' > ds_finder.c"
-    COMMAND sh -c "find includes libs/libft libs/gnl -name '*.h' -exec sed '/# include \"/d' {} + >> ds_finder.c"
-    COMMAND sh -c "find libs/libft libs/gnl core/struct core/utils core/solvers -name '*.c' -not -name 'main.c' -exec sed '/#include \"/d' {} + >> ds_finder.c"
+    COMMAND sh -c "find includes libs/libft -name '*.h' -exec sed '/# include \"/d' {} + >> ds_finder.c"
+    COMMAND sh -c "find libs/libft core/struct core/utils core/solvers -name '*.c' -not -name 'main.c' -exec sed '/#include \"/d' {} + >> ds_finder.c"
     COMMAND sh -c "sed '/#include \"/d' core/main.c >> ds_finder.c"
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Unifying all sources into ds_finder.c"
