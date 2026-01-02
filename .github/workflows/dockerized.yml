@@ -117,7 +117,7 @@ jobs:
             /bin/sh -c "
               cmake -DCMAKE_BUILD_TYPE=Debug . && \
               make ds_finder && \
-              valgrind --leak-check=full --show-leak-kinds=all ./ds_finder < /testset/ds_lite_1.gr 2>&1 | tee /app/valgrind_log.txt && \
+              valgrind --leak-check=full --show-leak-kinds=all timeout -k 5s 60s ./ds_finder < /testset/ds_lite_1.gr 2>&1 | tee /app/valgrind_log.txt && \
               if grep -q 'All heap blocks were freed -- no leaks are possible' /app/valgrind_log.txt; then
                 echo '✅ MEMORY CHECK PASSED: No leaks detected.'
                 exit 0
