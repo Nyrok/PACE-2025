@@ -14,7 +14,7 @@
 
 
 
-if [ "$#" -ne 2 ]; then
+if [ "$#" -ne 3 ]; then
     echo "Illegal number of parameters. Usage : $0 PROGRAM DIRECTORY_OF_INSTANCES"
     exit 1
 fi
