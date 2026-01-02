@@ -1,21 +1,28 @@
 #include "ds_finder.h"
 
-extern volatile sig_atomic_t	tle;
-
-static int	find_best_candidate(int v_count, int *first_active, t_bool *actives)
+static int	find_best_candidate(int v_count, int *v_sorted, int *first_active, t_bool *actives)
 {
 	int	i;
+	int	node_idx;
 
-	while (*first_active < v_count && !actives[*first_active])
+	while (*first_active < v_count)
+	{
+		node_idx = v_sorted[*first_active];
+		if (actives[node_idx])
+			break;
 		(*first_active)++;
+	}
+	if (*first_active >= v_count)
+		return (-1);
 	i = *first_active;
 	while (i < v_count)
 	{
-		if (actives[i])
-			return (i);
+		node_idx = v_sorted[i];
+		if (actives[node_idx] && rand() % 2 == 0)
+			return (node_idx);
 		i++;
 	}
-	return (-1);
+	return (v_sorted[*first_active]);
 }
 
 static void	update_neighbors_active(t_graph *g, int u, t_bool *actives)
@@ -35,23 +42,23 @@ static void	update_neighbors_active(t_graph *g, int u, t_bool *actives)
 	}
 }
 
-void	solve_greedy(t_graph *graph, t_time *start_time)
+void	solve_greedy(t_graph *graph)
 {
 	t_bool	*solutions;
 	t_bool	*actives;
 	int		best_node;
 	int		first_active;
 
-	fprintf(stderr, "%lld s - Starting Greedy\n", gettime() - *start_time);
+	debug("Start Greedy");
 	solutions = ft_calloc(graph->v_count, sizeof(t_bool));
-	actives = malloc(graph->v_count * sizeof(t_bool));
+	actives = malloc((unsigned int)graph->v_count * sizeof(t_bool));
 	if (!solutions || !actives)
 		return ;
 	ft_memset(actives, TRUE, graph->v_count * sizeof(t_bool));
 	first_active = 0;
-	while (!tle && gettime() - *start_time < MAX_SOLVE_TIME - TOLERANCE_TIME)
+	while (!tle)
 	{
-		best_node = find_best_candidate(graph->v_count, &first_active, actives);
+		best_node = find_best_candidate(graph->v_count, graph->v_sorted, &first_active, actives);
 		if (best_node == -1)
 		{
 			graph->finished = TRUE;
@@ -62,7 +69,7 @@ void	solve_greedy(t_graph *graph, t_time *start_time)
 		graph->len_solutions++;
 		update_neighbors_active(graph, best_node, actives);
 	}
-	fprintf(stderr, "%lld s - Finished Greedy\n", gettime() - *start_time);
 	graph->actives = actives;
 	graph->solutions = solutions;
+	debug("End Greedy");
 }

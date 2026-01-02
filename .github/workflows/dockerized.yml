@@ -77,10 +77,10 @@ jobs:
             -w /app \
             ds-test:latest \
             /bin/sh -c "
-              cmake -DTIME_LIMIT=60 -DCMAKE_BUILD_TYPE=Release . && \
+              cmake -DCMAKE_BUILD_TYPE=Release . && \
               make -j$(nproc) && \
               cd /root && \
-              /root/testall.sh /app/ds_finder /testset | tee /app/test_output.log && \
+              /root/testall.sh 60s /app/ds_finder /testset | tee /app/test_output.log && \
               if grep -qE 'TO|KO|ERR' /app/test_output.log; then
                 echo '❌ FAILURE DETECTED: TO, KO, or ERR found in logs.'
                 exit 1
@@ -115,9 +115,9 @@ jobs:
             -w /app \
             ds-leaks:latest \
             /bin/sh -c "
-              cmake -DTIME_LIMIT=60 -DCMAKE_BUILD_TYPE=Debug . && \
+              cmake -DCMAKE_BUILD_TYPE=Debug . && \
               make ds_finder && \
-              valgrind --leak-check=full --show-leak-kinds=all ./ds_finder < /testset/bremen_subgraph_300.gr 2>&1 | tee /app/valgrind_log.txt && \
+              valgrind --leak-check=full --show-leak-kinds=all timeout -k 5s 60s ./ds_finder < /testset/ds_lite_1.gr 2>&1 | tee /app/valgrind_log.txt && \
               if grep -q 'All heap blocks were freed -- no leaks are possible' /app/valgrind_log.txt; then
                 echo '✅ MEMORY CHECK PASSED: No leaks detected.'
                 exit 0
@@ -153,13 +153,13 @@ jobs:
             -w /app \
             ds-timeout:latest \
             /bin/sh -c "
-              cmake -DTIME_LIMIT=300 -DCMAKE_BUILD_TYPE=Release . && \
+              cmake -DCMAKE_BUILD_TYPE=Release . && \
               make -j$(nproc) && \
-              (timeout -k 2s 15s ./ds_finder < /testset/bremen_subgraph_300.gr > /app/timeouted.sol || [ \$? -eq 124 ]) && \
-              java -jar /root/ds_verifier-1.0.jar /testset/bremen_subgraph_300.gr /app/timeouted.sol | tee /app/test_output.log && \
+              (timeout -k 2s 15s ./ds_finder < /testset/ds_lite_1.gr > /app/timeouted.sol || [ \$? -eq 124 ]) && \
+              java -jar /root/ds_verifier-1.0.jar /testset/ds_lite_1.gr /app/timeouted.sol | tee /app/test_output.log && \
               if grep -qE 'At least one vertex is not dominated by the given solution!' /app/test_output.log; then
                 exit 1
               else
                 exit 0
               fi
-            "
+            " 

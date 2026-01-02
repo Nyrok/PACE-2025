@@ -9,15 +9,9 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-if(NOT TIME_LIMIT)
-    set(TIME_LIMIT 300)
-endif()
-
-add_definitions(-DMAX_SOLVE_TIME=${TIME_LIMIT}LL)
-
 add_compile_options(-Wall -Wextra -Werror)
 
-include_directories(includes libs/libft libs/gnl)
+include_directories(includes libs/libft)
 
 file(GLOB LIBFT_SRCS "libs/libft/*.c")
 
@@ -25,20 +19,27 @@ set(SRCS
     core/main.c
     core/utils/parser.c
     core/utils/time.c
+    core/utils/logger.c
     core/struct/graph.c
+    core/struct/covers.c
     core/solvers/solver.c
     core/solvers/greedy.c
+    core/solvers/sparse_greedy.c
     core/solvers/optimizer.c
-    libs/gnl/get_next_line.c
+    core/solvers/prune.c
+    core/solvers/swap.c
+    core/solvers/sorter.c
     ${LIBFT_SRCS}
 )
 
 add_executable(ds_finder ${SRCS})
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
+	add_definitions(-DDEBUG=0)
 	target_compile_options(ds_finder PRIVATE -O3 -flto)
 	target_link_options(ds_finder PRIVATE -flto)
 elseif(CMAKE_BUILD_TYPE STREQUAL "Static")
+	add_definitions(-DDEBUG=0)
     target_compile_options(ds_finder PRIVATE -O3 -flto)
     target_link_options(ds_finder PRIVATE -static -flto)
 else()
@@ -88,8 +89,8 @@ add_custom_target(source_solution
 
 add_custom_target(unify
     COMMAND sh -c "echo '/* Unified Source - DS_FINDER */' > ds_finder.c"
-    COMMAND sh -c "find includes libs/libft libs/gnl -name '*.h' -exec sed '/# include \"/d' {} + >> ds_finder.c"
-    COMMAND sh -c "find libs/libft libs/gnl core/struct core/utils core/solvers -name '*.c' -not -name 'main.c' -exec sed '/#include \"/d' {} + >> ds_finder.c"
+    COMMAND sh -c "find includes libs/libft -name '*.h' -exec sed '/# include \"/d' {} + >> ds_finder.c"
+    COMMAND sh -c "find libs/libft core/struct core/utils core/solvers -name '*.c' -not -name 'main.c' -exec sed '/#include \"/d' {} + >> ds_finder.c"
     COMMAND sh -c "sed '/#include \"/d' core/main.c >> ds_finder.c"
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Unifying all sources into ds_finder.c"

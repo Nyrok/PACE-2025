@@ -1,11 +1,10 @@
 #include "ds_finder.h"
 
-void	solve_graph(t_graph *graph, t_time *start_time) {
+void	exit_print_solution(t_graph *graph)
+{
 	int	i;
 	int	solutions_count;
 
-	solve_greedy(graph, start_time);
-	solve_optimizer(graph, start_time);
 	solutions_count = graph->len_solutions;
 	if (!graph->finished)
 	{
@@ -24,6 +23,17 @@ void	solve_graph(t_graph *graph, t_time *start_time) {
 			printf("%d\n", i + 1);
 		i++;
 	}
+	fflush(stdout);
 	free_graph(graph);
 	exit(EXIT_SUCCESS);
 }
+
+void	solve_graph(t_graph *graph) {
+	if (get_graph_type(graph) == GRAPH_CORE_PERIPHERY)
+		solve_sparse_greedy(graph);
+	else
+		solve_greedy(graph);
+	solve_optimizer(graph);
+	exit_print_solution(graph);
+}
+
