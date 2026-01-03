@@ -8,11 +8,16 @@ LIBFT_SRCS = $(wildcard $(LIBFT_DIR)/*.c)
 SRCS = core/main.c \
 		core/utils/parser.c \
 		core/utils/time.c \
+		core/utils/logger.c \
 		core/struct/graph.c \
+		core/struct/covers.c \
 		core/solvers/solver.c \
+		core/solvers/sorter.c \
 		core/solvers/optimizer.c \
 		core/solvers/greedy.c \
-		libs/gnl/get_next_line.c \
+		core/solvers/periphery_greedy.c \
+		core/solvers/prune.c \
+		core/solvers/swap.c \
         $(LIBFT_SRCS)
 
 OBJDIR = objs
