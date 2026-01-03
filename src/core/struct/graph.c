@@ -2,11 +2,11 @@
 
 t_graph_type	get_graph_type(t_graph *g)
 {
-	int		i;
-	int		max_d;
-	int		leaf_count;
-	double	avg_d;
-	double	ratio;
+	int					i;
+	int					max_d;
+	int					leaf_count;
+	unsigned long long	avg_d;
+	unsigned long long	ratio;
 
 	if (!g || g->v_count <= 0)
 		return (GRAPH_UNKNOWN);
@@ -21,21 +21,22 @@ t_graph_type	get_graph_type(t_graph *g)
 			leaf_count++;
 		i++;
 	}
-	avg_d = (double)(2 * g->e_count) / g->v_count;
-	ratio = (double)max_d / avg_d;
+	avg_d = (unsigned long long)(2 * g->e_count) / g->v_count;
+	ratio = (unsigned long long)max_d / avg_d;
+	debug("max_d %i avg_d %i", max_d, avg_d);
 	if (g->e_count == (g->v_count * (g->v_count - 1)) / 2)
 		return (GRAPH_COMPLETE);
 	if (max_d == g->v_count - 1 && g->e_count == g->v_count - 1)
 		return (GRAPH_STAR);
-	if (ratio > 50.0)
+	if (ratio > 50)
 	{
 		if (leaf_count > g->v_count * 0.7)
 			return (GRAPH_MULTI_STAR);
 		return (GRAPH_CORE_PERIPHERY);
 	}
-	if (ratio > 5.0)
+	if (ratio > 5)
 		return (GRAPH_SCALE_FREE);
-	if (avg_d >= 2.0 && avg_d <= 6.0 && max_d <= 10)
+	if (avg_d >= 2 && avg_d <= 6 && max_d <= 10)
 	{
 		if (leaf_count > g->v_count * 0.1)
 			return (GRAPH_TREE);
@@ -43,7 +44,7 @@ t_graph_type	get_graph_type(t_graph *g)
 			return (GRAPH_RING);
 		return (GRAPH_GRID_2D);
 	}
-	if (leaf_count == 0 && avg_d > 2.0)
+	if (leaf_count == 0 && avg_d > 2)
 		return (GRAPH_ERDOS_RENYI);
 	return (GRAPH_UNKNOWN);
 }
