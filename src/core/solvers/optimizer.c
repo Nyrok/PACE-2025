@@ -10,7 +10,7 @@ static void	force_kick(t_graph *g, int *covers, int *tabu_list, int iter)
 	g->solutions[v] = FALSE;
 	g->len_solutions--;
 	update_covers(g, covers, v, -1);
-	tabu_list[v] = iter + 20; 
+	tabu_list[v] = iter + 20;
 }
 
 static void	add_candidates(t_graph *g, int *covers)
@@ -61,6 +61,8 @@ void	solve_optimizer(t_graph *g)
 	t_bool	change;
 	int		i;
 	int	 	iter;
+	int		lock_count;
+	int		old_len_solutions;
 
 	if (tle)
 		return ;
@@ -75,6 +77,7 @@ void	solve_optimizer(t_graph *g)
 		return ;
 	}
 	iter = 0;
+	old_len_solutions = g->len_solutions;
 	while (!tle)
 	{
 		iter++;
@@ -91,11 +94,17 @@ void	solve_optimizer(t_graph *g)
 			}
 			i++;
 		}
-		if (!tle && !change)
+		if (old_len_solutions == g->len_solutions)
+			lock_count++;
+		else
+			lock_count = 0;
+		old_len_solutions = g->len_solutions;
+		if (!tle && (!change || lock_count >= 2))
 		{
 			force_kick(g, covers, tabu_list, iter);
 			while (!is_covered(g, covers))
 				add_candidates(g, covers);
+			old_len_solutions = g->len_solutions;
 		}
 	}
 	free(covers);
