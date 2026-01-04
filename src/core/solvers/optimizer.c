@@ -77,6 +77,7 @@ void	solve_optimizer(t_graph *g)
 		return ;
 	}
 	iter = 0;
+	lock_count = 0;
 	old_len_solutions = g->len_solutions;
 	while (!tle)
 	{
