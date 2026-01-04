@@ -1,6 +1,60 @@
 #include "ds_finder.h"
 
-void solve_optimizer(t_graph *g)
+static void	force_kick(t_graph *g, int *covers, int *tabu_list, int iter)
+{
+	int v;
+
+	v = rand() % g->v_count;
+	while (!g->solutions[v])
+		v = rand() % g->v_count;
+	g->solutions[v] = FALSE;
+	g->len_solutions--;
+	update_covers(g, covers, v, -1);
+	tabu_list[v] = iter + 20; 
+}
+
+static void	add_candidates(t_graph *g, int *covers)
+{
+	int i;
+	int best_v;
+	int max_gain;
+	int current_gain;
+	int j;
+
+	best_v = -1;
+	max_gain = 0;
+	i = 0;
+	while (i < g->v_count)
+	{
+		if (!g->solutions[i])
+		{
+			current_gain = 0;
+			if (covers[i] == 0)
+				current_gain++;
+			j = 0;
+			while (j < g->nodes[i].degree)
+			{
+				if (covers[g->nodes[i].neighbors[j]] == 0)
+					current_gain++;
+				j++;
+			}
+			if (current_gain > max_gain)
+			{
+				max_gain = current_gain;
+				best_v = i;
+			}
+		}
+		i++;
+	}
+	if (best_v != -1)
+	{
+		g->solutions[best_v] = TRUE;
+		g->len_solutions++;
+		update_covers(g, covers, best_v, 1);
+	}
+}
+
+void	solve_optimizer(t_graph *g)
 {
 	int	 	*covers;
 	int	 	*tabu_list;
@@ -37,8 +91,12 @@ void solve_optimizer(t_graph *g)
 			}
 			i++;
 		}
-		if (!change)
-			break ;
+		if (!tle && !change)
+		{
+			force_kick(g, covers, tabu_list, iter);
+			while (!is_covered(g, covers))
+				add_candidates(g, covers);
+		}
 	}
 	free(covers);
 	free(tabu_list);
