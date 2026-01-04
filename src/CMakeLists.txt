@@ -4,12 +4,11 @@ project(ds_finder C)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_COMPILER gcc)
+set(CMAKE_C_FLAGS "-Wall -Wextra -Werror")
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
-
-add_compile_options(-Wall -Wextra -Werror)
 
 include_directories(includes libs/libft)
 
