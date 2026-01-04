@@ -70,6 +70,7 @@ void			solve_periphery_greedy(t_graph *graph);
 t_bool			try_prune(t_graph *g, int *covers, int u);
 t_bool			try_swap(t_graph *g, int *covers, int u, int *tabu_list, int iter);
 int				*init_cover_counts(t_graph *g);
+t_bool			is_covered(t_graph *g, int *covers);
 void			update_covers(t_graph *g, int *covers, int u, int val);
 void			exit_print_solution(t_graph *graph);
 t_graph_type	get_graph_type(t_graph *g);

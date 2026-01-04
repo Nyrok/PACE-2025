@@ -40,3 +40,17 @@ void	update_covers(t_graph *g, int *covers, int u, int val)
 		j++;
 	}
 }
+
+t_bool	is_covered(t_graph *g, int *covers)
+{
+	int	i;
+
+	i = 0;
+	while (i < g->v_count)
+	{
+		if (covers[i] == 0)
+			return (FALSE);
+		i++;
+	}
+	return (TRUE);
+}
