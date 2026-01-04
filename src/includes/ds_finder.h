@@ -19,25 +19,6 @@
 typedef long long			t_time;
 typedef unsigned char		t_bool;
 
-typedef struct s_node
-{
-	int	*neighbors;
-	int	degree;
-	int	capacity;
-}	t_node;
-
-typedef struct s_graph
-{
-	int		v_count;
-	int		e_count;
-	t_node	*nodes;
-	t_bool	*solutions;
-	t_bool	*actives;
-	int		*v_sorted;
-	int		len_solutions;
-	t_bool	finished;
-}	t_graph;
-
 typedef enum e_graph_type
 {
 	GRAPH_UNKNOWN = 0,			// Type non identifié
@@ -51,6 +32,26 @@ typedef enum e_graph_type
 	GRAPH_TREE = 8,				// Arbre pur (pas de cycles)
 	GRAPH_ERDOS_RENYI = 9,			// Aléatoire uniforme (chaque arête a une probabilité p)
 }   t_graph_type;
+
+typedef struct s_node
+{
+	int	*neighbors;
+	int	degree;
+	int	capacity;
+}	t_node;
+
+typedef struct s_graph
+{
+	int				v_count;
+	int				e_count;
+	t_graph_type	type;
+	t_node			*nodes;
+	t_bool			*solutions;
+	t_bool			*actives;
+	int				*v_sorted;
+	int				len_solutions;
+	t_bool			finished;
+}	t_graph;
 
 extern volatile sig_atomic_t	tle;
 extern t_time					start_time;

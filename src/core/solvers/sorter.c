@@ -1,6 +1,7 @@
 #include "ds_finder.h"
 
-static t_node *nodes_ctx;
+static t_node	*nodes_ctx;
+static int		sort_asc;
 
 static int	compare_degrees(const void *a, const void *b)
 {
@@ -13,6 +14,8 @@ static int	compare_degrees(const void *a, const void *b)
 	index_b = *(int *)b;
 	degree_a = nodes_ctx[index_a].degree;
 	degree_b = nodes_ctx[index_b].degree;
+	if (sort_asc)
+		return (degree_a - degree_b); 
 	return (degree_b - degree_a); 
 }
 
@@ -28,6 +31,7 @@ void	sort_graph(t_graph *graph)
 		i++;
 	}
 	nodes_ctx = graph->nodes;
+	sort_asc = graph->type == GRAPH_UNKNOWN || graph->type == GRAPH_SCALE_FREE;
 	qsort(graph->v_sorted, graph->v_count, sizeof(int), compare_degrees);
 	debug("End sorting graph");
 }
