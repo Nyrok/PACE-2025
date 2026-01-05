@@ -107,7 +107,7 @@ int	*create_solutions_only(t_graph *graph)
 		return (NULL);
 	i = 0;
 	count = 0;
-	while (i < graph->v_count)
+	while (count < graph->len_solutions)
 	{
 		if (graph->solutions[i])
 			arr[count++] = i;

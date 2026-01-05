@@ -2,13 +2,10 @@
 
 static void	force_kick(t_graph *g, int *solutions_only, int *covers, int *tabu_list, int iter)
 {
-	static int	idx = 0;
-	int			v;
+	int	idx;
+	int	v;
 
-	if (!idx)
-		idx = rand() % g->len_solutions;
-	else
-		idx = (idx + 1) % g->len_solutions;
+	idx = rand() % g->len_solutions;
 	v = solutions_only[idx];
 	g->solutions[v] = FALSE;
 	g->len_solutions--;
