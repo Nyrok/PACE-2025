@@ -80,7 +80,7 @@ void	fill_graph(t_graph *graph, int v, int e)
 		exit(EXIT_FAILURE);
 }
 
-void	free_graph(t_graph	*graph)
+void	free_graph(t_graph *graph)
 {
 	int	i;
 
@@ -94,4 +94,24 @@ void	free_graph(t_graph	*graph)
 	free(graph->solutions);
 	free(graph->actives);
 	free(graph->v_sorted);
+}
+
+int	*create_solutions_only(t_graph *graph)
+{
+	int	*arr;
+	int	i;
+	int	count;
+
+	arr = malloc(graph->len_solutions * sizeof(int));
+	if (!arr)
+		return (NULL);
+	i = 0;
+	count = 0;
+	while (i < graph->v_count)
+	{
+		if (graph->solutions[i])
+			arr[count++] = i;
+		i++;
+	}
+	return (arr);
 }

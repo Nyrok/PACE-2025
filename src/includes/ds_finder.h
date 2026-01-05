@@ -59,6 +59,7 @@ extern t_time					start_time;
 t_time			gettime(void);
 void			debug(char *message, ...);
 void			parse_input(t_graph *graph);
+int				*create_solutions_only(t_graph *graph);
 void			fill_graph(t_graph	*graph, int v, int e);
 void			add_neighbor(t_graph *graph, int e1, int e2);
 void			free_graph(t_graph	*graph);

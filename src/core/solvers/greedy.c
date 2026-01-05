@@ -1,20 +1,21 @@
 #include "ds_finder.h"
 
-static int	find_best_candidate(int v_count, int *v_sorted, int *first_active, t_bool *actives)
+static int	find_best_candidate(int v_count, int *v_sorted, t_bool *actives)
 {
-	int	i;
-	int	node_idx;
+	static int	first_active = 0;
+	int			i;
+	int			node_idx;
 
-	while (*first_active < v_count)
+	while (first_active < v_count)
 	{
-		node_idx = v_sorted[*first_active];
+		node_idx = v_sorted[first_active];
 		if (actives[node_idx])
 			break;
-		(*first_active)++;
+		first_active++;
 	}
-	if (*first_active >= v_count)
+	if (first_active >= v_count)
 		return (-1);
-	i = *first_active;
+	i = first_active;
 	while (i < v_count)
 	{
 		node_idx = v_sorted[i];
@@ -22,7 +23,7 @@ static int	find_best_candidate(int v_count, int *v_sorted, int *first_active, t_
 			return (node_idx);
 		i++;
 	}
-	return (v_sorted[*first_active]);
+	return (v_sorted[first_active]);
 }
 
 static void	update_neighbors_active(t_graph *g, int u, t_bool *actives)
@@ -47,7 +48,6 @@ void	solve_greedy(t_graph *graph)
 	t_bool	*solutions;
 	t_bool	*actives;
 	int		best_node;
-	int		first_active;
 
 	debug("Start Greedy");
 	solutions = ft_calloc(graph->v_count, sizeof(t_bool));
@@ -55,10 +55,9 @@ void	solve_greedy(t_graph *graph)
 	if (!solutions || !actives)
 		return ;
 	ft_memset(actives, TRUE, graph->v_count * sizeof(t_bool));
-	first_active = 0;
 	while (!tle)
 	{
-		best_node = find_best_candidate(graph->v_count, graph->v_sorted, &first_active, actives);
+		best_node = find_best_candidate(graph->v_count, graph->v_sorted, actives);
 		if (best_node == -1)
 		{
 			graph->finished = TRUE;

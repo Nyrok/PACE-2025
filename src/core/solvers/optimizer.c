@@ -1,12 +1,15 @@
 #include "ds_finder.h"
 
-static void	force_kick(t_graph *g, int *covers, int *tabu_list, int iter)
+static void	force_kick(t_graph *g, int *solutions_only, int *covers, int *tabu_list, int iter)
 {
-	int v;
+	static int	idx = 0;
+	int			v;
 
-	v = rand() % g->v_count;
-	while (!g->solutions[v])
-		v = rand() % g->v_count;
+	if (!idx)
+		idx = rand() % g->len_solutions;
+	else
+		idx = (idx + 1) % g->len_solutions;
+	v = solutions_only[idx];
 	g->solutions[v] = FALSE;
 	g->len_solutions--;
 	update_covers(g, covers, v, -1);
@@ -57,6 +60,7 @@ static void	add_candidates(t_graph *g, int *covers)
 void	solve_optimizer(t_graph *g)
 {
 	int	 	*covers;
+	int	 	*solutions_only;
 	int	 	*tabu_list;
 	t_bool	change;
 	int		i;
@@ -102,10 +106,12 @@ void	solve_optimizer(t_graph *g)
 		old_len_solutions = g->len_solutions;
 		if (!tle && (!change || lock_count >= 2))
 		{
-			force_kick(g, covers, tabu_list, iter);
+			solutions_only = create_solutions_only(g);
+			force_kick(g, solutions_only, covers, tabu_list, iter);
 			while (!is_covered(g, covers))
 				add_candidates(g, covers);
 			old_len_solutions = g->len_solutions;
+			free(solutions_only);
 		}
 	}
 	free(covers);
