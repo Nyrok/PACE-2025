@@ -1,6 +1,6 @@
 #include "ds_finder.h"
 
-t_bool	try_prune(t_graph *g, int *covers, int u)
+t_bool	try_prune(t_graph *g, t_bool *solutions, int *len_solutions, int *covers, int u)
 {
 	int j, neighbor;
 
@@ -15,8 +15,8 @@ t_bool	try_prune(t_graph *g, int *covers, int u)
 		j++;
 	}
 	check_timeout(g);
-	g->solutions[u] = FALSE;
-	g->len_solutions--;
+	solutions[u] = FALSE;
+	(*len_solutions)--;
 	update_covers(g, covers, u, -1);
 	return (TRUE);
 }

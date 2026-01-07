@@ -95,23 +95,3 @@ void	free_graph(t_graph *graph)
 	free(graph->actives);
 	free(graph->v_sorted);
 }
-
-int	*create_solutions_only(t_graph *graph)
-{
-	int	*arr;
-	int	i;
-	int	count;
-
-	arr = malloc(graph->len_solutions * sizeof(int));
-	if (!arr)
-		return (NULL);
-	i = 0;
-	count = 0;
-	while (count < graph->len_solutions)
-	{
-		if (graph->solutions[i])
-			arr[count++] = i;
-		i++;
-	}
-	return (arr);
-}

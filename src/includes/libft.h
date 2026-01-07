@@ -19,6 +19,7 @@ int		ft_atoi(const char *nptr);
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
 int		ft_isdigit(int c);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
 void	*ft_memset(void	*s, int c, size_t n);
 char	**ft_split(const char *s, const char c);
 char	*ft_strchr(const char *str, const char c);
