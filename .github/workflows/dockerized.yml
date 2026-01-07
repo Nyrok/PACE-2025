@@ -18,8 +18,7 @@ jobs:
           file: build.Dockerfile
           load: true
           tags: ds-build:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          no-cache: true
       - name: Build the Static Binary
         run: |
           docker run --rm \

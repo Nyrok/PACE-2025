@@ -88,9 +88,10 @@ add_custom_target(source_solution
 
 add_custom_target(unify
     COMMAND sh -c "echo '/* Unified Source - DS_FINDER */' > ds_finder.c"
-    COMMAND sh -c "find includes libs/libft -name '*.h' -exec sed '/# include \"/d' {} + >> ds_finder.c"
-    COMMAND sh -c "find libs/libft core/struct core/utils core/solvers -name '*.c' -not -name 'main.c' -exec sed '/#include \"/d' {} + >> ds_finder.c"
-    COMMAND sh -c "sed '/#include \"/d' core/main.c >> ds_finder.c"
+    COMMAND sh -c "sed '/# *include \"/d' includes/types.h >> ds_finder.c; echo >> ds_finder.c"
+    COMMAND sh -c "find includes libs/libft -name '*.h' -not -name 'types.h' | LC_ALL=C sort | xargs -I {} sh -c 'sed \"/# *include \\\"/d\" {}; echo' >> ds_finder.c"
+    COMMAND sh -c "find libs/libft core/struct core/utils core/solvers -name '*.c' -not -name 'main.c' | LC_ALL=C sort | xargs -I {} sh -c 'sed \"/# *include \\\"/d\" {}; echo' >> ds_finder.c"
+    COMMAND sh -c "sed '/# *include \"/d' core/main.c >> ds_finder.c"
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "Unifying all sources into ds_finder.c"
     VERBATIM

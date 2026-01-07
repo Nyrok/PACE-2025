@@ -12,7 +12,7 @@ void term(int signum)
 	tle = 1;
 }
 
-int main(int argc, char *argv[])
+int main(void)
 {
 	start_time = gettime();
 	t_graph graph = {
@@ -28,8 +28,6 @@ int main(int argc, char *argv[])
 	};
 	struct sigaction action;
 
-	(void)argc;
-	(void)argv;
 	srand(42); // Déterministe
 	ft_memset(&action, 0, sizeof(struct sigaction));
 	action.sa_handler = term;
