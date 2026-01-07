@@ -80,7 +80,7 @@ void	fill_graph(t_graph *graph, int v, int e)
 		exit(EXIT_FAILURE);
 }
 
-void	free_graph(t_graph	*graph)
+void	free_graph(t_graph *graph)
 {
 	int	i;
 

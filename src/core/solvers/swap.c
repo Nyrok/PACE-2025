@@ -1,6 +1,6 @@
 #include "ds_finder.h"
 
-t_bool	try_swap(t_graph *g, int *covers, int u, int *tabu_list, int iter)
+t_bool	try_swap(t_graph *g, t_bool *solutions, int *len_solutions, int *covers, int u, int *tabu_list, int iter)
 {
 	t_node	*first_priv;
 	int		*private_neighbors;
@@ -27,8 +27,8 @@ t_bool	try_swap(t_graph *g, int *covers, int u, int *tabu_list, int iter)
 	{
 		check_timeout(g);
 		free(private_neighbors);
-		g->solutions[u] = FALSE;
-		g->len_solutions--;
+		solutions[u] = FALSE;
+		(*len_solutions)--;
 		update_covers(g, covers, u, -1);
 		return (TRUE);
 	}
@@ -37,7 +37,7 @@ t_bool	try_swap(t_graph *g, int *covers, int u, int *tabu_list, int iter)
 	while (k < first_priv->degree)
 	{
 		v = first_priv->neighbors[k];
-		if (!g->solutions[v] && tabu_list[v] <= iter)
+		if (!solutions[v] && tabu_list[v] <= iter)
 		{
 			can_cover_all = TRUE;
 			for (int m = 1; m < p_count; m++)
@@ -61,9 +61,9 @@ t_bool	try_swap(t_graph *g, int *covers, int u, int *tabu_list, int iter)
 			if (can_cover_all)
 			{
 				check_timeout(g);
-				g->solutions[u] = FALSE;
+				solutions[u] = FALSE;
 				update_covers(g, covers, u, -1);
-				g->solutions[v] = TRUE;
+				solutions[v] = TRUE;
 				update_covers(g, covers, v, 1);
 				tabu_list[u] = iter + TABU_TENURE;
 				tabu_list[v] = iter + TABU_TENURE;

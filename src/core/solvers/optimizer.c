@@ -1,72 +1,47 @@
 #include "ds_finder.h"
 
-static void	force_kick(t_graph *g, int *covers, int *tabu_list, int iter)
+static void	add_candidates(t_graph *g, t_bool *solutions, int *len_solutions, int *covers, int *tabu_list, int iter)
 {
-	int v;
+	int	v;
+	int	i;
 
-	v = rand() % g->v_count;
-	while (!g->solutions[v])
+	do {
 		v = rand() % g->v_count;
-	g->solutions[v] = FALSE;
-	g->len_solutions--;
-	update_covers(g, covers, v, -1);
-	tabu_list[v] = iter + 20;
-}
-
-static void	add_candidates(t_graph *g, int *covers)
-{
-	int i;
-	int best_v;
-	int max_gain;
-	int current_gain;
-	int j;
-
-	best_v = -1;
-	max_gain = 0;
+	} while (solutions[v]);
 	i = 0;
-	while (i < g->v_count)
+	while (i < g->nodes[v].degree)
 	{
-		if (!g->solutions[i])
+		if (!solutions[g->nodes[v].neighbors[i]])
 		{
-			current_gain = 0;
-			if (covers[i] == 0)
-				current_gain++;
-			j = 0;
-			while (j < g->nodes[i].degree)
-			{
-				if (covers[g->nodes[i].neighbors[j]] == 0)
-					current_gain++;
-				j++;
-			}
-			if (current_gain > max_gain)
-			{
-				max_gain = current_gain;
-				best_v = i;
-			}
+			solutions[g->nodes[v].neighbors[i]] = TRUE;
+			(*len_solutions)++;
+			update_covers(g, covers, g->nodes[v].neighbors[i], 1);
 		}
 		i++;
 	}
-	if (best_v != -1)
-	{
-		g->solutions[best_v] = TRUE;
-		g->len_solutions++;
-		update_covers(g, covers, best_v, 1);
-	}
+	solutions[v] = TRUE;
+	(*len_solutions)++;
+	update_covers(g, covers, v, 1);
+	tabu_list[v] = iter + 20;
 }
 
 void	solve_optimizer(t_graph *g)
 {
 	int	 	*covers;
+	t_bool	*solutions;
+	int		len_solutions, old_len_solutions;
 	int	 	*tabu_list;
 	t_bool	change;
 	int		i;
 	int	 	iter;
 	int		lock_count;
-	int		old_len_solutions;
 
 	if (tle)
 		return ;
 	debug("Start Local Search, solutions len %i", g->len_solutions);
+	solutions = malloc(g->v_count * sizeof(t_bool));
+	ft_memcpy(solutions, g->solutions, g->v_count * sizeof(t_bool));
+	len_solutions = g->len_solutions;
 	covers = init_cover_counts(g);
 	if (!covers)
 		return ;
@@ -78,7 +53,7 @@ void	solve_optimizer(t_graph *g)
 	}
 	iter = 0;
 	lock_count = 0;
-	old_len_solutions = g->len_solutions;
+	old_len_solutions = len_solutions;
 	while (!tle)
 	{
 		iter++;
@@ -86,26 +61,31 @@ void	solve_optimizer(t_graph *g)
 		i = 0;
 		while (!tle && i < g->v_count)
 		{
-			if (g->solutions[i])
+			if (solutions[i])
 			{
-				if (try_prune(g, covers, i))
+				if (try_prune(g, solutions, &len_solutions, covers, i))
 					change = TRUE;
-				else if (try_swap(g, covers, i, tabu_list, iter))
+				else if (try_swap(g, solutions, &len_solutions, covers, i, tabu_list, iter))
 					change = TRUE;
 			}
 			i++;
 		}
-		if (old_len_solutions == g->len_solutions)
+		if (old_len_solutions == len_solutions)
 			lock_count++;
-		else
-			lock_count = 0;
-		old_len_solutions = g->len_solutions;
-		if (!tle && (!change || lock_count >= 2))
+		else if (len_solutions < g->len_solutions)
 		{
-			force_kick(g, covers, tabu_list, iter);
-			while (!is_covered(g, covers))
-				add_candidates(g, covers);
-			old_len_solutions = g->len_solutions;
+			free(g->solutions);
+			g->solutions = solutions;
+			g->len_solutions = len_solutions;
+			solutions = malloc(g->v_count * sizeof(t_bool));
+			ft_memcpy(solutions, g->solutions, g->v_count * sizeof(t_bool));
+			lock_count = 0;
+		}
+		old_len_solutions = len_solutions;
+		if (!tle && ((iter > 0 && !change) || lock_count >= 2))
+		{
+			add_candidates(g, solutions, &len_solutions, covers, tabu_list, iter);
+			old_len_solutions = len_solutions;
 		}
 	}
 	free(covers);
