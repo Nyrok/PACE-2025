@@ -13,20 +13,9 @@
 #ifndef LIBFT_H
 # define LIBFT_H
 # include <stdlib.h>
-# include <unistd.h>
 
-int		ft_atoi(const char *nptr);
 void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
-int		ft_isdigit(int c);
 void	*ft_memset(void	*s, int c, size_t n);
-char	**ft_split(const char *s, const char c);
-char	*ft_strchr(const char *str, const char c);
-char	*ft_strdup(const char *s);
-size_t	ft_strlcpy(char *dest, const char *src, size_t size);
-size_t	ft_strlen(const char *str);
-char	*ft_strjoin(char const *s1, char const *s2);
-char	*add_word(char const *s, int i, int k);
-void	free_split(char **res, int j);
 
 #endif

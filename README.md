@@ -9,8 +9,7 @@ Hamza KONTE
 
 ## Optilio
 
-`dauphine_l3miage_hamza` <br>
-<sub>*actuellement `hkonte`, en cours de changement par l'équipe optilio*</sub>
+`dauphine_l3miage_hamza`
 
 ## USAGE
 ```
