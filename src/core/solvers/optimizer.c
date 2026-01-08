@@ -78,12 +78,6 @@ void	solve_optimizer(t_graph *g)
 			ft_memcpy(g->solutions, solutions, g->v_count * sizeof(t_bool));
 			lock_count = 0;
 		}
-		else if (len_solutions > g->len_solutions)
-		{
-			len_solutions = g->len_solutions;
-			ft_memcpy(solutions, g->solutions, g->v_count * sizeof(t_bool));
-			lock_count = 0;
-		}
 		old_len_solutions = len_solutions;
 		if (!tle && ((iter > 0 && !change) || lock_count >= 2))
 		{
