@@ -74,11 +74,8 @@ void	solve_optimizer(t_graph *g)
 			lock_count++;
 		else if (len_solutions < g->len_solutions)
 		{
-			free(g->solutions);
-			g->solutions = solutions;
 			g->len_solutions = len_solutions;
-			solutions = malloc(g->v_count * sizeof(t_bool));
-			ft_memcpy(solutions, g->solutions, g->v_count * sizeof(t_bool));
+			ft_memcpy(g->solutions, solutions, g->v_count * sizeof(t_bool));
 			lock_count = 0;
 		}
 		old_len_solutions = len_solutions;
