@@ -116,15 +116,12 @@ jobs:
             /bin/sh -c "
               cmake -DCMAKE_BUILD_TYPE=Debug . && \
               make ds_finder && \
-              valgrind --leak-check=full --show-leak-kinds=all timeout -k 5s 60s ./ds_finder < /testset/ds_lite_1.gr 2>&1 | tee /app/valgrind_log.txt && \
-              if grep -q 'All heap blocks were freed -- no leaks are possible' /app/valgrind_log.txt; then
-                echo '✅ MEMORY CHECK PASSED: No leaks detected.'
-                exit 0
-              else
-                echo '❌ MEMORY CHECK FAILED: Leaks detected or program crashed.'
-                exit 1
-              fi
-            "
+              timeout -p -k 5s 60s valgrind --leak-check=full \
+                       --show-leak-kinds=all \
+                       --trace-children=yes \
+                       --errors-for-leak-kinds=all \
+                       --error-exitcode=42 \
+                       ./ds_finder < /testset/ds_lite_1.gr"
   timeout:
     runs-on: ubuntu-latest
     steps:

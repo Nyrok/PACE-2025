@@ -27,7 +27,7 @@ static void	add_candidates(t_graph *g, t_bool *solutions, int *len_solutions, in
 
 void	solve_optimizer(t_graph *g)
 {
-	int	 	*covers;
+	int	 	*covers, *backed_covers;
 	t_bool	*solutions;
 	int		len_solutions, old_len_solutions;
 	int	 	*tabu_list;
@@ -43,12 +43,15 @@ void	solve_optimizer(t_graph *g)
 	ft_memcpy(solutions, g->solutions, g->v_count * sizeof(t_bool));
 	len_solutions = g->len_solutions;
 	covers = init_cover_counts(g);
-	if (!covers)
+	backed_covers = malloc(g->v_count * sizeof(int));
+	if (!covers || !backed_covers)
 		return ;
+	ft_memcpy(backed_covers, covers, g->v_count * sizeof(int));
 	tabu_list = ft_calloc(g->v_count, sizeof(int));
 	if (!tabu_list)
 	{
 		free(covers);
+		free(backed_covers);
 		return ;
 	}
 	iter = 0;
@@ -76,6 +79,14 @@ void	solve_optimizer(t_graph *g)
 		{
 			g->len_solutions = len_solutions;
 			ft_memcpy(g->solutions, solutions, g->v_count * sizeof(t_bool));
+			ft_memcpy(backed_covers, covers, g->v_count * sizeof(int));
+			lock_count = 0;
+		}
+		else if (len_solutions > g->len_solutions)
+		{
+			len_solutions = g->len_solutions;
+			ft_memcpy(solutions, g->solutions, g->v_count * sizeof(t_bool));
+			ft_memcpy(covers, backed_covers, g->v_count * sizeof(int));
 			lock_count = 0;
 		}
 		old_len_solutions = len_solutions;
@@ -87,5 +98,7 @@ void	solve_optimizer(t_graph *g)
 	}
 	free(covers);
 	free(tabu_list);
+	free(solutions);
+	free(backed_covers);
 	debug("End Local Search, solutions len %i", g->len_solutions);
 }
