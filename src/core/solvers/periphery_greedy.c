@@ -93,10 +93,12 @@ void	solve_periphery_greedy(t_graph *g)
 	int	*gain;
 	int	i;
 
+	g->actives = malloc(sizeof(t_bool) * (unsigned int)(g->v_count));
+	g->solutions = malloc(sizeof(t_bool) * (unsigned int)(g->v_count));
 	head = malloc(sizeof(int) * (unsigned int)(g->v_count + 1));
 	next = malloc(sizeof(int) * (unsigned int)g->v_count);
 	gain = malloc(sizeof(int) * (unsigned int)g->v_count);
-	if (!head || !next || !gain)
+	if (!head || !next || !gain || !g->actives || !g->solutions)
 		exit(EXIT_FAILURE);
 	debug("Start Periphery Greedy");
 	i = -1;
