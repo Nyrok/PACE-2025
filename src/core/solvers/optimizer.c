@@ -82,7 +82,7 @@ void	solve_optimizer(t_graph *g)
 			ft_memcpy(backed_covers, covers, g->v_count * sizeof(int));
 			lock_count = 0;
 		}
-		else if (len_solutions > g->len_solutions)
+		else if (g->type != GRAPH_CORE_PERIPHERY && len_solutions > g->len_solutions)
 		{
 			len_solutions = g->len_solutions;
 			ft_memcpy(solutions, g->solutions, g->v_count * sizeof(t_bool));
