@@ -121,6 +121,7 @@ jobs:
                        --trace-children=yes \
                        --errors-for-leak-kinds=all \
                        --error-exitcode=42 \
+                       --log-fd=1 \
                        ./ds_finder < /testset/ds_lite_1.gr"
   timeout:
     runs-on: ubuntu-latest
