@@ -116,7 +116,7 @@ jobs:
             /bin/sh -c "
               cmake -DCMAKE_BUILD_TYPE=Debug . && \
               make ds_finder && \
-              timeout -p -k 5s 60s valgrind --leak-check=full \
+              timeout -v -p 60s valgrind --leak-check=full \
                        --show-leak-kinds=all \
                        --trace-children=yes \
                        --errors-for-leak-kinds=all \
