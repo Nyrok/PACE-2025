@@ -4,6 +4,7 @@
 # ifndef DEBUG
 #  define DEBUG 1
 # endif
+// Durée minimale (en itérations) pendant laquelle un sommet est interdit après un swap
 # define TABU_TENURE 2
 # define TRUE 1
 # define FALSE 0
@@ -20,6 +21,7 @@
 # include "graph.h"
 # include "solver.h"
 
+// Flag de timeout levé par SIGTERM (le juge optil.io envoie ce signal quand le temps est écoulé)
 extern volatile sig_atomic_t	tle;
 extern t_time					start_time;
 static unsigned int g_seed = 42;
@@ -28,6 +30,8 @@ t_time	gettime(void);
 void	debug(char *message, ...);
 void	parse_input(t_graph *graph);
 
+/* Générateur pseudo-aléatoire XOR-shift : rapide et déterministe.
+** La seed fixe (42) garantit des résultats reproductibles entre les exécutions. */
 static inline int	xor_rand(void) {
 	g_seed ^= g_seed << 13;
 	g_seed ^= g_seed >> 17;

@@ -1,5 +1,16 @@
 #include "ds_finder.h"
 
+/*
+** Recherche locale par tabou : tente d'améliorer la solution gloutonne.
+** Pour chaque sommet de la solution, on essaie de le supprimer (prune) ou de l'échanger (swap).
+** backed_covers et g->solutions sauvegardent la meilleure solution connue.
+*/
+
+/*
+** Perturbation : retire aléatoirement un sommet de la solution, ce qui crée des "trous",
+** puis comble les trous en ajoutant les voisins non couverts.
+** Casse les plateaux et permet d'explorer une nouvelle zone de l'espace de recherche.
+*/
 static void	add_candidates(t_graph *g, t_bool *solutions, int *len_solutions,
 		int *covers, int *tabu_list, int iter)
 {
@@ -84,7 +95,7 @@ void	solve_optimizer(t_graph *g)
 		return ;
 	}
 	iter = 0;
-	lock_count = 0;
+	lock_count = 0; // Compte les itérations sans amélioration. Après 2 → perturbation
 	old_len_solutions = len_solutions;
 	while (!tle)
 	{
@@ -111,6 +122,7 @@ void	solve_optimizer(t_graph *g)
 			ft_memcpy(backed_covers, covers, g->v_count * sizeof(int));
 			lock_count = 0;
 		}
+		// Si la solution s'est dégradée, on restaure la meilleure connue (sauf core-periphery)
 		else if (g->type != GRAPH_CORE_PERIPHERY && len_solutions > g->len_solutions)
 		{
 			len_solutions = g->len_solutions;
@@ -119,6 +131,8 @@ void	solve_optimizer(t_graph *g)
 			lock_count = 0;
 		}
 		old_len_solutions = len_solutions;
+		// Perturbation si : (aucun changement dans l'itération OU 2 itérations bloquées)
+		// ET (on est à la meilleure solution OU ce n'est pas un graphe core-periphery)
 		if (!tle && ((iter > 0 && !change) || lock_count >= 2) \
 			&& (len_solutions == g->len_solutions || g->type != GRAPH_CORE_PERIPHERY))
 		{

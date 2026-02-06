@@ -1,5 +1,6 @@
 #include "ds_finder.h"
 
+// Gain = nombre de sommets actifs que u couvrirait s'il était ajouté (lui-même + voisins actifs)
 static int	get_gain(t_graph *g, int u, t_bool *actives)
 {
 	int	i;
@@ -39,6 +40,13 @@ static void	update_actives(t_graph *g, int u, t_bool *actives, int *remaining)
 	}
 }
 
+/*
+** Structure de bucket sort par listes chaînées implicites (tableaux) :
+**   head[d] = premier sommet dans le bucket de gain d (-1 si vide)
+**   next[u] = prochain sommet après u dans le même bucket
+**   gain[u] = gain estimé du sommet u
+** Permet de traiter en priorité les sommets à haut gain sans re-trier.
+*/
 static void	init_buckets(t_graph *g, int *head, int *next, int *gain)
 {
 	int	i;
@@ -73,6 +81,7 @@ static void	core_loop(t_graph *g, int *head, int *next, int *gain)
 		}
 		u = head[idx];
 		head[idx] = next[u];
+		// Lazy evaluation : on recalcule le gain réel au moment de traiter le sommet
 		real_g = get_gain(g, u, g->actives);
 		if (real_g >= idx)
 		{
@@ -82,6 +91,7 @@ static void	core_loop(t_graph *g, int *head, int *next, int *gain)
 		}
 		else if (real_g > 0)
 		{
+			// Re-bucketing : gain réel < bucket actuel, on déplace vers le bon bucket
 			gain[u] = real_g;
 			next[u] = head[real_g];
 			head[real_g] = u;

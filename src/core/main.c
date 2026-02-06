@@ -1,6 +1,11 @@
 #include "ds_finder.h"
 
-//https://www.optil.io/optilion/help/signals#c
+/*
+** Pipeline principal : parse → classification du graphe → tri par degré → résolution gloutonne → optimisation locale.
+** Le juge optil.io envoie SIGTERM quand le temps est écoulé : on intercepte ce signal
+** pour lever le flag `tle` et afficher la meilleure solution trouvée jusque-là.
+*/
+
 volatile sig_atomic_t	tle = 0;
 t_time					start_time;
 

@@ -31,9 +31,9 @@ typedef struct s_graph
 	int				e_count;
 	t_graph_type	type;
 	t_node			*nodes;
-	t_bool			*solutions;
-	t_bool			*actives;
-	int				*v_sorted;
+	t_bool			*solutions;	// solutions[i] = TRUE si le sommet i fait partie de l'ensemble dominant
+	t_bool			*actives;	// actives[i] = TRUE si le sommet i n'est pas encore couvert
+	int				*v_sorted;	// Indices des sommets triés par degré croissant (dernier = plus haut degré)
 	int				len_solutions;
 	t_bool			finished;
 }	t_graph;
