@@ -1,5 +1,5 @@
 CX = gcc
-CXFLAGS = -Wall -Werror -Wextra -I includes -std=c99
+CXFLAGS = -Wall -Werror -Wextra -I includes -std=c99 \
 		-O3 \
 		-flto \
 		-march=native \
