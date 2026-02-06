@@ -115,7 +115,7 @@ jobs:
             ds-leaks:latest \
             /bin/sh -c "
               cmake -DCMAKE_BUILD_TYPE=Debug . && \
-              make ds_finder && \
+              make -j$(nproc) && \
               timeout -v -p 60s valgrind --leak-check=full \
                        --show-leak-kinds=all \
                        --trace-children=yes \
