@@ -99,5 +99,6 @@ void	solve_greedy(t_graph *graph)
 	}
 	graph->actives = actives;
 	graph->solutions = solutions;
+	free(v_sorted);
 	debug("End Greedy");
 }
