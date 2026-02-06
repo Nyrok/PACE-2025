@@ -55,12 +55,15 @@ void	solve_greedy(t_graph *graph)
 	t_bool	*actives;
 	int		best_node;
 	int		i;
+	int		*v_sorted;	// Indices des sommets triés par degré croissant (dernier = plus haut degré)
 
-	debug("Start Greedy");
+	v_sorted = malloc((unsigned int)graph->v_count * sizeof(int));
 	solutions = ft_calloc(graph->v_count, sizeof(t_bool));
 	actives = malloc((unsigned int)graph->v_count * sizeof(t_bool));
-	if (!solutions || !actives)
+	if (!v_sorted || !solutions || !actives)
 		return ;
+	sort_graph(graph, &v_sorted);
+	debug("Start Greedy");
 	ft_memset(actives, TRUE, graph->v_count * sizeof(t_bool));
 	// Phase feuilles : on ajoute le voisin de la feuille (pas la feuille elle-même),
 	// car le voisin couvre la feuille ET potentiellement d'autres sommets
@@ -83,7 +86,7 @@ void	solve_greedy(t_graph *graph)
 	}
 	while (!tle)
 	{
-		best_node = find_best_candidate(graph->v_count, graph->v_sorted, actives);
+		best_node = find_best_candidate(graph->v_count, v_sorted, actives);
 		if (best_node == -1)
 		{
 			graph->finished = TRUE;

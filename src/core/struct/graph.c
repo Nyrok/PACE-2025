@@ -78,8 +78,7 @@ void	fill_graph(t_graph *graph, int v, int e)
 	graph->v_count = v;
 	graph->e_count = e;
 	graph->nodes = ft_calloc(v, sizeof(t_node));
-	graph->v_sorted = malloc(graph->v_count * sizeof(int));
-	if (!graph->nodes || !graph->v_sorted)
+	if (!graph->nodes)
 		exit(EXIT_FAILURE);
 }
 
@@ -96,5 +95,4 @@ void	free_graph(t_graph *graph)
 	free(graph->nodes);
 	free(graph->solutions);
 	free(graph->actives);
-	free(graph->v_sorted);
 }

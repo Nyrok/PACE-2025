@@ -27,7 +27,6 @@ int main(void)
 		.nodes = NULL,
 		.solutions = NULL,
 		.actives = NULL,
-		.v_sorted = NULL,
 		.len_solutions = 0,
 		.finished = FALSE
 	};
@@ -39,7 +38,6 @@ int main(void)
 	parse_input(&graph);
 	graph.type = get_graph_type(&graph);
 	debug("Graph type %d", graph.type);
-	sort_graph(&graph);
 	solve_graph(&graph);
 	return (EXIT_SUCCESS);
 }
