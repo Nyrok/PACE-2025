@@ -38,7 +38,7 @@ t_graph_type	get_graph_type(t_graph *g)
 		return (GRAPH_SCALE_FREE);
 	if (avg_d >= 2 && avg_d <= 6 && max_d <= 10)
 	{
-		if (leaf_count > g->v_count * 0.1)
+		if (g->e_count == g->v_count - 1 && leaf_count > g->v_count * 0.1)
 			return (GRAPH_TREE);
 		if (g->e_count == g->v_count)
 			return (GRAPH_RING);

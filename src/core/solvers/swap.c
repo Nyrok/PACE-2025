@@ -23,9 +23,8 @@ t_bool	try_swap(t_graph *g, t_bool *solutions, int *len_solutions, int *covers, 
 			private_neighbors[p_count++] = neighbor;
 		j++;
 	}
-	if (p_count == 0) 
+	if (p_count == 0)
 	{
-		check_timeout(g);
 		free(private_neighbors);
 		solutions[u] = FALSE;
 		(*len_solutions)--;
@@ -60,13 +59,12 @@ t_bool	try_swap(t_graph *g, t_bool *solutions, int *len_solutions, int *covers, 
 			}
 			if (can_cover_all)
 			{
-				check_timeout(g);
 				solutions[u] = FALSE;
 				update_covers(g, covers, u, -1);
 				solutions[v] = TRUE;
 				update_covers(g, covers, v, 1);
-				tabu_list[u] = iter + TABU_TENURE;
-				tabu_list[v] = iter + TABU_TENURE;
+				tabu_list[u] = iter + TABU_TENURE + (xor_rand() % 10);
+				tabu_list[v] = iter + TABU_TENURE + (xor_rand() % 10);
 				free(private_neighbors);
 				return (TRUE);
 			}

@@ -20,6 +20,7 @@ static void	update_actives(t_graph *g, int u, t_bool *actives, int *remaining)
 {
 	int	i;
 	int	v;
+	
 	if (actives[u])
 	{
 		actives[u] = FALSE;
@@ -42,6 +43,7 @@ static void	init_buckets(t_graph *g, int *head, int *next, int *gain)
 {
 	int	i;
 	int	v_gain;
+
 	i = 0;
 	while (i < g->v_count)
 	{
@@ -59,6 +61,7 @@ static void	core_loop(t_graph *g, int *head, int *next, int *gain)
 	int	u;
 	int	real_g;
 	int	remaining;
+
 	remaining = g->v_count;
 	idx = g->v_count;
 	while (idx > 0 && remaining > 0)
@@ -73,7 +76,7 @@ static void	core_loop(t_graph *g, int *head, int *next, int *gain)
 		real_g = get_gain(g, u, g->actives);
 		if (real_g >= idx)
 		{
-			g->solutions[u] = 1;
+			g->solutions[u] = TRUE;
 			g->len_solutions++;
 			update_actives(g, u, g->actives, &remaining);
 		}
@@ -105,6 +108,7 @@ void	solve_periphery_greedy(t_graph *g)
 	while (++i < g->v_count)
 	{
 		g->actives[i] = TRUE;
+		g->solutions[i] = FALSE;
 		head[i] = -1;
 	}
 	head[g->v_count] = -1;

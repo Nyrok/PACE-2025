@@ -1,22 +1,23 @@
 #include "ds_finder.h"
 
 static t_node	*nodes_ctx;
-static int		sort_asc;
 
 static int	compare_degrees(const void *a, const void *b)
 {
-	int		index_a;
-	int		index_b;
-	double	degree_a;
-	double	degree_b;
+	int	index_a;
+	int	index_b;
+	int	degree_a;
+	int	degree_b;
+	int	diff;
 
 	index_a = *(int *)a;
 	index_b = *(int *)b;
 	degree_a = nodes_ctx[index_a].degree;
 	degree_b = nodes_ctx[index_b].degree;
-	if (sort_asc)
-		return (degree_a - degree_b); 
-	return (degree_b - degree_a); 
+	diff = degree_a - degree_b;
+	if (diff == 0)
+		diff = index_a - index_b;
+	return (diff);
 }
 
 void	sort_graph(t_graph *graph)
@@ -31,7 +32,6 @@ void	sort_graph(t_graph *graph)
 		i++;
 	}
 	nodes_ctx = graph->nodes;
-	sort_asc = graph->type == GRAPH_UNKNOWN || graph->type == GRAPH_SCALE_FREE;
 	qsort(graph->v_sorted, graph->v_count, sizeof(int), compare_degrees);
 	debug("End sorting graph");
 }

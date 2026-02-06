@@ -6,6 +6,7 @@ void	exit_print_solution(t_graph *graph)
 	int	solutions_count;
 
 	solutions_count = graph->len_solutions;
+	debug("Graph finished ? %d", graph->finished);
 	if (!graph->finished)
 	{
 		i = 0;
@@ -29,7 +30,7 @@ void	exit_print_solution(t_graph *graph)
 }
 
 void	solve_graph(t_graph *graph) {
-	if (graph->type == GRAPH_CORE_PERIPHERY)
+	if (graph->type == GRAPH_CORE_PERIPHERY || graph->type == GRAPH_GRID_2D)
 		solve_periphery_greedy(graph);
 	else
 		solve_greedy(graph);

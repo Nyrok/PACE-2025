@@ -22,14 +22,18 @@
 
 extern volatile sig_atomic_t	tle;
 extern t_time					start_time;
+static unsigned int g_seed = 42;
 
 t_time	gettime(void);
 void	debug(char *message, ...);
 void	parse_input(t_graph *graph);
 void	exit_print_solution(t_graph *graph);
 
-static inline void check_timeout(t_graph *graph) {
-    if (tle) exit_print_solution(graph);
+static inline int	xor_rand(void) {
+	g_seed ^= g_seed << 13;
+	g_seed ^= g_seed >> 17;
+	g_seed ^= g_seed << 5;
+	return ((int)(g_seed & 0x7FFFFFFF));
 }
 
 #endif

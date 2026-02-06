@@ -19,7 +19,7 @@ static int	find_best_candidate(int v_count, int *v_sorted, t_bool *actives)
 	while (i < v_count)
 	{
 		node_idx = v_sorted[i];
-		if (actives[node_idx] && rand() % 2 == 0)
+		if (actives[node_idx])
 			return (node_idx);
 		i++;
 	}
@@ -48,6 +48,7 @@ void	solve_greedy(t_graph *graph)
 	t_bool	*solutions;
 	t_bool	*actives;
 	int		best_node;
+	int		i;
 
 	debug("Start Greedy");
 	solutions = ft_calloc(graph->v_count, sizeof(t_bool));
@@ -55,6 +56,23 @@ void	solve_greedy(t_graph *graph)
 	if (!solutions || !actives)
 		return ;
 	ft_memset(actives, TRUE, graph->v_count * sizeof(t_bool));
+	i = 0;
+	while (i < graph->v_count)
+	{
+		if (graph->nodes[i].degree == 1 && actives[i])
+		{
+			best_node = graph->nodes[i].neighbors[0];
+			if (!solutions[best_node])
+			{
+				actives[best_node] = FALSE;
+				solutions[best_node] = TRUE;
+				graph->len_solutions++;
+				update_neighbors_active(graph, best_node, actives);
+			}
+			actives[i] = FALSE;
+		}
+		i++;
+	}
 	while (!tle)
 	{
 		best_node = find_best_candidate(graph->v_count, graph->v_sorted, actives);

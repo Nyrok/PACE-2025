@@ -14,7 +14,6 @@ t_bool	try_prune(t_graph *g, t_bool *solutions, int *len_solutions, int *covers,
 			return (FALSE);
 		j++;
 	}
-	check_timeout(g);
 	solutions[u] = FALSE;
 	(*len_solutions)--;
 	update_covers(g, covers, u, -1);

@@ -28,7 +28,6 @@ int main(void)
 	};
 	struct sigaction action;
 
-	srand(42); // Déterministe
 	ft_memset(&action, 0, sizeof(struct sigaction));
 	action.sa_handler = term;
 	sigaction(SIGTERM, &action, NULL);
