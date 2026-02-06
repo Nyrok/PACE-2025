@@ -60,17 +60,7 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Static")
 	)
 	target_link_options(ds_finder PRIVATE -static -flto -march=native)
 else()
-	target_compile_options(ds_finder PRIVATE 
-		-O3
-		-flto 
-		-march=native 
-		-funroll-loops
-		-fno-strict-aliasing
-		-fprefetch-loop-arrays
-		-fomit-frame-pointer
-		-D_GNU_SOURCE
-	)
-	target_link_options(ds_finder PRIVATE -static -flto -march=native)
+	target_compile_options(ds_finder PRIVATE -g3 -flto)
 endif()
 
 if(NOT FILENO)
