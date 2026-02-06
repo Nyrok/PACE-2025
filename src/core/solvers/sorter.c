@@ -1,5 +1,7 @@
 #include "ds_finder.h"
 
+// Variable globale nécessaire car qsort n'accepte pas de contexte supplémentaire
+// dans sa fonction de comparaison
 static t_node	*nodes_ctx;
 
 static int	compare_degrees(const void *a, const void *b)

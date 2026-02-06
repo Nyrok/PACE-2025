@@ -1,5 +1,10 @@
 #include "ds_finder.h"
 
+/*
+** Cherche le sommet actif de plus haut degré dans v_sorted (trié par degré croissant).
+** first_active mémorise l'index du premier sommet encore actif pour éviter de
+** rescanner depuis le début (les premiers sommets inactifs le restent).
+*/
 static int	find_best_candidate(int v_count, int *v_sorted, t_bool *actives)
 {
 	static int	first_active = 0;
@@ -15,6 +20,7 @@ static int	find_best_candidate(int v_count, int *v_sorted, t_bool *actives)
 	}
 	if (first_active >= v_count)
 		return (-1);
+	// Parcours depuis first_active : le dernier trouvé = plus haut degré actif
 	i = first_active;
 	while (i < v_count)
 	{
@@ -56,6 +62,8 @@ void	solve_greedy(t_graph *graph)
 	if (!solutions || !actives)
 		return ;
 	ft_memset(actives, TRUE, graph->v_count * sizeof(t_bool));
+	// Phase feuilles : on ajoute le voisin de la feuille (pas la feuille elle-même),
+	// car le voisin couvre la feuille ET potentiellement d'autres sommets
 	i = 0;
 	while (i < graph->v_count)
 	{
