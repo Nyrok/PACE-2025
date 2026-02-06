@@ -1,6 +1,6 @@
 #include "ds_finder.h"
 
-void	exit_print_solution(t_graph *graph)
+static void	exit_print_solution(t_graph *graph)
 {
 	int	i;
 	int	solutions_count;

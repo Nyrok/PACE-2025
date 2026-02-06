@@ -27,7 +27,6 @@ static unsigned int g_seed = 42;
 t_time	gettime(void);
 void	debug(char *message, ...);
 void	parse_input(t_graph *graph);
-void	exit_print_solution(t_graph *graph);
 
 static inline int	xor_rand(void) {
 	g_seed ^= g_seed << 13;
