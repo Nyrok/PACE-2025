@@ -94,5 +94,4 @@ void	free_graph(t_graph *graph)
 	}
 	free(graph->nodes);
 	free(graph->solutions);
-	free(graph->actives);
 }

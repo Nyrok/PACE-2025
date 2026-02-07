@@ -88,16 +88,14 @@ void	solve_greedy(t_graph *graph)
 	{
 		best_node = find_best_candidate(graph->v_count, v_sorted, actives);
 		if (best_node == -1)
-		{
-			graph->finished = TRUE;
 			break ;
-		}
 		actives[best_node] = FALSE;
 		solutions[best_node] = TRUE;
 		graph->len_solutions++;
 		update_neighbors_active(graph, best_node, actives);
 	}
-	graph->actives = actives;
+	if (tle)
+		add_missing_solutions(graph, actives);
 	graph->solutions = solutions;
 	free(v_sorted);
 	debug("End Greedy");

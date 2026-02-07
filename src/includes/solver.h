@@ -9,5 +9,6 @@ void	solve_greedy(t_graph *graph);
 void	solve_periphery_greedy(t_graph *graph);
 t_bool	try_prune(t_graph *graph, t_bool *solutions, int *len_solutions, int *covers, int u);
 t_bool	try_swap(t_graph *graph, t_bool *solutions, int *len_solutions, int *covers, int u, int *tabu_list, int iter);
+void	add_missing_solutions(t_graph *graph, t_bool *actives);
 
 #endif

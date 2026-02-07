@@ -40,13 +40,6 @@ static void	update_actives(t_graph *g, int u, t_bool *actives, int *remaining)
 	}
 }
 
-/*
-** Structure de bucket sort par listes chaînées implicites (tableaux) :
-**   head[d] = premier sommet dans le bucket de gain d (-1 si vide)
-**   next[u] = prochain sommet après u dans le même bucket
-**   gain[u] = gain estimé du sommet u
-** Permet de traiter en priorité les sommets à haut gain sans re-trier.
-*/
 static void	init_buckets(t_graph *g, int *head, int *next, int *gain)
 {
 	int	i;
@@ -63,7 +56,7 @@ static void	init_buckets(t_graph *g, int *head, int *next, int *gain)
 	}
 }
 
-static void	core_loop(t_graph *g, int *head, int *next, int *gain)
+static void	core_loop(t_graph *g, t_bool *actives, int *head, int *next, int *gain)
 {
 	int	idx;
 	int	u;
@@ -72,7 +65,7 @@ static void	core_loop(t_graph *g, int *head, int *next, int *gain)
 
 	remaining = g->v_count;
 	idx = g->v_count;
-	while (idx > 0 && remaining > 0)
+	while (!tle && idx > 0 && remaining > 0)
 	{
 		if (head[idx] == -1)
 		{
@@ -82,12 +75,12 @@ static void	core_loop(t_graph *g, int *head, int *next, int *gain)
 		u = head[idx];
 		head[idx] = next[u];
 		// Lazy evaluation : on recalcule le gain réel au moment de traiter le sommet
-		real_g = get_gain(g, u, g->actives);
+		real_g = get_gain(g, u, actives);
 		if (real_g >= idx)
 		{
 			g->solutions[u] = TRUE;
 			g->len_solutions++;
-			update_actives(g, u, g->actives, &remaining);
+			update_actives(g, u, actives, &remaining);
 		}
 		else if (real_g > 0)
 		{
@@ -99,33 +92,43 @@ static void	core_loop(t_graph *g, int *head, int *next, int *gain)
 	}
 }
 
-void	solve_periphery_greedy(t_graph *g)
+/*
+** Structure de bucket sort par listes chaînées implicites (tableaux) :
+**   actives[u] = TRUE si le sommet u n'est pas encore couvert
+**   head[d] = premier sommet dans le bucket de gain d (-1 si vide)
+**   next[u] = prochain sommet après u dans le même bucket
+**   gain[u] = gain estimé du sommet u
+** Permet de traiter en priorité les sommets à haut gain sans re-trier.
+*/
+void	solve_periphery_greedy(t_graph *graph)
 {
-	int	*head;
-	int	*next;
-	int	*gain;
-	int	i;
+	t_bool	*actives;
+	int		*head;
+	int		*next;
+	int		*gain;
+	int		i;
 
-	g->actives = malloc(sizeof(t_bool) * (unsigned int)(g->v_count));
-	g->solutions = malloc(sizeof(t_bool) * (unsigned int)(g->v_count));
-	head = malloc(sizeof(int) * (unsigned int)(g->v_count + 1));
-	next = malloc(sizeof(int) * (unsigned int)g->v_count);
-	gain = malloc(sizeof(int) * (unsigned int)g->v_count);
-	if (!head || !next || !gain || !g->actives || !g->solutions)
+	graph->solutions = malloc(sizeof(t_bool) * (unsigned int)(graph->v_count));
+	actives = malloc(sizeof(t_bool) * (unsigned int)(graph->v_count));
+	head = malloc(sizeof(int) * (unsigned int)(graph->v_count + 1));
+	next = malloc(sizeof(int) * (unsigned int)graph->v_count);
+	gain = malloc(sizeof(int) * (unsigned int)graph->v_count);
+	if (!head || !next || !gain || !actives || !graph->solutions)
 		exit(EXIT_FAILURE);
 	debug("Start Periphery Greedy");
 	i = -1;
-	while (++i < g->v_count)
+	while (++i < graph->v_count)
 	{
-		g->actives[i] = TRUE;
-		g->solutions[i] = FALSE;
+		actives[i] = TRUE;
+		graph->solutions[i] = FALSE;
 		head[i] = -1;
 	}
-	head[g->v_count] = -1;
-	init_buckets(g, head, next, gain);
-	g->len_solutions = 0;
-	core_loop(g, head, next, gain);
-	g->finished = TRUE;
+	head[graph->v_count] = -1;
+	init_buckets(graph, head, next, gain);
+	graph->len_solutions = 0;
+	core_loop(graph, actives, head, next, gain);
+	if (tle)
+		add_missing_solutions(graph, actives);
 	free(head);
 	free(next);
 	free(gain);

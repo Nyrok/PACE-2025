@@ -26,9 +26,7 @@ int main(void)
 		.type = GRAPH_UNKNOWN,
 		.nodes = NULL,
 		.solutions = NULL,
-		.actives = NULL,
-		.len_solutions = 0,
-		.finished = FALSE
+		.len_solutions = 0
 	};
 	struct sigaction action;
 

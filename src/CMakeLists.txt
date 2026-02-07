@@ -51,7 +51,6 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Static")
 	target_compile_options(ds_finder PRIVATE 
 		-O3 
 		-flto 
-		-march=native 
 		-funroll-loops
 		-fno-strict-aliasing
 		-fprefetch-loop-arrays
@@ -95,7 +94,6 @@ add_custom_target(binary_solution
 	COMMAND rm -f ds_finder
 	COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target unify
 	COMMAND gcc -static -O3 -flto 
-		-march=native 
 		-funroll-loops
 		-fno-strict-aliasing
 		-fprefetch-loop-arrays
