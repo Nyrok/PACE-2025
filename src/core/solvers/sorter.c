@@ -4,6 +4,8 @@
 // dans sa fonction de comparaison
 static t_node	*nodes_ctx;
 
+// Compare deux sommets par leur degré (croissant).
+// En cas d'égalité, compare par index pour garantir un ordre stable et déterministe.
 static int	compare_degrees(const void *a, const void *b)
 {
 	int	index_a;

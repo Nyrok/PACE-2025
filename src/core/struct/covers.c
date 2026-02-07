@@ -48,6 +48,7 @@ void	update_covers(t_graph *g, int *covers, int u, int val)
 	}
 }
 
+// Vérifie que tous les sommets soient couverts (covers[i] >= 1 pour tout i appartenant à [0; v_count[ )
 t_bool	is_covered(t_graph *g, int *covers)
 {
 	int	i;

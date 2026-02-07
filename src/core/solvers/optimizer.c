@@ -1,12 +1,6 @@
 #include "ds_finder.h"
 
 /*
-** Recherche locale par tabou : tente d'améliorer la solution gloutonne.
-** Pour chaque sommet de la solution, on essaie de le supprimer (prune) ou de l'échanger (swap).
-** backed_covers et g->solutions sauvegardent la meilleure solution connue.
-*/
-
-/*
 ** Perturbation : retire aléatoirement un sommet de la solution, ce qui crée des "trous",
 ** puis comble les trous en ajoutant les voisins non couverts.
 ** Casse les plateaux et permet d'explorer une nouvelle zone de l'espace de recherche.
@@ -60,6 +54,11 @@ static void	add_candidates(t_graph *g, t_bool *solutions, int *len_solutions,
     }
 }
 
+/*
+** Recherche locale par tabou : tente d'améliorer la solution gloutonne.
+** Pour chaque sommet de la solution, on essaie de le supprimer (prune) ou de l'échanger (swap).
+** backed_covers et g->solutions sauvegardent la meilleure solution connue.
+*/
 void	solve_optimizer(t_graph *g)
 {
 	int	 	*covers, *backed_covers;
