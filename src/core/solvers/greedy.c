@@ -97,6 +97,7 @@ void	solve_greedy(t_graph *graph)
 	if (tle)
 		add_missing_solutions(graph, actives);
 	graph->solutions = solutions;
+	free(actives);
 	free(v_sorted);
 	debug("End Greedy");
 }

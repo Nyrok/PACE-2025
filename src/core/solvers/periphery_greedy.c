@@ -129,6 +129,7 @@ void	solve_periphery_greedy(t_graph *graph)
 	core_loop(graph, actives, head, next, gain);
 	if (tle)
 		add_missing_solutions(graph, actives);
+	free(actives);
 	free(head);
 	free(next);
 	free(gain);
