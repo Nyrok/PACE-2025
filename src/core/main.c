@@ -1,6 +1,11 @@
 #include "ds_finder.h"
 
-//https://www.optil.io/optilion/help/signals#c
+/*
+** Pipeline principal : parse → classification du graphe → tri par degré → résolution gloutonne → optimisation locale.
+** Le juge optil.io envoie SIGTERM quand le temps est écoulé : on intercepte ce signal
+** pour lever le flag `tle` et afficher la meilleure solution trouvée jusque-là.
+*/
+
 volatile sig_atomic_t	tle = 0;
 t_time					start_time;
 
@@ -21,21 +26,16 @@ int main(void)
 		.type = GRAPH_UNKNOWN,
 		.nodes = NULL,
 		.solutions = NULL,
-		.actives = NULL,
-		.v_sorted = NULL,
-		.len_solutions = 0,
-		.finished = FALSE
+		.len_solutions = 0
 	};
 	struct sigaction action;
 
-	srand(42); // Déterministe
 	ft_memset(&action, 0, sizeof(struct sigaction));
 	action.sa_handler = term;
 	sigaction(SIGTERM, &action, NULL);
 	parse_input(&graph);
 	graph.type = get_graph_type(&graph);
 	debug("Graph type %d", graph.type);
-	sort_graph(&graph);
 	solve_graph(&graph);
 	return (EXIT_SUCCESS);
 }

@@ -1,5 +1,13 @@
 CX = gcc
-CXFLAGS = -Wall -Werror -Wextra -I includes -O3 -std=c99 -flto
+CXFLAGS = -Wall -Werror -Wextra -I includes -std=c99 \
+		-O3 \
+		-flto \
+		-march=native \
+		-funroll-loops \
+		-fno-strict-aliasing \
+		-fprefetch-loop-arrays \
+		-fomit-frame-pointer \
+		-D_GNU_SOURCE
 
 LIBFT_DIR = libs/libft
 LIBFT = $(LIBFT_DIR)/libft.a

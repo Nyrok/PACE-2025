@@ -20,22 +20,19 @@ typedef enum e_graph_type
 
 typedef struct s_node
 {
-	int	*neighbors;
-	int	degree;
-	int	capacity;
+	int	*neighbors; // Tableau dynamique des voisins (indices des sommets adjacents)
+	int	degree; // Nombre de voisins (degré du sommet)
+	int	capacity; // Metadata pour savoir la taille à allouer pour neighbors
 }	t_node;
 
 typedef struct s_graph
 {
-	int				v_count;
-	int				e_count;
-	t_graph_type	type;
-	t_node			*nodes;
-	t_bool			*solutions;
-	t_bool			*actives;
-	int				*v_sorted;
-	int				len_solutions;
-	t_bool			finished;
+	int				v_count; // nombre de sommets
+	int				e_count; // nombre d'arêtes
+	t_graph_type	type; // classification du graphe pour choisir la meilleure stratégie de résolution
+	t_node			*nodes; // nodes[i] = structure du sommet i (degré, voisins, etc.)
+	t_bool			*solutions;	// solutions[i] = TRUE si le sommet i fait partie de l'ensemble dominant
+	int				len_solutions; // nombre de sommets dominants
 }	t_graph;
 
 #endif
