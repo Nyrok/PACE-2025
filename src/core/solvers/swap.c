@@ -1,5 +1,6 @@
 #include "ds_finder.h"
 
+__attribute__((hot))
 t_bool	try_swap(t_graph *g, t_bool * restrict solutions, int *len_solutions,
 		int * restrict covers, int u, int * restrict tabu_list, int iter,
 		int *buffer)

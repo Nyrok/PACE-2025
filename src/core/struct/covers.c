@@ -6,6 +6,7 @@
 ** Si covers[i] >= 1, le sommet i est couvert.
 */
 
+__attribute__((malloc))
 int	*init_cover_counts(t_graph *g)
 {
 	int	*covers;
@@ -35,6 +36,7 @@ int	*init_cover_counts(t_graph *g)
 }
 
 // val = +1 quand on ajoute u à la solution, -1 quand on le retire (mise à jour incrémentale)
+__attribute__((always_inline)) inline
 void	update_covers(t_graph *g, int * restrict covers, int u, int val)
 {
 	int			i;
@@ -53,6 +55,7 @@ void	update_covers(t_graph *g, int * restrict covers, int u, int val)
 }
 
 // Vérifie que tous les sommets soient couverts (covers[i] >= 1 pour tout i appartenant à [0; v_count[ )
+__attribute__((pure))
 t_bool	is_covered(t_graph *g, int *covers)
 {
 	int	u;

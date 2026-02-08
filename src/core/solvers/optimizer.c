@@ -5,6 +5,7 @@
 ** Pour chaque sommet de la solution, on essaie de le supprimer (prune) ou de l'échanger (swap).
 ** backed_covers et g->solutions sauvegardent la meilleure solution connue.
 */
+__attribute__((flatten, hot))
 void	solve_optimizer(t_graph *g)
 {
 	int	 	*covers, *backed_covers, *buffer;

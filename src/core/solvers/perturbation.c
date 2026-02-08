@@ -8,6 +8,7 @@
 ** include_self = TRUE  → u est candidat (réparation d'un voisin non couvert)
 ** include_self = FALSE → seuls N(u) sont candidats (couvrir u sans le réinsérer)
 */
+__attribute__((hot))
 static int	greedy_pick(t_graph *g, int * restrict covers,
 		t_bool * restrict solutions, int u, t_bool include_self)
 {
@@ -75,6 +76,7 @@ static int	greedy_pick(t_graph *g, int * restrict covers,
 ** La mise à jour de covers[] après chaque ajout est dynamique : les scores
 ** des candidats suivants tiennent compte des ajouts précédents.
 */
+__attribute__((hot))
 void	add_candidates(t_graph *g, t_bool * restrict solutions,
 		int *len_solutions, int * restrict covers,
 		int * restrict tabu_list, int iter)

@@ -35,7 +35,7 @@ set(SRCS
 add_executable(ds_finder ${SRCS})
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	add_definitions(-DDEBUG=0)
+	#add_definitions(-DDEBUG=0)
 	target_compile_options(ds_finder PRIVATE 
 		-O3 
 		-flto 

@@ -49,6 +49,7 @@ static void	update_neighbors_active(t_graph *g, int u, t_bool *actives)
 	}
 }
 
+__attribute__((cold))
 void	solve_greedy(t_graph *graph)
 {
 	t_bool	*solutions;

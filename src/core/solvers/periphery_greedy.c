@@ -101,6 +101,7 @@ static void	core_loop(t_graph *g, t_bool *solutions, t_bool *actives, int *head,
 **   gain[u] = gain estimé du sommet u
 ** Permet de traiter en priorité les sommets à haut gain sans re-trier.
 */
+__attribute__((cold))
 void	solve_periphery_greedy(t_graph *graph)
 {
 	t_bool	*solutions;
