@@ -26,7 +26,7 @@
     #text(size: 18pt, weight: "bold", fill: rgb("#003366"))[ds\_finder]
     
     #v(0.3em)
-    #text(size: 10pt)[Projet en algorithmes dans les graphes (PACE 2025)]
+    #text(size: 10pt)[Projet en algorithmes dans les graphes]
     
     #v(0.2em)
     #text(size: 8pt, style: "italic")[

@@ -35,16 +35,19 @@ int	*init_cover_counts(t_graph *g)
 }
 
 // val = +1 quand on ajoute u à la solution, -1 quand on le retire (mise à jour incrémentale)
-void	update_covers(t_graph *g, int *covers, int u, int val)
+void	update_covers(t_graph *g, int * restrict covers, int u, int val)
 {
-	int i, v;
+	int			i;
+	int			deg;
+	const int	*neigh;
 
 	covers[u] += val;
+	deg = g->nodes[u].degree;
+	neigh = g->nodes[u].neighbors;
 	i = 0;
-	while (i < g->nodes[u].degree)
+	while (i < deg)
 	{
-		v = g->nodes[u].neighbors[i];
-		covers[v] += val;
+		covers[neigh[i]] += val;
 		i++;
 	}
 }

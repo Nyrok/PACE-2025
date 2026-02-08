@@ -15,25 +15,27 @@ void	solve_optimizer(t_graph *g)
 	int		u;
 	int	 	iter;
 	int		lock_count, degrade_count, stale_count;
+	int		v_count;
 
 	if (tle)
 		return ;
+	v_count = g->v_count;
 	debug("Start Local Search, solutions len %i", g->len_solutions);
-	solutions = malloc(g->v_count * sizeof(t_bool));
+	solutions = malloc(v_count * sizeof(t_bool));
 	if (!solutions)
 		return ;
-	ft_memcpy(solutions, g->solutions, g->v_count * sizeof(t_bool));
+	ft_memcpy(solutions, g->solutions, v_count * sizeof(t_bool));
 	len_solutions = g->len_solutions;
 	covers = init_cover_counts(g);
-	backed_covers = malloc(g->v_count * sizeof(int));
-	buffer = malloc(g->v_count * sizeof(int));
+	backed_covers = malloc(v_count * sizeof(int));
+	buffer = malloc(v_count * sizeof(int));
 	if (!covers || !backed_covers || !buffer)
 	{
 		free(solutions);
 		return ;
 	}
-	ft_memcpy(backed_covers, covers, g->v_count * sizeof(int));
-	tabu_list = ft_calloc(g->v_count, sizeof(int));
+	ft_memcpy(backed_covers, covers, v_count * sizeof(int));
+	tabu_list = ft_calloc(v_count, sizeof(int));
 	if (!tabu_list)
 	{
 		free(covers);
@@ -50,9 +52,10 @@ void	solve_optimizer(t_graph *g)
 		iter++;
 		change = FALSE;
 		u = 0;
-		while (!tle && u < g->v_count)
+		while (u < v_count)
 		{
-			if (solutions[u])
+			// La majorité des sommets ne sont PAS dans D → branch hint unlikely
+			if (__builtin_expect(solutions[u], 0))
 			{
 				if (try_prune(g, solutions, &len_solutions, covers, u))
 					change = TRUE;
@@ -67,8 +70,8 @@ void	solve_optimizer(t_graph *g)
 		{
 			debug("New best solution found at iter %i, len %i", iter, len_solutions);
 			g->len_solutions = len_solutions;
-			ft_memcpy(g->solutions, solutions, g->v_count * sizeof(t_bool));
-			ft_memcpy(backed_covers, covers, g->v_count * sizeof(int));
+			ft_memcpy(g->solutions, solutions, v_count * sizeof(t_bool));
+			ft_memcpy(backed_covers, covers, v_count * sizeof(int));
 			lock_count = 0;
 			degrade_count = 0;
 			stale_count = 0;
@@ -81,8 +84,8 @@ void	solve_optimizer(t_graph *g)
 			if (degrade_count >= 2)
 			{
 				len_solutions = g->len_solutions;
-				ft_memcpy(solutions, g->solutions, g->v_count * sizeof(t_bool));
-				ft_memcpy(covers, backed_covers, g->v_count * sizeof(int));
+				ft_memcpy(solutions, g->solutions, v_count * sizeof(t_bool));
+				ft_memcpy(covers, backed_covers, v_count * sizeof(int));
 				lock_count = 0;
 				degrade_count = 0;
 			}

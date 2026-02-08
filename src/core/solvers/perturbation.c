@@ -8,41 +8,49 @@
 ** include_self = TRUE  → u est candidat (réparation d'un voisin non couvert)
 ** include_self = FALSE → seuls N(u) sont candidats (couvrir u sans le réinsérer)
 */
-static int	greedy_pick(t_graph *g, int *covers, t_bool *solutions,
-		int u, t_bool include_self)
+static int	greedy_pick(t_graph *g, int * restrict covers,
+		t_bool * restrict solutions, int u, t_bool include_self)
 {
-	int	best, best_score, i, j, v, score;
+	int			best, best_score, i, j, v, score;
+	int			deg;
+	const int	*neigh;
 
 	best = -1;
-	best_score = -1; // -1 pour accepter tout candidat avec score >= 0
+	best_score = -1;
 	// Passe 1 : évaluation de u lui-même (si autorisé et pas déjà dans D)
 	// score(u) = |{w ∈ N(u) : covers[w] == 0}| (nb voisins non couverts)
 	if (include_self && !solutions[u])
 	{
 		best = u;
 		best_score = 0;
+		deg = g->nodes[u].degree;
+		neigh = g->nodes[u].neighbors;
 		i = 0;
-		while (i < g->nodes[u].degree)
+		while (i < deg)
 		{
-			if (covers[g->nodes[u].neighbors[i]] == 0)
+			if (covers[neigh[i]] == 0)
 				best_score++;
 			i++;
 		}
 	}
 	// Passe 2 : évaluation de chaque voisin v ∈ N(u) non présent dans D
+	deg = g->nodes[u].degree;
+	neigh = g->nodes[u].neighbors;
 	i = 0;
-	while (!tle && i < g->nodes[u].degree)
+	while (i < deg)
 	{
-		v = g->nodes[u].neighbors[i];
+		v = neigh[i];
 		if (!solutions[v])
 		{
 			// score(v) = 1{covers[v]==0} + |{w ∈ N(v) : covers[w] == 0}|
 			// v lui-même compte s'il est non couvert (il se dominerait en rejoignant D)
 			score = (covers[v] == 0) ? 1 : 0;
+			int deg_v = g->nodes[v].degree;
+			const int *neigh_v = g->nodes[v].neighbors;
 			j = 0;
-			while (j < g->nodes[v].degree)
+			while (j < deg_v)
 			{
-				if (covers[g->nodes[v].neighbors[j]] == 0)
+				if (covers[neigh_v[j]] == 0)
 					score++;
 				j++;
 			}
@@ -67,16 +75,17 @@ static int	greedy_pick(t_graph *g, int *covers, t_bool *solutions,
 ** La mise à jour de covers[] après chaque ajout est dynamique : les scores
 ** des candidats suivants tiennent compte des ajouts précédents.
 */
-void	add_candidates(t_graph *g, t_bool *solutions, int *len_solutions,
-		int *covers, int *tabu_list, int iter)
+void	add_candidates(t_graph *g, t_bool * restrict solutions,
+		int *len_solutions, int * restrict covers,
+		int * restrict tabu_list, int iter)
 {
-	int	u;
-	int	i;
-	int	*neighbors;
+	int			u, deg;
+	int			i;
+	const int	*neigh;
 
 	// Éjection : sommet aléatoire dans D, non protégé par le tabou
 	do {
-		if (tle)
+		if (__builtin_expect(tle, 0))
 			return ;
 		u = xor_rand() % g->v_count;
 	} while (!solutions[u] || tabu_list[u] > iter);
@@ -85,14 +94,15 @@ void	add_candidates(t_graph *g, t_bool *solutions, int *len_solutions,
 	tabu_list[u] = iter + 20; // Tabou long (20) pour empêcher la réinsertion immédiate
 	update_covers(g, covers, u, -1);
 	// Phase 1 : réparation des voisins devenus non couverts après l'éjection de u
-	neighbors = g->nodes[u].neighbors;
+	deg = g->nodes[u].degree;
+	neigh = g->nodes[u].neighbors;
 	i = 0;
-	while (!tle && i < g->nodes[u].degree)
+	while (i < deg)
 	{
-		if (covers[neighbors[i]] == 0)
+		if (covers[neigh[i]] == 0)
 		{
 			// TRUE : le voisin non couvert est lui-même candidat à rejoindre D
-			int w = greedy_pick(g, covers, solutions, neighbors[i], TRUE);
+			int w = greedy_pick(g, covers, solutions, neigh[i], TRUE);
 			if (w >= 0 && !solutions[w])
 			{
 				solutions[w] = TRUE;
@@ -104,7 +114,7 @@ void	add_candidates(t_graph *g, t_bool *solutions, int *len_solutions,
 		i++;
 	}
 	// Phase 2 : si u reste non couvert et a des voisins, chercher un candidat
-	if (covers[u] == 0 && g->nodes[u].degree > 0)
+	if (covers[u] == 0 && deg > 0)
 	{
 		// FALSE : u ne peut pas se réinsérer (tabou), seuls ses voisins sont candidats
 		int v = greedy_pick(g, covers, solutions, u, FALSE);
