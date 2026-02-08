@@ -2,7 +2,7 @@
 
 t_graph_type	get_graph_type(t_graph *g)
 {
-	int					i;
+	int					u;
 	int					max_d;
 	int					leaf_count;
 	unsigned long long	avg_d;
@@ -12,14 +12,14 @@ t_graph_type	get_graph_type(t_graph *g)
 		return (GRAPH_UNKNOWN);
 	max_d = 0;
 	leaf_count = 0;
-	i = 0;
-	while (i < g->v_count)
+	u = 0;
+	while (u < g->v_count)
 	{
-		if (g->nodes[i].degree > max_d)
-			max_d = g->nodes[i].degree;
-		if (g->nodes[i].degree == 1)
+		if (g->nodes[u].degree > max_d)
+			max_d = g->nodes[u].degree;
+		if (g->nodes[u].degree == 1)
 			leaf_count++;
-		i++;
+		u++;
 	}
 	// Degré moyen = somme des degrés / nb sommets = 2*arêtes / nb sommets
 	avg_d = (unsigned long long)(2 * g->e_count) / g->v_count;
@@ -84,13 +84,13 @@ void	fill_graph(t_graph *graph, int v, int e)
 
 void	free_graph(t_graph *graph)
 {
-	int	i;
+	int	u;
 
-	i = 0;
-	while (i < graph->v_count)
+	u = 0;
+	while (u < graph->v_count)
 	{
-		free(graph->nodes[i].neighbors);
-		i++;
+		free(graph->nodes[u].neighbors);
+		u++;
 	}
 	free(graph->nodes);
 	free(graph->solutions);

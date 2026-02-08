@@ -5,7 +5,7 @@
 #  define DEBUG 1
 # endif
 // Durée minimale (en itérations) pendant laquelle un sommet est interdit après un swap
-# define TABU_TENURE 2
+# define TABU_TENURE 1
 # define TRUE 1
 # define FALSE 0
 

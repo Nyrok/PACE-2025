@@ -25,6 +25,7 @@ set(SRCS
 	core/solvers/greedy.c
 	core/solvers/periphery_greedy.c
 	core/solvers/optimizer.c
+	core/solvers/perturbation.c
 	core/solvers/prune.c
 	core/solvers/swap.c
 	core/solvers/sorter.c
@@ -34,7 +35,7 @@ set(SRCS
 add_executable(ds_finder ${SRCS})
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-	add_definitions(-DDEBUG=0)
+	#add_definitions(-DDEBUG=0)
 	target_compile_options(ds_finder PRIVATE 
 		-O3 
 		-flto 
@@ -98,7 +99,7 @@ add_custom_target(binary_solution
 		-fno-strict-aliasing
 		-fprefetch-loop-arrays
 		-fomit-frame-pointer
-		-D_GNU_SOURCE ds_finder.c -o ds_finder
+		-D_GNU_SOURCE -DDEBUG=0 ds_finder.c -o ds_finder
 	COMMAND rm -f ds_finder.c
 	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )

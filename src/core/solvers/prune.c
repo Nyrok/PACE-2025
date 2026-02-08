@@ -2,19 +2,20 @@
 
 t_bool	try_prune(t_graph *g, t_bool *solutions, int *len_solutions, int *covers, int u)
 {
-	int j, neighbor;
+	int i; // Itérateur
+	int	v; // Voisin de u
 
 	// Seuil 2 : si on retire u, covers[u] décrémente de 1. Pour que u reste
 	// couvert (covers >= 1), il faut covers[u] >= 2 avant le retrait. Idem pour ses voisins.
 	if (covers[u] < 2)
 		return (FALSE);
-	j = 0;
-	while (j < g->nodes[u].degree)
+	i = 0;
+	while (i < g->nodes[u].degree)
 	{
-		neighbor = g->nodes[u].neighbors[j];
-		if (covers[neighbor] < 2)
+		v = g->nodes[u].neighbors[i];
+		if (covers[v] < 2)
 			return (FALSE);
-		j++;
+		i++;
 	}
 	solutions[u] = FALSE;
 	(*len_solutions)--;

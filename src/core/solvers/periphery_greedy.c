@@ -42,17 +42,17 @@ static void	update_actives(t_graph *g, int u, t_bool *actives, int *remaining)
 
 static void	init_buckets(t_graph *g, int *head, int *next, int *gain)
 {
-	int	i;
-	int	v_gain;
+	int	u;
+	int	v_gain; // Gain initial = degree + 1 (surestimation, car tous actifs au départ)
 
-	i = 0;
-	while (i < g->v_count)
+	u = 0;
+	while (u < g->v_count)
 	{
-		v_gain = g->nodes[i].degree + 1;
-		gain[i] = v_gain;
-		next[i] = head[v_gain];
-		head[v_gain] = i;
-		i++;
+		v_gain = g->nodes[u].degree + 1;
+		gain[u] = v_gain;
+		next[u] = head[v_gain];
+		head[v_gain] = u;
+		u++;
 	}
 }
 
@@ -76,6 +76,7 @@ static void	core_loop(t_graph *g, t_bool *solutions, t_bool *actives, int *head,
 		head[idx] = next[u];
 		// Lazy evaluation : on recalcule le gain réel au moment de traiter le sommet
 		real_g = get_gain(g, u, actives);
+		// Gain réel >= bucket → candidat valide (gain stable ou sous-estimé), on l'ajoute
 		if (real_g >= idx)
 		{
 			solutions[u] = TRUE;
@@ -107,7 +108,7 @@ void	solve_periphery_greedy(t_graph *graph)
 	int		*head;
 	int		*next;
 	int		*gain;
-	int		i;
+	int		u;
 
 	solutions = malloc(sizeof(t_bool) * (unsigned int)(graph->v_count));
 	actives = malloc(sizeof(t_bool) * (unsigned int)(graph->v_count));
@@ -117,12 +118,12 @@ void	solve_periphery_greedy(t_graph *graph)
 	if (!head || !next || !gain || !actives || !solutions)
 		exit(EXIT_FAILURE);
 	debug("Start Periphery Greedy");
-	i = -1;
-	while (++i < graph->v_count)
+	u = -1;
+	while (++u < graph->v_count)
 	{
-		actives[i] = TRUE;
-		solutions[i] = FALSE;
-		head[i] = -1;
+		actives[u] = TRUE;
+		solutions[u] = FALSE;
+		head[u] = -1;
 	}
 	head[graph->v_count] = -1;
 	init_buckets(graph, head, next, gain);

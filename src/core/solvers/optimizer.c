@@ -1,60 +1,6 @@
 #include "ds_finder.h"
 
 /*
-** Perturbation : retire aléatoirement un sommet de la solution, ce qui crée des "trous",
-** puis comble les trous en ajoutant les voisins non couverts.
-** Casse les plateaux et permet d'explorer une nouvelle zone de l'espace de recherche.
-*/
-static void	add_candidates(t_graph *g, t_bool *solutions, int *len_solutions,
-		int *covers, int *tabu_list, int iter)
-{
-	int	v;
-	int	i;
-	int	*neighbors;
-
-	do {
-		v = xor_rand() % g->v_count;
-	} while (!solutions[v] || tabu_list[v] > iter);
-	solutions[v] = FALSE;
-	(*len_solutions)--;
-	tabu_list[v] = iter + 20;
-	update_covers(g, covers, v, -1);
-	neighbors = g->nodes[v].neighbors;
-	i = 0;
-	while (i < g->nodes[v].degree)
-	{
-		if (covers[neighbors[i]] == 0)
-		{
-			solutions[neighbors[i]] = TRUE;
-			(*len_solutions)++;
-			update_covers(g, covers, neighbors[i], 1);
-		}
-		i++;
-	}
-	// Si après la boucle, v n'est toujours pas couvert (cas où tous ses voisins 
-    // étaient déjà couverts par d'autres), la solution est invalide.
-    // On doit ajouter un voisin au hasard (ou le premier disponible) pour couvrir v.
-    if (covers[v] == 0 && g->nodes[v].degree > 0)
-    {
-        int savior = neighbors[0]; // On prend le premier voisin par défaut
-        if (!solutions[savior]) // S'il n'est pas déjà pris
-        {
-            solutions[savior] = TRUE;
-            (*len_solutions)++;
-            update_covers(g, covers, savior, 1);
-        }
-    }
-    // Note: Si covers[v] == 0 et degree == 0 (isolé), c'est impossible 
-    // car on vient de le retirer, donc il était solution. On devrait le remettre.
-    else if (covers[v] == 0)
-    {
-         solutions[v] = TRUE;
-         (*len_solutions)++;
-         update_covers(g, covers, v, 1);
-    }
-}
-
-/*
 ** Recherche locale par tabou : tente d'améliorer la solution gloutonne.
 ** Pour chaque sommet de la solution, on essaie de le supprimer (prune) ou de l'échanger (swap).
 ** backed_covers et g->solutions sauvegardent la meilleure solution connue.
@@ -66,9 +12,9 @@ void	solve_optimizer(t_graph *g)
 	int		len_solutions, old_len_solutions;
 	int	 	*tabu_list;
 	t_bool	change;
-	int		i;
+	int		u;
 	int	 	iter;
-	int		lock_count;
+	int		lock_count, degrade_count, stale_count;
 
 	if (tle)
 		return ;
@@ -95,41 +41,51 @@ void	solve_optimizer(t_graph *g)
 		return ;
 	}
 	iter = 0;
-	lock_count = 0; // Compte les itérations sans amélioration. Après 2 → perturbation
+	lock_count = 0; // Itérations sans changement (ni prune ni swap réussi). >= 2 → perturbation
+	degrade_count = 0; // Itérations où len_solutions > meilleure connue. >= 2 → restauration
+	stale_count = 0; // Perturbations sans que la meilleure solution ne s'améliore. >= 20 → triple perturbation
 	old_len_solutions = len_solutions;
 	while (!tle)
 	{
 		iter++;
 		change = FALSE;
-		i = 0;
-		while (!tle && i < g->v_count)
+		u = 0;
+		while (!tle && u < g->v_count)
 		{
-			if (solutions[i])
+			if (solutions[u])
 			{
-				if (try_prune(g, solutions, &len_solutions, covers, i))
+				if (try_prune(g, solutions, &len_solutions, covers, u))
 					change = TRUE;
-				else if (try_swap(g, solutions, &len_solutions, covers, i, tabu_list, iter, buffer))
+				else if (try_swap(g, solutions, &len_solutions, covers, u, tabu_list, iter, buffer))
 					change = TRUE;
 			}
-			i++;
+			u++;
 		}
 		if (old_len_solutions == len_solutions)
 			lock_count++;
 		else if (len_solutions < g->len_solutions)
 		{
-			//debug("New best solution found at iter %i, len %i", iter, len_solutions);
+			debug("New best solution found at iter %i, len %i", iter, len_solutions);
 			g->len_solutions = len_solutions;
 			ft_memcpy(g->solutions, solutions, g->v_count * sizeof(t_bool));
 			ft_memcpy(backed_covers, covers, g->v_count * sizeof(int));
 			lock_count = 0;
+			degrade_count = 0;
+			stale_count = 0;
 		}
-		// Si la solution s'est dégradée, on restaure la meilleure connue (sauf core-periphery)
+		// Dégradation : len_solutions > meilleure connue (g->len_solutions).
+		// Tolérer 2 itérations pour traverser un col avant de restaurer.
 		else if (g->type != GRAPH_CORE_PERIPHERY && len_solutions > g->len_solutions)
 		{
-			len_solutions = g->len_solutions;
-			ft_memcpy(solutions, g->solutions, g->v_count * sizeof(t_bool));
-			ft_memcpy(covers, backed_covers, g->v_count * sizeof(int));
-			lock_count = 0;
+			degrade_count++;
+			if (degrade_count >= 2)
+			{
+				len_solutions = g->len_solutions;
+				ft_memcpy(solutions, g->solutions, g->v_count * sizeof(t_bool));
+				ft_memcpy(covers, backed_covers, g->v_count * sizeof(int));
+				lock_count = 0;
+				degrade_count = 0;
+			}
 		}
 		old_len_solutions = len_solutions;
 		// Perturbation si : (aucun changement dans l'itération OU 2 itérations bloquées)
@@ -138,6 +94,13 @@ void	solve_optimizer(t_graph *g)
 			&& (len_solutions == g->len_solutions || g->type != GRAPH_CORE_PERIPHERY))
 		{
 			add_candidates(g, solutions, &len_solutions, covers, tabu_list, iter);
+			stale_count++;
+			if (stale_count >= 20)
+			{
+				add_candidates(g, solutions, &len_solutions, covers, tabu_list, iter);
+				add_candidates(g, solutions, &len_solutions, covers, tabu_list, iter);
+				stale_count = 0;
+			}
 			old_len_solutions = len_solutions;
 			lock_count = 0;
 		}
