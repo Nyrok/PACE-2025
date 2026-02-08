@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Projet L3</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#dominating-set-problem-projet-algo-des-graphes-l3-miage-2025-2026">Dominating Set problem (Projet Algo des graphes L3 MIAGE 2025-2026)</a>
+<ul>
+<li><a href="#en-quelques-mots">En quelques mots:</a></li>
+<li><a href="#dates">Dates</a></li>
+<li><a href="#dominating-set">Dominating Set</a></li>
+<li><a href="#ce-qui-est-attendu">Ce qui est attendu</a>
+<ul>
+<li><a href="#obligatoirement">Obligatoirement</a></li>
+<li><a href="#optionnellement">Optionnellement</a></li>
+</ul></li>
+<li><a href="#rendu">Rendu</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="dominating-set-problem-projet-algo-des-graphes-l3-miage-2025-2026">Dominating Set problem (Projet Algo des graphes L3 MIAGE 2025-2026)</h1>
+<h2 id="en-quelques-mots">En quelques mots:</h2>
+<p>Le but de ce projet est de participer à la track <em>heuristic</em> du <a href="https://pacechallenge.org/2025/ds/">challenge PACE 2025</a> pour le problème de graphe <em>Dominating Set</em> (DS) en proposant un ou plusieurs algorithmes pour le résoudre. </p>
+<h2 id="dates">Dates</h2>
+<ul>
+<li>1er Octobre 2025 : mise en ligne du sujet.</li>
+<li>Rendu du projet : 9 février 2026, 23h (automatique via Github)</li>
+<li>Soutenances : Soutenances 11 février 2026 de 13h45 à 17h (présentations de 5 minutes devant la classe). Possibilité de faire des slides (les mettre sur le git ou sur le teams).</li>
+</ul>
+<h2 id="dominating-set">Dominating Set</h2>
+<p>Nous considérons dans ce projet des graphes non-orientés non pondérés. Le but est de trouver un sous-ensemble <span class="math inline"><em>D</em></span> de sommets de la plus petite taille possible tel que chaque sommet du graphe est soit dans <span class="math inline"><em>D</em></span>, soit un voisin d’un sommet de <span class="math inline"><em>D</em></span>.</p>
+<p>Ce problème sert dans de nombreuses applications pratiques (réseaux sans-fil etc).</p>
+<p><img src="example.png" width="200" ></p>
+<p>Dans l’exemple ci-dessus (tiré de Wikipedia), on voit 3 dominating set possibles (en rouge) pour un même graphe. Celui en (a) est de taille 3, ceux en (b) et (c) sont de taille 2. Il n’en existe pas de taille 1.</p>
+<p>Ce projet consiste à résoudre ce problème, dans le cadre d’un <a href="https://pacechallenge.org/2025/">challenge international</a>.</p>
+<p>Ce problème est dit difficile à résoudre optimalement avec une complexité polynomiale (NP-complet). Nous verrons donc des <em>heuristiques</em>, donnant une solution sans garantie d’optimalité mais de bonne qualité en pratique.</p>
+<p>Le but de ce projet est de proposer et d’implémenter un (ou plusieurs) algorithme heuristique <strong>non trivial</strong> (originaux et efficaces) proposant une solution réalisable pour ce problème. C’est à dire qu’il n’est pas demandé d’avoir une solution forcement <em>optimale</em>, mais une solution <em>valide</em>. On souhaite toutefois avoir la solution la plus petite possible, ce qui donnera un classement.</p>
+<p>En effet, votre programme devra résoudre 100 instances différentes de ce problème, avec un temps maximum de 5 minutes par instance. La qualité de la solution pour chacune de ces instances apportera un score entre 0 et 1, et ainsi votre programme aura un score entre 0 et 100 au global. En plus de la plateforme optil.io (voir plus loin), je lancerai de temps en temps un script testant vos projets (automatiquement depuis github) dont la sortie se trouvera <a href="results/">ici</a>. La méthode de score sera celle décrite dans la section “scoring” de <a href="https://pacechallenge.org/2025/">cette page</a> (en gros, pour chaque instance, aucun point si trop loin de la solution optimum, 1 point si la solution optimum, et améliorer une bonne solution rapporte plus que d’améliorer une solution mauvaise).</p>
+<p>Vous êtes encouragés à être créatifs dans vos heuristiques, à comparer plusieurs idées, et même à échouer sur certaines pistes, tant que vous les documentez dans votre rapport.</p>
+<h2 id="ce-qui-est-attendu">Ce qui est attendu</h2>
+<h3 id="obligatoirement">Obligatoirement</h3>
+<ul>
+<li>Utilisation du GIT avec ce lien d’<a href="https://classroom.github.com/a/dVaZWQFC">inscription</a>. Une utilisation non standard sera considérée comme suspecte (on attend des commit réguliers de petites tailles) (si vous ne savez pas utiliser GIT, c’est l’occasion d’apprendre ou de voir <a href="https://github.com/oliviercailloux/java-course/blob/main/Git/README.adoc">votre cours du prochain semestre</a>).</li>
+<li>Un choix et une implémentation maison d’un graphe comme vu en cours (l’utilisation de librairies externes pour la gestion du graphe est <em>interdite</em>).</li>
+<li>La lecture d’un fichier au <a href="https://pacechallenge.org/2025/ds/">format imposé</a> par la compétition (section Input and Output). Les instances publiques sont disponibles <a href="https://www.lamsade.dauphine.fr/~sikora/ens/graphes/projet2025/instances.7z">ici</a>. Il y a dans le GIT quelques instances très simples avec leurs solutions pour que vous puissiez debugger plus simplement. Votre projet <em>doit</em> gérer des instances plus compliquées !</li>
+<li>La lecture du graphe doit être faite sur l’<em>entrée standard</em> (<em>stdin</em>) (exemple pour python sur le git), la solution doit être donnée sur la <em>sortie standard</em> (<em>stdout</em>). Cela veut dire qu’il ne doit pas y avoir d’autres messages sur la sortie standard (sinon ils seraient considérés comme dans la solution) ! Utilisez pour le debug soit une macro debug, soit la sortie erreur <em>stderr</em>. La sortie doit être la <a href="https://pacechallenge.org/2025/">liste des sommets de la solution</a> précédée par la taille de la solution. Un programme Java est disponible <a href="https://github.com/MarioGrobler/ds_verifier">ici</a> (ou avec le fichier jar sur le dépôt GIT) permettant de vérifier que la solution est bien valide (ou il affiche un message d’erreur).</li>
+<li>Au moins un algorithme heuristique non trivial produisant une solution valide en moins de 5 minutes dans <em>le langage de votre choix</em> (me contacter en cas de langage exotique), si cela est compatible avec optil.io.</li>
+<li>Votre programme recevra un signal <a href="https://fr.wikipedia.org/wiki/SIGTERM">SIGTERM</a> après 5 minutes lui demandant (gentiment) de s’arrêter. Vous devez <a href="https://www.optil.io/optilion/help/signals">le gérer</a>, i.e. le capter et terminer votre programme rapidement. En effet, si votre programme ne s’arrête pas, il sera tué et vous aurez un score de 0 pour cette instance. Il y a un exemple en python sur le git sur comment capturer ce signal. Si vous n’arrivez pas à mettre en place cela, vous pouvez faire en sorte que votre programme s’arrête après au plus 5 minutes (avec un timer par exemple).</li>
+</ul>
+<p>Une exécution typique de votre programme pourra être (avec les entrées et sorties standards):</p>
+<pre><code>cat file1.gr | python3 programme.py &gt; solution</code></pre>
+<p>ou encore</p>
+<pre><code>python3 programme.py &lt; file1.gr &gt; solution</code></pre>
+<p>Pour tester le principe du signal, on peut faire ceci, ce qui envoie un signal SIGTERM après 10 secondes:</p>
+<pre><code>timeout 10s python3 programme.py &lt; file1.gr &gt; solution</code></pre>
+<p>Vous êtes libres de faire des programmes en plus pour tester différentes propriétés des instances, ou de faire des scripts testant automatiquement votre programme sur l’ensemble des instances (un exemple est donné sur le GIT).</p>
+<h3 id="optionnellement">Optionnellement</h3>
+<ul>
+<li><p>Une participation sur <a href="https://www.optil.io/optilion/">optil.io</a>, voir <a href="https://www.optil.io/optilion/help">ici</a> sur comment faire pour uploader votre projet sur la plateforme. Merci d’utiliser une référence à dauphine/mido/miage/l3/… dans votre username pour vérification (pas besoin de mettre votre nom de famille). Pour participer, vous enverez votre code <a href="https://optil.io/optilion/problem/3222">ici</a> (un envoi max par 5H). Pour tester avant, envoyer le code <a href="https://optil.io/optilion/problem/3219">ici</a> (un envoi max par minute) pour vérifier que tout fonctionne. Attention, ce site ne doit <em>pas</em> être un moyen de tester si votre programme fonctionne, mais indique simplement à peu près le niveau de votre programme. Faites vos tests en local. Le site pourrait être surchargé.</p></li>
+<li><p>Vous avez le droit de regarder dans la littérature pour vous inspirer des bonnes heuristiques, plusieurs articles vous sont proposés <a href="papers">ici</a>.</p>
+<p>Attention, certains graphes sont très (très) grands, faites attention à la complexité, faites des approximations. Quelques pistes :</p>
+<ul>
+<li>Réduire le graphe initialement (exemple, que faire d’un sommet de degré 0 ou 1 ? )</li>
+<li>Trouver une première solution (bête) de manière gloutonne très rapidement sur chaque composante connexe et essayer ensuite de l’améliorer ?</li>
+<li>Trouver différentes propriétés intéressantes pour effectuer l’algorithme glouton (quel prochain sommet ajouter dans la solution ?).</li>
+<li>Améliorer une solution avec de la <a href="https://fr.wikipedia.org/wiki/Recherche_locale_(optimisation)">recherche locale</a> ?</li>
+<li>Si le temps vient à manquer, finir avec une solution triviale ?</li>
+<li>Relancer plusieurs fois votre algorithme avec des paramètres différents ou des choix randomisés ou faire des tentatives d’amélioration de la solution, afin d’utiliser aux mieux les 5 minutes qui vous sont alloués ?</li>
+</ul></li>
+</ul>
+<h2 id="rendu">Rendu</h2>
+<p>L’utilisation du GIT de github classroom est imposée. S’inscrire <a href="https://classroom.github.com/a/dVaZWQFC">ici</a>.  Tous vos dépôts seront automatiquement clonés au moment de la deadline et la note se basera sur cet état. Il ne servira donc à rien de continuer à modifier votre code après la deadline.</p>
+<p>Le projet est à faire <em>seul</em>.</p>
+<p>Utilisez exclusivement le canal Teams pour toute question relative au projet.</p>
+<p>Il est attendu sur votre Git :</p>
+<ul>
+<li>Le code source du projet dans un répertoire <em>src</em></li>
+<li>Un <em>README</em> à la racine décrivant comment compiler et utiliser votre projet. Si vous n’utilisez pas python, votre README doit expliquer comment compiler et exécuter votre programme (par exemple avec Ant/Maven et jar pour Java, un Makefile puis la ligne d’éxecution pour du C/C++ etc).</li>
+<li>Un court document (2 à 4 pages) <em>doc.pdf</em> indiquant vos approches, vos algorithmes, leurs complexités. Vous ne devez <strong>pas</strong> copier coller votre code ! Il indiquera également les sources d’articles proposant les algorithmes dont vous vous êtes inspiré ou tout autre code emprunté qui n’est pas de vous. Éventuellement vous donnerez quelques graphes de tests montrant les performances de votre algorithme.</li>
+</ul>
+<h4 id="llm-plagiat">LLM, plagiat…</h4>
+<p>Vous avez le droit de discuter entre vous et de lire des articles, mais vous devez préciser ce qui n’est pas de vous. Les idées ou le code provenant de LLMs devront être mentionnées, dans les commentaires ou dans le rapport. Votre rapport contiendra, si vous êtes concernés, un <strong>retour critique et honnête</strong> sur votre utilisation d’IAs génératives. Vous pourrez indiquer les différents types et le nombre de prompts utilisés (par ex. avec des liens vers les historiques de conversations), les retours critiques que vous avez eus sur le code ou algorithmes généré, les avantages et les inconvénients que vous avez identifiés sur l’utilisation de ce type d’outils.  Vous devez être capable d’expliquer et justifier tout votre code !</p>
+<p>Un détecteur de plagiat de code entre les soumissions de la classe sera utilisé.</p>
+<p>La note finale prendra en compte largement votre score dans le challenge, mais aussi votre inventivité.</p>
+<p>Bon courage !</p>
+</body>
+</html>
