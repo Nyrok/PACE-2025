@@ -13,6 +13,13 @@
 #set footnote(numbering: n => text(size: 2em, weight: "bold", [#n]))
 #show heading: set text(fill: rgb("#003366"))
 #show figure.caption: emph
+#show heading.where(level: 1): it => {
+  block(
+    fill: rgb("#003366"),
+    inset: 4pt,
+    text(fill: white, it)
+  )
+}
 
 #grid(
   columns: (1fr, 1fr, 1fr), // Trois colonnes égales pour un alignement parfait
