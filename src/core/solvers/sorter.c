@@ -26,14 +26,14 @@ static int	compare_degrees(const void *a, const void *b)
 
 void	sort_graph(t_graph *graph, int **v_sorted)
 {
-	int i;
+	int u;
 
 	debug("Start sorting graph");
-	i = 0;
-	while (i < graph->v_count)
+	u = 0;
+	while (u < graph->v_count)
 	{
-		(*v_sorted)[i] = i;
-		i++;
+		(*v_sorted)[u] = u;
+		u++;
 	}
 	nodes_ctx = graph->nodes;
 	qsort(*v_sorted, graph->v_count, sizeof(int), compare_degrees);

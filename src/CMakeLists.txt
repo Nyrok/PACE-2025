@@ -25,6 +25,7 @@ set(SRCS
 	core/solvers/greedy.c
 	core/solvers/periphery_greedy.c
 	core/solvers/optimizer.c
+	core/solvers/perturbation.c
 	core/solvers/prune.c
 	core/solvers/swap.c
 	core/solvers/sorter.c
@@ -98,7 +99,7 @@ add_custom_target(binary_solution
 		-fno-strict-aliasing
 		-fprefetch-loop-arrays
 		-fomit-frame-pointer
-		-D_GNU_SOURCE ds_finder.c -o ds_finder
+		-D_GNU_SOURCE -DDEBUG=0 ds_finder.c -o ds_finder
 	COMMAND rm -f ds_finder.c
 	WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )

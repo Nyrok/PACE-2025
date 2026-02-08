@@ -2,34 +2,34 @@
 
 void	add_missing_solutions(t_graph *graph, t_bool *actives)
 {
-	int	i;
+	int	u;
 
-	// Sécurité qui n'arrive pas en temps réel ; si l'algorithme principal n'est pas terminé,
-	// alors on compte les sommets non couverts dans la solution
-	i = 0;
-	while (i < graph->v_count)
+	// Fallback si SIGTERM interrompt l'algorithme avant qu'il ne termine :
+	// ajoute tous les sommets encore actifs (non couverts) pour garantir une solution valide
+	u = 0;
+	while (u < graph->v_count)
 	{
-		if (!graph->solutions[i] && actives[i])
+		if (!graph->solutions[u] && actives[u])
 		{
-			graph->solutions[i] = TRUE;
+			graph->solutions[u] = TRUE;
 			graph->len_solutions++;
 		}
-		i++;
+		u++;
 	}
 }
 
 static void	exit_print_solution(t_graph *graph)
 {
-	int	i;
+	int	u;
 	int	solutions_count;
 
 	solutions_count = graph->len_solutions;
 	printf("%d\n", solutions_count);
-	i = 0;
-	while (i < graph->v_count) {
-		if (graph->solutions[i])
-			printf("%d\n", i + 1);
-		i++;
+	u = 0;
+	while (u < graph->v_count) {
+		if (graph->solutions[u])
+			printf("%d\n", u + 1);
+		u++;
 	}
 	fflush(stdout);
 	free_graph(graph);

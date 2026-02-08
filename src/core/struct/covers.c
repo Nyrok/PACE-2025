@@ -6,59 +6,66 @@
 ** Si covers[i] >= 1, le sommet i est couvert.
 */
 
+__attribute__((malloc))
 int	*init_cover_counts(t_graph *g)
 {
-	int		*covers;
-	int	i, j, neighbor;
+	int	*covers;
+	int	u, v;
+	int	i;
 
 	covers = ft_calloc(g->v_count, sizeof(int));
 	if (!covers) return (NULL);
 
-	i = 0;
-	while (i < g->v_count)
+	u = 0;
+	while (u < g->v_count)
 	{
-		if (g->solutions[i])
+		if (g->solutions[u])
 		{
-			covers[i]++;
-			j = 0;
-			while (j < g->nodes[i].degree)
+			covers[u]++;
+			i = 0;
+			while (i < g->nodes[u].degree)
 			{
-				neighbor = g->nodes[i].neighbors[j];
-				covers[neighbor]++;
-				j++;
+				v = g->nodes[u].neighbors[i];
+				covers[v]++;
+				i++;
 			}
 		}
-		i++;
+		u++;
 	}
 	return (covers);
 }
 
 // val = +1 quand on ajoute u à la solution, -1 quand on le retire (mise à jour incrémentale)
-void	update_covers(t_graph *g, int *covers, int u, int val)
+__attribute__((always_inline)) inline
+void	update_covers(t_graph *g, int * restrict covers, int u, int val)
 {
-	int j, neighbor;
+	int			i;
+	int			deg;
+	const int	*neigh;
 
 	covers[u] += val;
-	j = 0;
-	while (j < g->nodes[u].degree)
+	deg = g->nodes[u].degree;
+	neigh = g->nodes[u].neighbors;
+	i = 0;
+	while (i < deg)
 	{
-		neighbor = g->nodes[u].neighbors[j];
-		covers[neighbor] += val;
-		j++;
+		covers[neigh[i]] += val;
+		i++;
 	}
 }
 
 // Vérifie que tous les sommets soient couverts (covers[i] >= 1 pour tout i appartenant à [0; v_count[ )
+__attribute__((pure))
 t_bool	is_covered(t_graph *g, int *covers)
 {
-	int	i;
+	int	u;
 
-	i = 0;
-	while (i < g->v_count)
+	u = 0;
+	while (u < g->v_count)
 	{
-		if (covers[i] == 0)
+		if (covers[u] == 0)
 			return (FALSE);
-		i++;
+		u++;
 	}
 	return (TRUE);
 }

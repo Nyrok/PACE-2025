@@ -8,7 +8,7 @@
 static int	find_best_candidate(int v_count, int *v_sorted, t_bool *actives)
 {
 	static int	first_active = 0;
-	int			i;
+	int			u;
 	int			node_idx;
 
 	while (first_active < v_count)
@@ -21,13 +21,13 @@ static int	find_best_candidate(int v_count, int *v_sorted, t_bool *actives)
 	if (first_active >= v_count)
 		return (-1);
 	// Parcours depuis first_active : le dernier trouvé = plus haut degré actif
-	i = first_active;
-	while (i < v_count)
+	u = first_active;
+	while (u < v_count)
 	{
-		node_idx = v_sorted[i];
+		node_idx = v_sorted[u];
 		if (actives[node_idx])
 			return (node_idx);
-		i++;
+		u++;
 	}
 	return (v_sorted[first_active]);
 }
@@ -49,12 +49,13 @@ static void	update_neighbors_active(t_graph *g, int u, t_bool *actives)
 	}
 }
 
+__attribute__((cold))
 void	solve_greedy(t_graph *graph)
 {
 	t_bool	*solutions;
 	t_bool	*actives;
 	int		best_node;
-	int		i;
+	int		u;
 	int		*v_sorted;	// Indices des sommets triés par degré croissant (dernier = plus haut degré)
 
 	v_sorted = malloc((unsigned int)graph->v_count * sizeof(int));
@@ -67,12 +68,12 @@ void	solve_greedy(t_graph *graph)
 	ft_memset(actives, TRUE, graph->v_count * sizeof(t_bool));
 	// Phase feuilles : on ajoute le voisin de la feuille (pas la feuille elle-même),
 	// car le voisin couvre la feuille ET potentiellement d'autres sommets
-	i = 0;
-	while (i < graph->v_count)
+	u = 0;
+	while (u < graph->v_count)
 	{
-		if (graph->nodes[i].degree == 1 && actives[i])
+		if (graph->nodes[u].degree == 1 && actives[u])
 		{
-			best_node = graph->nodes[i].neighbors[0];
+			best_node = graph->nodes[u].neighbors[0];
 			if (!solutions[best_node])
 			{
 				actives[best_node] = FALSE;
@@ -80,9 +81,9 @@ void	solve_greedy(t_graph *graph)
 				graph->len_solutions++;
 				update_neighbors_active(graph, best_node, actives);
 			}
-			actives[i] = FALSE;
+			actives[u] = FALSE;
 		}
-		i++;
+		u++;
 	}
 	while (!tle)
 	{
