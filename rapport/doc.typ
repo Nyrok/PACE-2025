@@ -5,7 +5,7 @@
 
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
 
-#set document(title: "ds_finder — Solveur heuristique pour le Minimum Dominating Set", author: "Hamza Konte")
+#set document(title: "Projet en Algorithmes dans les Graphes", author: "Hamza Konte")
 #set page(paper: "a4", margin: (x: 2cm, y: 2cm), numbering: "1")
 #set text(font: "Helvetica Neue", size: 7.5pt, lang: "fr")
 #set par(justify: true, leading: 0.55em)
@@ -26,7 +26,7 @@
     #text(size: 18pt, weight: "bold", fill: rgb("#003366"))[ds\_finder]
     
     #v(0.3em)
-    #text(size: 10pt)[Projet en algorithme dans les graphes (PACE 2025)]
+    #text(size: 10pt)[Projet en algorithmes dans les graphes (PACE 2025)]
     
     #v(0.2em)
     #text(size: 8pt, style: "italic")[
@@ -52,7 +52,7 @@
 
 Le _Minimum Dominating Set_ (MDS) est un problème d'optimisation classique sur les graphes : étant donné un graphe non orienté $G = (V, E)$, on cherche un sous-ensemble $D ⊆ V$ de taille minimale tel que tout sommet de $V$ est soit dans $D$, soit adjacent à un sommet de $D$#footnote[Pour une définition formelle et la preuve de NP-difficulté, voir Sikora, F. — _Notes de cours : Algorithmes dans les graphes_, Université Paris-Dauphine, 2025–2026. Voir aussi Haynes, T. W., Hedetniemi, S. T. & Slater, P. J. (1998) — _Fundamentals of Domination in Graphs_, Marcel Dekker.]. Ce problème est NP-difficile dans le cas général et constitue le thème du challenge PACE 2025 #footnote[_Parameterized Algorithms and Computational Experiments_, https://pacechallenge.org/2025/].
 
-*ds\_finder* est un solveur écrit en C (≈ 800 lignes) qui combine des heuristiques gloutonnes adaptatives et une recherche locale de type tabou pour produire des solutions de bonne qualité en temps limité. Le programme reçoit un graphe au format DIMACS sur l'entrée standard, résout le problème sous contrainte de temps (SIGTERM), et affiche la solution sur la sortie standard.
+Ce solveur a été écrit en C (≈ 800 lignes) qui combine des heuristiques gloutonnes adaptatives et une recherche locale de type tabou pour produire des solutions de bonne qualité en temps limité. Le programme reçoit un graphe au format DIMACS sur l'entrée standard, résout le problème sous contrainte de temps (SIGTERM), et affiche la solution sur la sortie standard.
 
 = Choix techniques
 
@@ -366,7 +366,7 @@ Cette approche a permis de quantifier l'impact de chaque changement. Par exemple
 
 == Visualisation des solutions
 
-Un outil de visualisation en Python (NetworkX + Matplotlib) a été développé en parallèle du solveur, accompagné d'un convertisseur GEXF pour Gephi. Ces outils permettent de représenter graphiquement les graphes et les solutions calculées par ds\_finder.
+Un outil de visualisation en Python (NetworkX + Matplotlib) a été développé en parallèle du solveur, accompagné d'un convertisseur GEXF pour Gephi. Ces outils permettent de représenter graphiquement les graphes et les solutions calculées par le solveur.
 
 La visualisation a joué un rôle important dans le processus itératif d'amélioration :
 
