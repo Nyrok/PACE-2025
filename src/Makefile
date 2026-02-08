@@ -7,7 +7,8 @@ CXFLAGS = -Wall -Werror -Wextra -I includes -std=c99 \
 		-fno-strict-aliasing \
 		-fprefetch-loop-arrays \
 		-fomit-frame-pointer \
-		-D_GNU_SOURCE
+		-D_GNU_SOURCE \
+		-DDEBUG=0
 
 LIBFT_DIR = libs/libft
 LIBFT = $(LIBFT_DIR)/libft.a
