@@ -31,7 +31,7 @@ static int	greedy_pick(t_graph *g, int *covers, t_bool *solutions,
 	}
 	// Passe 2 : évaluation de chaque voisin v ∈ N(u) non présent dans D
 	i = 0;
-	while (i < g->nodes[u].degree)
+	while (!tle && i < g->nodes[u].degree)
 	{
 		v = g->nodes[u].neighbors[i];
 		if (!solutions[v])
@@ -76,6 +76,8 @@ void	add_candidates(t_graph *g, t_bool *solutions, int *len_solutions,
 
 	// Éjection : sommet aléatoire dans D, non protégé par le tabou
 	do {
+		if (tle)
+			return ;
 		u = xor_rand() % g->v_count;
 	} while (!solutions[u] || tabu_list[u] > iter);
 	solutions[u] = FALSE;
@@ -85,7 +87,7 @@ void	add_candidates(t_graph *g, t_bool *solutions, int *len_solutions,
 	// Phase 1 : réparation des voisins devenus non couverts après l'éjection de u
 	neighbors = g->nodes[u].neighbors;
 	i = 0;
-	while (i < g->nodes[u].degree)
+	while (!tle && i < g->nodes[u].degree)
 	{
 		if (covers[neighbors[i]] == 0)
 		{
