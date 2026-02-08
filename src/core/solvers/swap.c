@@ -64,6 +64,7 @@ t_bool	try_swap(t_graph *g, t_bool *solutions, int *len_solutions, int *covers, 
 							covered_by_w = TRUE;
 							break ;
 						}
+						k++;
 					}
 				}
 				if (!covered_by_w) {
