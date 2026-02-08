@@ -56,7 +56,7 @@ static void	init_buckets(t_graph *g, int *head, int *next, int *gain)
 	}
 }
 
-static void	core_loop(t_graph *g, t_bool *actives, int *head, int *next, int *gain)
+static void	core_loop(t_graph *g, t_bool *solutions, t_bool *actives, int *head, int *next, int *gain)
 {
 	int	idx;
 	int	u;
@@ -78,7 +78,7 @@ static void	core_loop(t_graph *g, t_bool *actives, int *head, int *next, int *ga
 		real_g = get_gain(g, u, actives);
 		if (real_g >= idx)
 		{
-			g->solutions[u] = TRUE;
+			solutions[u] = TRUE;
 			g->len_solutions++;
 			update_actives(g, u, actives, &remaining);
 		}
@@ -102,31 +102,33 @@ static void	core_loop(t_graph *g, t_bool *actives, int *head, int *next, int *ga
 */
 void	solve_periphery_greedy(t_graph *graph)
 {
+	t_bool	*solutions;
 	t_bool	*actives;
 	int		*head;
 	int		*next;
 	int		*gain;
 	int		i;
 
-	graph->solutions = malloc(sizeof(t_bool) * (unsigned int)(graph->v_count));
+	solutions = malloc(sizeof(t_bool) * (unsigned int)(graph->v_count));
 	actives = malloc(sizeof(t_bool) * (unsigned int)(graph->v_count));
 	head = malloc(sizeof(int) * (unsigned int)(graph->v_count + 1));
 	next = malloc(sizeof(int) * (unsigned int)graph->v_count);
 	gain = malloc(sizeof(int) * (unsigned int)graph->v_count);
-	if (!head || !next || !gain || !actives || !graph->solutions)
+	if (!head || !next || !gain || !actives || !solutions)
 		exit(EXIT_FAILURE);
 	debug("Start Periphery Greedy");
 	i = -1;
 	while (++i < graph->v_count)
 	{
 		actives[i] = TRUE;
-		graph->solutions[i] = FALSE;
+		solutions[i] = FALSE;
 		head[i] = -1;
 	}
 	head[graph->v_count] = -1;
 	init_buckets(graph, head, next, gain);
 	graph->len_solutions = 0;
-	core_loop(graph, actives, head, next, gain);
+	core_loop(graph, solutions, actives, head, next, gain);
+	graph->solutions = solutions;
 	if (tle)
 		add_missing_solutions(graph, actives);
 	free(actives);

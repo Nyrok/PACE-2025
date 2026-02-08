@@ -33,6 +33,7 @@ int main(void)
 	ft_memset(&action, 0, sizeof(struct sigaction));
 	action.sa_handler = term;
 	sigaction(SIGTERM, &action, NULL);
+	sigaction(SIGINT, &action, NULL);
 	parse_input(&graph);
 	graph.type = get_graph_type(&graph);
 	debug("Graph type %d", graph.type);

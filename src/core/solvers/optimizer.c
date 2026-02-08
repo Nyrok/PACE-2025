@@ -1,12 +1,6 @@
 #include "ds_finder.h"
 
 /*
-** Recherche locale par tabou : tente d'améliorer la solution gloutonne.
-** Pour chaque sommet de la solution, on essaie de le supprimer (prune) ou de l'échanger (swap).
-** backed_covers et g->solutions sauvegardent la meilleure solution connue.
-*/
-
-/*
 ** Perturbation : retire aléatoirement un sommet de la solution, ce qui crée des "trous",
 ** puis comble les trous en ajoutant les voisins non couverts.
 ** Casse les plateaux et permet d'explorer une nouvelle zone de l'espace de recherche.
@@ -60,9 +54,14 @@ static void	add_candidates(t_graph *g, t_bool *solutions, int *len_solutions,
     }
 }
 
+/*
+** Recherche locale par tabou : tente d'améliorer la solution gloutonne.
+** Pour chaque sommet de la solution, on essaie de le supprimer (prune) ou de l'échanger (swap).
+** backed_covers et g->solutions sauvegardent la meilleure solution connue.
+*/
 void	solve_optimizer(t_graph *g)
 {
-	int	 	*covers, *backed_covers;
+	int	 	*covers, *backed_covers, *buffer;
 	t_bool	*solutions;
 	int		len_solutions, old_len_solutions;
 	int	 	*tabu_list;
@@ -81,7 +80,8 @@ void	solve_optimizer(t_graph *g)
 	len_solutions = g->len_solutions;
 	covers = init_cover_counts(g);
 	backed_covers = malloc(g->v_count * sizeof(int));
-	if (!covers || !backed_covers)
+	buffer = malloc(g->v_count * sizeof(int));
+	if (!covers || !backed_covers || !buffer)
 	{
 		free(solutions);
 		return ;
@@ -108,7 +108,7 @@ void	solve_optimizer(t_graph *g)
 			{
 				if (try_prune(g, solutions, &len_solutions, covers, i))
 					change = TRUE;
-				else if (try_swap(g, solutions, &len_solutions, covers, i, tabu_list, iter))
+				else if (try_swap(g, solutions, &len_solutions, covers, i, tabu_list, iter, buffer))
 					change = TRUE;
 			}
 			i++;
@@ -117,6 +117,7 @@ void	solve_optimizer(t_graph *g)
 			lock_count++;
 		else if (len_solutions < g->len_solutions)
 		{
+			//debug("New best solution found at iter %i, len %i", iter, len_solutions);
 			g->len_solutions = len_solutions;
 			ft_memcpy(g->solutions, solutions, g->v_count * sizeof(t_bool));
 			ft_memcpy(backed_covers, covers, g->v_count * sizeof(int));
@@ -145,5 +146,6 @@ void	solve_optimizer(t_graph *g)
 	free(tabu_list);
 	free(solutions);
 	free(backed_covers);
+	free(buffer);
 	debug("End Local Search, solutions len %i", g->len_solutions);
 }
