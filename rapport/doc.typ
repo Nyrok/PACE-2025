@@ -340,7 +340,7 @@ Le générateur XOR-shift déterministe (graine fixe 42) assure la reproductibil
 
 = Chronologie du développement
 
-Le projet s'est développé sur trois mois, de début décembre 2025 à début février 2026. L'historique Git compte plus de 130 commits, synthétisés ci-dessous.
+Le projet s'est développé sur trois mois, de début décembre 2025 à début février 2026. L'historique Git compte plus de 160 commits, synthétisés ci-dessous.
 
 #figure(
   table(
