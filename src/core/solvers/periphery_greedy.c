@@ -43,15 +43,15 @@ static void	update_actives(t_graph *g, int u, t_bool *actives, int *remaining)
 static void	init_buckets(t_graph *g, int *head, int *next, int *gain)
 {
 	int	u;
-	int	v_gain; // Gain initial = degree + 1 (surestimation, car tous actifs au départ)
+	int	u_gain; // Gain initial = degree + 1 (surestimation, car tous actifs au départ)
 
 	u = 0;
 	while (u < g->v_count)
 	{
-		v_gain = g->nodes[u].degree + 1;
-		gain[u] = v_gain;
-		next[u] = head[v_gain];
-		head[v_gain] = u;
+		u_gain = g->nodes[u].degree + 1;
+		gain[u] = u_gain;
+		next[u] = head[u_gain];
+		head[u_gain] = u;
 		u++;
 	}
 }

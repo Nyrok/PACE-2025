@@ -180,7 +180,7 @@ fletcher.diagram(
   
   node((2.2, 4), [*Force Kick*\ Si `"lock_count"` >= 2\ (Stagnation)], shape: fletcher.shapes.rect, name: <kick>),
   node((2.2, 5.2), [Éjection aléatoire de $u$\ tabu$(u) arrow.l "iter" + 20$], shape: fletcher.shapes.rect, name: <kick_exec>),
-  node((2.2, 6.3), [`greedy_pick` : sélection\ du meilleur candidat pour\ chaque sommet non couvert], shape: fletcher.shapes.rect, name: <greedy>),
+  node((2.2, 6.3), [Réparation : ajout des\ voisins non couverts à $D$], shape: fletcher.shapes.rect, name: <greedy>),
   
   node((0, 7.2), [Signal SIGTERM ?], shape: fletcher.shapes.diamond, name: <signal>),
   node((0, 8.5), [*Fin de l'optimisation*], shape: fletcher.shapes.rect, name: <end>),
@@ -232,7 +232,7 @@ La fonction `get_graph_type` calcule le degré maximal ($d_max$), le degré moye
     [Anneau], [$|E| = V$, $overline(d) ∈ [2,6]$], [Glouton classique],
     [Grille 2D], [$overline(d) ∈ [2,6]$, $d_max ≤ 10$], [Core-périphérie glouton],
     [Erdős–Rényi], [feuilles $= 0$, $overline(d) > 2$], [Glouton classique],
-    [Inconnu], [Défaut], [Glouton classique],
+    [Autre], [Défaut], [Glouton classique],
   ),
   caption: [Heuristiques de classification],
 ) <classification>
@@ -294,33 +294,12 @@ Si le nombre de voisins privés dépasse 15, le swap est abandonné immédiateme
 === Perturbation (force kick)
 Quand aucune amélioration n'est trouvée pendant 2 itérations consécutives, une perturbation est déclenchée#footnote[Les mécanismes de perturbation pour échapper aux optima locaux sont étudiés dans Cai, S. et al. (2020), _Two-goal Local Search_, IJCAI-20, et dans Zhu, E. et al. (2024), _A dual-mode local search_, Knowledge-Based Systems. Voir aussi les stratégies de perturbation dans da Fonseca, G. D. et al., _Shadoks_, PACE 2025.] :
 + Un sommet aléatoire $u$ est retiré de $D$ (avec tabu de 20 itérations pour empêcher sa réinsertion immédiate).
-+ Les sommets devenus non couverts sont réparés par la fonction `greedy_pick`, détaillée ci-dessous.
++ Les sommets devenus non couverts sont réparés en les ajoutant directement à $D$.
++ Si le sommet éjecté $u$ reste non couvert, son premier voisin disponible est ajouté à $D$.
 
-==== Sélection gloutonne : `greedy_pick`
+*Complexité de la perturbation :* $O(deg(u))$ — une passe sur les voisins de $u$.
 
-Au cœur de la phase de réparation, `greedy_pick(g, covers, solutions, u, include_self)` sélectionne le meilleur candidat à ajouter à $D$ parmi le voisinage d'un sommet non couvert $u$. L'algorithme procède en deux passes :
-
-+ *Évaluation de $u$* (si `include_self` et $u in.not D$) : le score de $u$ est le nombre de ses voisins actuellement non couverts ($"covers"[v] = 0$).
-+ *Évaluation de chaque voisin $v in N(u)$* (si $v in.not D$) : le score de $v$ est $bold(1)_("covers"[v] = 0) + |{w in N(v) : "covers"[w] = 0}|$, c'est-à-dire le nombre total de sommets non couverts que $v$ dominerait s'il était ajouté à $D$ (lui-même inclus s'il est non couvert).
-
-Le candidat de score maximal est retourné. Si aucun candidat valide n'existe, la fonction retourne $-1$.
-
-*Complexité :* $O(deg(u) times overline(d))$ — une passe sur $N(u)$, et pour chaque voisin $v$, une passe sur $N(v)$.
-
-==== Orchestration : `add_candidates`
-
-La procédure `add_candidates` utilise `greedy_pick` en deux phases après l'éjection du sommet $u$ :
-
-+ *Phase 1 — réparation des voisins :* pour chaque voisin $v_i$ de $u$ devenu non couvert ($"covers"[v_i] = 0$), `greedy_pick` est appelé avec `include_self = TRUE`. Le meilleur candidat dans $N[v_i]$ (potentiellement $v_i$ lui-même) est ajouté à $D$, et `covers[]` est mis à jour immédiatement. Cette mise à jour *dynamique* est cruciale : chaque ajout modifie les scores des candidats suivants, ce qui évite d'ajouter des sommets redondants.
-+ *Phase 2 — réparation du sommet éjecté :* si $u$ lui-même reste non couvert après la phase 1, `greedy_pick` est appelé avec `include_self = FALSE` pour sélectionner le meilleur voisin de $u$ — sans considérer $u$ lui-même comme candidat, car il est interdit par le tabou.
-
-Comparée à une réparation naïve (ajout du premier voisin non couvert), cette sélection gloutonne dynamique réduit la taille de la solution d'environ 83 sommets sur les instances larges à 300 secondes de calcul.
-
-Trois mécanismes complètent la perturbation :
-
-- *Restauration retardée* : si la solution courante se dégrade, c'est-à-dire si $|D_"courante"| > |D_"meilleure"|$ (la taille de la solution a augmenté par rapport à la meilleure connue), le solveur tolère 2 itérations de dégradation avant de restaurer l'état sauvegardé. Cela laisse à la recherche locale le temps de traverser un col et potentiellement trouver une meilleure vallée de l'autre côté.
-- *Perturbation croissante* : après 20 perturbations consécutives sans amélioration globale (c'est-à-dire sans que $|D_"meilleure"|$ ne diminue), le solveur déclenche une triple perturbation (3 éjections successives) pour diversifier plus agressivement l'exploration et sortir d'un bassin d'attraction.
-- *Générateur XOR-shift* déterministe (graine fixe 42) pour assurer la reproductibilité#footnote[Marsaglia, G. (2003). Xorshift RNGs. _Journal of Statistical Software_, 8(14), 1–6.].
+Le générateur XOR-shift déterministe (graine fixe 42) assure la reproductibilité#footnote[Marsaglia, G. (2003). Xorshift RNGs. _Journal of Statistical Software_, 8(14), 1–6.].
 
 *Complexité globale de l'optimiseur :* $O(I × V × overline(d))$ où $I$ est le nombre d'itérations (borné par le temps).
 
@@ -339,7 +318,7 @@ Trois mécanismes complètent la perturbation :
     [Core-périphérie glouton], [$O(V^2 + E)$ pire cas], [$O(V)$],
     [Prune], [$O(deg(u))$], [$O(V)$],
     [Swap], [$O(deg(u)^2)$], [$O(V)$],
-    [Perturbation (`greedy_pick`)], [$O(deg(u) times overline(d))$], [$O(1)$],
+    [Perturbation], [$O(deg(u))$], [$O(1)$],
   ),
   caption: [Récapitulatif des complexités],
 ) <complexites>
@@ -423,7 +402,6 @@ La visualisation a joué un rôle important dans le processus itératif d'améli
 
 Cet outil de développement ne fait pas partie du solveur soumis, mais il a été essentiel au processus de conception et de débogage.
 
-#pagebreak()
 = Utilisation de l'IA générative
 
 L'outil *Claude Code* (CLI d'Anthropic, modèle Claude Opus 4.5) a été utilisé ponctuellement au cours du développement. Voici les tâches pour lesquelles l'IA a été sollicitée, ainsi qu'une appréciation de son apport :
@@ -432,9 +410,7 @@ L'outil *Claude Code* (CLI d'Anthropic, modèle Claude Opus 4.5) a été utilis�
 
 - *Exploration algorithmique* : discussion sur les stratégies de perturbation (force kick vs. restart complet), sur le choix des paramètres de la recherche tabou (tenure, seuil de stagnation), et sur les critères de classification de graphe. L'IA a proposé des pistes intéressantes, mais les décisions finales ont été prises après expérimentation sur les instances du benchmark PACE.
 
-- *Génération de commentaires* : ajout de commentaires explicatifs sur le code existant pour le rendu final. Tâche purement mécanique où l'IA a été très efficace.
-
-*Retour critique :* L'IA s'est avérée utile pour les tâches mécaniques (déboggage, commentaires, mise en forme) et pour accélérer l'exploration de pistes algorithmiques. Cependant, les choix d'architecture fondamentaux (classification de graphe, stratégie d'optimisation, paramétrage de la recherche tabou) ont été conçus et ajustés manuellement par itérations successives sur les instances de test. Le paramétrage fin (tenure tabou de 1, seuil de perturbation à 2 itérations, tabu de 20 pour le force kick, seuil d'abandon précoce du swap à 15) résulte d'une expérimentation empirique que l'IA ne peut pas remplacer. En résumé, l'IA réduit significativement le temps passé sur les tâches à faible valeur ajoutée, mais ne se substitue pas à la compréhension du problème ni au travail d'expérimentation.
+*Retour critique :* L'IA s'est avérée utile pour les tâches mécaniques (déboggage, commentaires, mise en forme) et pour accélérer l'exploration de pistes algorithmiques. Cependant, les choix d'architecture fondamentaux (classification de graphe, stratégie d'optimisation, paramétrage de la recherche tabou) ont été conçus et ajustés manuellement par itérations successives sur les instances de test. Le paramétrage fin résulte d'une expérimentation empirique que l'IA ne peut pas remplacer. En résumé, l'IA réduit significativement le temps passé sur les tâches à faible valeur ajoutée, mais ne se substitue pas à la compréhension du problème ni au travail d'expérimentation.
 
 = Références
 

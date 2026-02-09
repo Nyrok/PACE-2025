@@ -114,10 +114,9 @@ java -jar ds_verifier-1.0.jar <graphe.gr> <solution.sol>
 │   │   │   ├── solver.c            # Routage vers la bonne stratégie
 │   │   │   ├── greedy.c            # Glouton par degré
 │   │   │   ├── periphery_greedy.c  # Glouton spécialisé core-periphery
-│   │   │   ├── optimizer.c         # Recherche tabou (boucle principale)
+│   │   │   ├── optimizer.c         # Recherche locale, échappement des optima locaux
 │   │   │   ├── prune.c             # Suppression de sommets redondants
 │   │   │   ├── swap.c              # Échange de sommets
-│   │   │   ├── perturbation.c      # Échappement des optima locaux
 │   │   │   └── sorter.c            # Tri par degré
 │   │   ├── struct/
 │   │   │   ├── graph.c             # Classification du graphe

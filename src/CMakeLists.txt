@@ -25,7 +25,6 @@ set(SRCS
 	core/solvers/greedy.c
 	core/solvers/periphery_greedy.c
 	core/solvers/optimizer.c
-	core/solvers/perturbation.c
 	core/solvers/prune.c
 	core/solvers/swap.c
 	core/solvers/sorter.c

@@ -27,7 +27,6 @@ SRCS = core/main.c \
 		core/solvers/periphery_greedy.c \
 		core/solvers/prune.c \
 		core/solvers/swap.c \
-		core/solvers/perturbation.c \
         $(LIBFT_SRCS)
 
 OBJDIR = objs
