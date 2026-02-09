@@ -135,13 +135,13 @@ fletcher.diagram(
   node((0, 0), [*Entrée DIMACS*], shape: fletcher.shapes.rect),
   node((0, 1), [Parsing], shape: fletcher.shapes.rect),
   node((0, 2), [Classification §3.1], shape: fletcher.shapes.rect),
-  node((0, 3.2), [Type de\ graphe ?], shape: fletcher.shapes.diamond, name: <q>),
+  node((0, 3.2), [Type de\ graphe], shape: fletcher.shapes.diamond, name: <q>),
   
   node((-1.2, 4.2), [Tri par degré croissant], shape: fletcher.shapes.rect, name: <tri>),
   node((-1.2, 5.2), [Glouton classique], shape: fletcher.shapes.rect, name: <gc>),
   node((1.2, 5.2), [Core-périphérie glouton], shape: fletcher.shapes.rect, name: <pg>),
   
-  node((0, 6.5), [Optimiseur tabou (Détail Fig. 2)], shape: fletcher.shapes.rect, name: <opt>),
+  node((0, 6.5), [Optimiseur tabou (Détails dans Fig. 2)], shape: fletcher.shapes.rect, name: <opt>),
   node((0, 8), [*Sortie*], shape: fletcher.shapes.rect),
 
   edge((0, 0), (0, 1), "->"),
@@ -159,56 +159,69 @@ fletcher.diagram(
 caption: [Workflow global du pipeline de résolution],
 ) <global-workflow>
 
-// Figure 2 : Détail de l'Optimiseur
-#set text(size: 7.5pt) // Texte réduit pour le diagramme complexe
+// Figure 2 : Détail de l'Optimiseur (flux séquentiel)
+#set text(size: 7.5pt)
 #figure(
 fletcher.diagram(
   node-stroke: 0.8pt + rgb("#003366"),
   node-fill: luma(245),
   node-inset: 5pt,
   spacing: (11mm, 5.5mm),
-  
-  node((0,0), [*Début optimisation* (Sol. $D$)], shape: fletcher.shapes.rect, name: <start>),
-  node((0,1), [Initialisation `"covers"[]`], shape: fletcher.shapes.rect, name: <init>),
-  node((0,2.5), [Parcours de chaque\ sommet $u in D$], shape: fletcher.shapes.diamond, name: <loop>),
-  
-  node((-2.2, 4), [*Prune (1-0)*\ Si $"covers"[u] >= 2$ et\ $forall v in N(u), "covers"[v] >= 2$], shape: fletcher.shapes.rect, name: <prune>),
-  node((-2.2, 5.2), [Retrait de $u$, \ décrémentation de len_solutions \ `update_covers(u, -1)`], shape: fletcher.shapes.rect, name: <prune_exec>),
-  
-  node((0, 4), [*Swap (1-1)*\ Si $u$ a des voisins privés,\ chercher $v in N(N_"priv"(u))$], shape: fletcher.shapes.rect, name: <swap>),
-  node((0, 5.2), [Échange $u arrow.l.r v$\ Tabou $T = 1 + "rand"$\ `update_covers(u, -1)` \ `update_covers(v, +1)`], shape: fletcher.shapes.rect, name: <swap_exec>),
-  
-  node((2.2, 4), [*Force Kick*\ Si `"lock_count"` >= 2\ (Stagnation)], shape: fletcher.shapes.rect, name: <kick>),
-  node((2.2, 5.2), [Éjection aléatoire de $u$\ tabu$(u) arrow.l "iter" + 20$], shape: fletcher.shapes.rect, name: <kick_exec>),
-  node((2.2, 6.3), [Réparation : ajout des\ voisins non couverts à $D$], shape: fletcher.shapes.rect, name: <greedy>),
-  
-  node((0, 7.2), [Signal SIGTERM ?], shape: fletcher.shapes.diamond, name: <signal>),
-  node((0, 8.5), [*Fin de l'optimisation*], shape: fletcher.shapes.rect, name: <end>),
 
+  // Nœuds principaux (flux vertical)
+  node((0, 0), [*Début optimisation* (Sol. $D$)], shape: fletcher.shapes.rect, name: <start>),
+  node((0, 1), [Initialisation `"covers"[]`], shape: fletcher.shapes.rect, name: <init>),
+  node((0, 2.5), [Parcours de chaque\ sommet $u in D$], shape: fletcher.shapes.diamond, name: <loop>),
+
+  // Prune conditionnel
+  node((0, 4), [*Prune (1-0)* :\ $"covers"[u] >= 2$ et\ $forall v in N(u), "covers"[v] >= 2$ ?], shape: fletcher.shapes.diamond, name: <prune>),
+  node((-2, 5.3), [Retrait de $u$,\ décrémentation de len_solutions,\ `update_covers(u, -1)`], shape: fletcher.shapes.rect, name: <prune_exec>),
+
+  // Swap conditionnel
+  node((0, 6.5), [*Swap (1-1)* :\ $u$ a des voisins privés\ et $exists w in N(N_"priv"(u))$ ?], shape: fletcher.shapes.diamond, name: <swap>),
+  node((-2, 7.8), [Échange $u arrow.l.r w$,\ Tabou $T = 1 + "rand"$,\ `update_covers`], shape: fletcher.shapes.rect, name: <swap_exec>),
+
+  // Force Kick conditionnel
+  node((0, 9), [*Force Kick* :\ `"lock_count"` $>= 2$\ (Stagnation) ?], shape: fletcher.shapes.diamond, name: <kick>),
+  node((-2, 10.3), [Éjection aléatoire de $u$,\ tabu$(u) arrow.l "iter" + 20$], shape: fletcher.shapes.rect, name: <kick_exec>),
+  node((-2, 11.4), [Réparation : ajout des\ voisins non couverts à $D$], shape: fletcher.shapes.rect, name: <greedy>),
+
+  // SIGTERM et Fin
+  node((0, 12.5), [Signal SIGTERM ?], shape: fletcher.shapes.diamond, name: <signal>),
+  node((0, 14), [*Fin de l'optimisation*], shape: fletcher.shapes.rect, name: <end>),
+
+  // Arêtes du flux principal
   edge(<start>, <init>, "->"),
   edge(<init>, <loop>, "->"),
-  edge(<loop>, <prune>, "->", label: [1], corner: left),
-  edge(<prune>, <prune_exec>, "->"),
-  edge(<prune_exec>, (0, 6.5), "->", corner: right),
-  edge(<loop>, <swap>, "->", label: [2]),
-  edge(<swap>, <swap_exec>, "->"),
-  edge(<swap_exec>, (0, 6.5), "->"),
-  edge(<loop>, <kick>, "->", label: [Si bloqué], corner: right),
-  edge(<kick>, <kick_exec>, "->"),
+  edge(<loop>, <prune>, "->"),
+
+  // Prune : Oui → exec → Swap ; Non → Swap
+  edge(<prune>, <prune_exec>, "->", label: [Oui], corner: left),
+  edge(<prune_exec>, <swap>, "->", corner: right),
+  edge(<prune>, <swap>, "->", label: [Non], label-pos: 0.1),
+
+  // Swap : Oui → exec → Kick ; Non → Kick
+  edge(<swap>, <swap_exec>, "->", label: [Oui], corner: left),
+  edge(<swap_exec>, <kick>, "->", corner: right),
+  edge(<swap>, <kick>, "->", label: [Non], label-pos: 0.1),
+
+  // Kick : Oui → exec → greedy → SIGTERM ; Non → SIGTERM
+  edge(<kick>, <kick_exec>, "->", label: [Oui], corner: left),
   edge(<kick_exec>, <greedy>, "->"),
-  edge(<greedy>, (0, 6.5), "->", corner: left),
-  edge((0, 6.5), <signal>, "->"),
-  
-  edge(<signal>, (-3.5, 7.2), (-3.5, 2.5), <loop>, "->", 
-    label: [Non], 
-    label-pos: 0.1, 
+  edge(<greedy>, <signal>, "->", corner: right),
+  edge(<kick>, <signal>, "->", label: [Non], label-pos: 0.1),
+
+  // SIGTERM : Non → retour boucle ; Oui → Fin
+  edge(<signal>, (-3.5, 12.5), (-3.5, 2.5), <loop>, "->",
+    label: [Non],
+    label-pos: 0.1,
     corner: left),
-  
-  edge(<signal>, <end>, "->", label: [Oui])
+  edge(<signal>, <end>, "->", label: [Oui]),
 ),
-caption: [Workflow de l'optimiseur par recherche locale et perturbation ],
+caption: [Workflow de l'optimiseur par recherche locale et perturbation],
 ) <detailed-optimizer-workflow>
 
+#pagebreak()
 = Algorithmes et complexités
 
 == Classification de graphe
