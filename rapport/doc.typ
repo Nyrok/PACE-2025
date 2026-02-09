@@ -85,7 +85,7 @@ Le pivot vers les *listes d'adjacence* ($O(V + E)$ en mémoire) a résolu le pro
 - Réutilisation de buffers pré-alloués plutôt que des allocations dynamiques dans les boucles chaudes.
 - Accès mémoire séquentiels pour maximiser l'utilisation du cache CPU (_cache-friendly_).
 
-Le minimum nécessaire, pas de superflu : chaque structure est dimensionnée exactement à $V$ ou $V + E$, sans marge ni indirection.
+Le minimum nécessaire : chaque structure est dimensionnée exactement à $V$ ou $V + E$, sans marge ni indirection. Par convention dans le code, $u$ désigne un sommet, $v$ un voisin de $u$, $w$ un voisin de $v$ (voisin à 2 sauts), et `i`, `j`, `k` sont des itérateurs de boucle.
 
 == Importance de l'optimisation
 
@@ -252,6 +252,8 @@ La fonction `get_graph_type` calcule le degré maximal ($d_max$), le degré moye
 
 *Complexité :* $O(V)$, un seul parcours des sommets suffit.
 
+Cette classification a été générée par intelligence artificielle (#link("https://gemini.google.com/share/668a7cf37a24")[lien]) et n'est ni exhaustive ni certaine ; elle permet néanmoins de distinguer deux familles de graphes selon la taille du DS produit par l'heuristique gloutonne : les familles où le glouton classique suffit (DS de taille faible), et celles, comme les graphes core-périphérie et les grilles, où un glouton par gain dynamique est nécessaire pour éviter un DS initial surdimensionné, point faible de notre approche.
+
 == Glouton classique
 
 L'algorithme glouton par degré maximal#footnote[L'approche gloutonne par degré pour le _Minimum Dominating Set_ est présentée dans Fontan, F. & Verger, G., _Solver description_, PACE 2025 ; et Swat, S., _DS7HS_, PACE 2025.] procède en deux phases :
@@ -310,7 +312,7 @@ Quand aucune amélioration n'est trouvée pendant 2 itérations consécutives, u
 + Les sommets devenus non couverts sont réparés en les ajoutant directement à $D$.
 + Si le sommet éjecté $u$ reste non couvert, son premier voisin disponible est ajouté à $D$.
 
-*Complexité de la perturbation :* $O(deg(u))$ — une passe sur les voisins de $u$.
+*Complexité de la perturbation :* $O(sum_(v in N(u)) deg(v))$ — l'éjection de $u$ coûte $O(deg(u))$, mais la réparation gloutonne ajoute chaque voisin non couvert à $D$ et met à jour ses propres voisins via `update_covers`, soit $O(deg(v))$ par voisin réparé.
 
 Le générateur XOR-shift déterministe (graine fixe 42) assure la reproductibilité#footnote[Marsaglia, G. (2003). Xorshift RNGs. _Journal of Statistical Software_, 8(14), 1–6.].
 
@@ -331,7 +333,7 @@ Le générateur XOR-shift déterministe (graine fixe 42) assure la reproductibil
     [Core-périphérie glouton], [$O(V^2 + E)$ pire cas], [$O(V)$],
     [Prune], [$O(deg(u))$], [$O(V)$],
     [Swap], [$O(deg(u)^2)$], [$O(V)$],
-    [Perturbation], [$O(deg(u))$], [$O(1)$],
+    [Perturbation], [$O(sum_(v in N(u)) deg(v))$], [$O(1)$],
   ),
   caption: [Récapitulatif des complexités],
 ) <complexites>
