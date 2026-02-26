@@ -1,7 +1,11 @@
 # Projet 2025 Dominating Set
 
 [Le sujet PACE25](https://pacechallenge.org/2025/)
+
 [Le lien Optil.io](https://optil.io/optilion/problem/3222#tab-4)
+
+[Le rapport académique](/doc.pdf)
+
 [Le sujet académique](https://www.lamsade.dauphine.fr/~sikora/ens/graphes/projet2025/sujet2526.html)
 
 ## AUTHOR
