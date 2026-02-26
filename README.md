@@ -1,7 +1,8 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/dVaZWQFC)
 # Projet 2025 Dominating Set
 
-[Le sujet](https://www.lamsade.dauphine.fr/~sikora/ens/graphes/projet2025/)
+[Le sujet PACE25](https://pacechallenge.org/2025/)
+[Le lien Optil.io](https://optil.io/optilion/problem/3222#tab-4)
+[Le sujet académique](https://www.lamsade.dauphine.fr/~sikora/ens/graphes/projet2025/sujet2526.html)
 
 ## AUTHOR
 
